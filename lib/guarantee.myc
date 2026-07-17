@@ -1,0 +1,47 @@
+// nodule: core.guarantee
+// The guarantee-strength lattice (RFC-0001 §3.4/§4.7; `guarantee.schema.json`).
+//
+// `Exact ⊐ Proven ⊐ Empirical ⊐ Declared`, ordered strongest-to-weakest. The [`meet`]
+// (weakest-wins) composition is a meet-semilattice (commutative/associative/idempotent, identity
+// `Exact`); operations propagate guarantees by taking the meet of their inputs and their own
+// intrinsic strength (M-102; RFC-0001 §3.4/§4.7).
+//
+// [`meet`]: GuaranteeStrength::meet
+// @summary: best-effort transpilation via mycelium-transpile (M-873). Declared,
+// unvalidated — no Mycelium parser/typechecker confirms this output; see the
+// accompanying .gap.json for every construct this pass could not express.
+nodule core.guarantee;
+
+// How trustworthy a value's representation/bound is. Honesty is monotone-downward: an operation's
+// result is never stronger than its weakest input (the [`meet`](GuaranteeStrength::meet)).
+//
+// The `serde` form is the bare string `"Exact"|"Proven"|"Empirical"|"Declared"`
+// (`guarantee.schema.json`).
+// Declared: renamed Exact -> Exact_kw (reserved-word collision, DN-140)
+// Declared: renamed Proven -> Proven_kw (reserved-word collision, DN-140)
+// Declared: renamed Empirical -> Empirical_kw (reserved-word collision, DN-140)
+// Declared: renamed Declared -> Declared_kw (reserved-word collision, DN-140)
+pub type GuaranteeStrength = Exact_kw | Proven_kw | Empirical_kw | Declared_kw;
+
+impl Show[GuaranteeStrength] for GuaranteeStrength {
+  fn render(x: GuaranteeStrength) => Bytes =
+    match x { Exact_kw => "Exact_kw", Proven_kw => "Proven_kw", Empirical_kw => "Empirical_kw", Declared_kw => "Declared_kw" };
+};
+
+fn eq_GuaranteeStrength(a: GuaranteeStrength, b: GuaranteeStrength) => Binary{1} =
+  match a { Exact_kw => match b { Exact_kw => 0b1, _ => 0b0 }, Proven_kw => match b { Proven_kw => 0b1, _ => 0b0 }, Empirical_kw => match b { Empirical_kw => 0b1, _ => 0b0 }, Declared_kw => match b { Declared_kw => 0b1, _ => 0b0 } };
+
+impl GuaranteeStrength {
+  // Lattice rank, `0` = strongest (`Exact`) … `3` = weakest (`Declared`). The [`meet`](Self::meet)
+  // of two strengths is the one with the larger rank (the weakest).
+  fn rank(self: GuaranteeStrength) => Binary{8} = match self { Exact_kw => 0, Proven_kw => 1, Empirical_kw => 2, Declared_kw => 3 };
+  // The lattice **meet** (greatest lower bound): the *weakest* of `self` and `other`
+  // (RFC-0001 §3.4/§4.7). Honesty is monotone-downward — a result can never be stronger than
+  // its weakest input — so composition takes the meet. The meet is the strength with the
+  // larger [`rank`](Self::rank); on a tie the operands are equal, so either is returned.
+  //
+  // Algebraically a meet-semilattice: **commutative**, **associative**, **idempotent**, with
+  // identity [`TOP`](Self::TOP) (`Exact`). These laws are verified by *exhaustion* over all
+  // 4×4(×4) tuples — the value space is finite, so this is a complete check, not sampling.
+  fn meet(self: GuaranteeStrength, other: GuaranteeStrength) => GuaranteeStrength = if gte(rank(self), rank(other)) then self else other;
+};

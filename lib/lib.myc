@@ -1,0 +1,76 @@
+// nodule: core
+// `mycelium-core` — the Core IR (M-101): `Value<Repr, Meta>`, the guarantee lattice, the bound
+// vocabulary, and the node grammar (RFC-0001 r2). The Rust types mirror the ratified
+// data-contract schemas under `docs/spec/schemas/`, and the honesty invariants (M-I1…M-I4) are
+// enforced *by construction* (see [`meta::Meta::new`]).
+//
+// Here so far: the guarantee `meet` composition + laws (M-102) and content-addressing (M-103).
+// Not yet here (own issues): (de)serialization to the schemas (M-104), the reference interpreter
+// (M-110).
+//
+// **Trusted-base discipline (ADR-014 / DN-21 §5 F-1):** zero `unsafe` — compiler-enforced.
+// @summary: best-effort transpilation via mycelium-transpile (M-873). Declared,
+// unvalidated — no Mycelium parser/typechecker confirms this output; see the
+// accompanying .gap.json for every construct this pass could not express.
+nodule core;
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.bound) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type BoundBasis = ProvenThm(Bytes) | EmpiricalFit(Binary{64}, Bytes) | UserDeclared;
+type NormKind = L1 | L2 | Linf | Rel;
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.cert_mode) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type CertMode = Fast | Balanced | Certified;
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.data) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type ContentHash = ContentHash(Bytes);
+type FieldTyRef = Repr(Repr) | Data(Bytes) | Fn(Box[FnSig]);
+type RegistryError = UnknownTypeRef(Bytes, Bytes) | FnArityMismatch(Bytes, Binary{32}, Binary{64});
+type ResolvedFieldTyRef = Repr(Repr) | Data(ContentHash) | Fn(Box[ResolvedFnSig]);
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.datum) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type CoreValue = Repr(Value) | Data(Datum);
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.guarantee) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type GuaranteeStrength = Exact_kw | Proven_kw | Empirical_kw | Declared_kw;
+
+// EXPLAIN (L2-B): resolved import(s) ContentHash already available in this file — no re-emit (G2).
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.meta) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type PackScheme = Unpacked | TwoBitPerTrit | FiveTritPerByte | I2S | Tl1 | Tl2;
+type PhysicalLayout = BinaryWords | TritPacked(PackScheme) | DenseArray | VsaStore(Bool);
+type SparsityObs = SparsityObs(Binary{64}, Float);
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.prim) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type ContentHash = ContentHash(Bytes);
+type PrimParadigm = Any | Binary_kw | Ternary_kw;
+type PrimRef = PrimRef(ContentHash);
+type WidthRel = Uniform | Collapse;
+type PrimSig = PrimSig(Vec[PrimParadigm], PrimParadigm, WidthRel);
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.recon) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type CleanupShape = Softmax | ArgMax;
+type DecodeProcedure = Cleanup | Resonator;
+type InitStrategy = UniformSuperposition | SeededGuess;
+type ReconMode = IndexedRetrieval | CompositionalReconstruction;
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.repr) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type FloatWidth = F64_kw;
+type ScalarKind = F16_kw | Bf16 | F32_kw | F64_kw;
+type SparsityClass = Dense_kw | Sparse_kw(Binary{32});
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.value) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type Trit = Neg | Zero | Pos;
+type Payload = Bits(Vec[Bool]) | Trits(Vec[Trit]) | Scalars(Vec[Float]) | Hypervector(Vec[Float]) | Float_kw(Float) | Seq_kw(Vec[Value]) | Bytes_kw(Vec[Binary{8}]);
+// EXPLAIN (DN-124): batch-resolved cross-nodule `use` of a non-type item with no extractable single-line free-fn surface — phylum mode sees the sibling export; single-file oracle (phylum-of-one) may refuse until multi-nodule co-check. Types and free-fns with extractable surface co-include instead (L2-B / G-α Rank-2). Not a silent skip (G2/VR-5).
+use core.value.CANONICAL_NAN_BITS;
+
+// Well-formedness errors for Core IR construction (RFC-0001 §4.3/§4.5 invariants).
+pub type WfError = GuaranteeBoundMismatch | MalformedBound | MalformedRepr | DimensionTooLarge(Bytes, Binary{32}, Binary{32}) | PayloadReprMismatch | MalformedReconstruction | MalformedSparsity;
+
+impl Show[WfError] for WfError {
+  fn render(x: WfError) => Bytes =
+    match x { GuaranteeBoundMismatch => "GuaranteeBoundMismatch", MalformedBound => "MalformedBound", MalformedRepr => "MalformedRepr", DimensionTooLarge(p0, p1, p2) => bytes_concat(bytes_concat(bytes_concat(bytes_concat(bytes_concat(bytes_concat("DimensionTooLarge(", render(p0)), ", "), render(width_cast(p1, 0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000))), ", "), render(width_cast(p2, 0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000))), ")"), PayloadReprMismatch => "PayloadReprMismatch", MalformedReconstruction => "MalformedReconstruction", MalformedSparsity => "MalformedSparsity" };
+};
+
+fn eq_WfError(a: WfError, b: WfError) => Binary{1} =
+  match a { GuaranteeBoundMismatch => match b { GuaranteeBoundMismatch => 0b1, _ => 0b0 }, MalformedBound => match b { MalformedBound => 0b1, _ => 0b0 }, MalformedRepr => match b { MalformedRepr => 0b1, _ => 0b0 }, DimensionTooLarge(p0, p1, p2) => match b { DimensionTooLarge(q0, q1, q2) => and(and(bytes_eq(p0, q0), eq(p1, q1)), eq(p2, q2)), _ => 0b0 }, PayloadReprMismatch => match b { PayloadReprMismatch => 0b1, _ => 0b0 }, MalformedReconstruction => match b { MalformedReconstruction => 0b1, _ => 0b0 }, MalformedSparsity => match b { MalformedSparsity => 0b1, _ => 0b0 } };

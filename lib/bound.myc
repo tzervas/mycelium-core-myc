@@ -1,0 +1,45 @@
+// nodule: core.bound
+// Bounds and their basis (RFC-0001 §4.3 r2; ADR-010; ADR-011; `bound.schema.json`).
+//
+// Per **ADR-011**, `basis` is a required companion of *every* [`Bound`], not just capacity bounds:
+// the guarantee strength derives from the basis for all bound kinds.
+//
+// The `serde` wire form is exactly `bound.schema.json` (M-104): a flat object tagged on `kind`
+// (`ErrorBound|ProbabilityBound|CrosstalkBound|CapacityBound`) carrying the payload fields and a
+// sibling `basis` (itself tagged on `kind`: `ProvenThm|EmpiricalFit|UserDeclared`). A `null`/absent
+// `tail` on a `CrosstalkBound` is simply omitted.
+// @summary: best-effort transpilation via mycelium-transpile (M-873). Declared,
+// unvalidated — no Mycelium parser/typechecker confirms this output; see the
+// accompanying .gap.json for every construct this pass could not express.
+nodule core.bound;
+
+// How a bound was obtained — this determines the honest [`crate::GuaranteeStrength`].
+pub type BoundBasis = ProvenThm(Bytes) | EmpiricalFit(Binary{64}, Bytes) | UserDeclared;
+
+impl Show[BoundBasis] for BoundBasis {
+  fn render(x: BoundBasis) => Bytes =
+    match x { ProvenThm(p0) => bytes_concat(bytes_concat("ProvenThm(", render(p0)), ")"), EmpiricalFit(p0, p1) => bytes_concat(bytes_concat(bytes_concat(bytes_concat("EmpiricalFit(", render(p0)), ", "), render(p1)), ")"), UserDeclared => "UserDeclared" };
+};
+
+fn eq_BoundBasis(a: BoundBasis, b: BoundBasis) => Binary{1} =
+  match a { ProvenThm(p0) => match b { ProvenThm(q0) => bytes_eq(p0, q0), _ => 0b0 }, EmpiricalFit(p0, p1) => match b { EmpiricalFit(q0, q1) => and(eq(p0, q0), bytes_eq(p1, q1)), _ => 0b0 }, UserDeclared => match b { UserDeclared => 0b1, _ => 0b0 } };
+
+impl BoundBasis {
+  // The honest [`GuaranteeStrength`] this basis implies (M-I2/M-I3/M-I4): the basis *is* the
+  // evidence class. This is the core-local equivalent of `mycelium_numerics::basis_strength`,
+  // available to kernel code (e.g. [`crate::recon`]) that must rank a basis against the lattice
+  // without depending on a downstream crate. Expressing rules via the lattice rank (rather than a
+  // `matches!` on a specific variant) keeps them correct if a new, stronger basis is ever added.
+  fn strength(self: BoundBasis) => GuaranteeStrength = match self { ProvenThm(_) => Proven_kw, EmpiricalFit(_, _) => Empirical_kw, UserDeclared => Declared_kw };
+};
+
+// Norm in which an [`BoundKind::Error`] `eps` is expressed (extensible registry; RFC-0001 §4.3 r2).
+pub type NormKind = L1 | L2 | Linf | Rel;
+
+impl Show[NormKind] for NormKind {
+  fn render(x: NormKind) => Bytes =
+    match x { L1 => "L1", L2 => "L2", Linf => "Linf", Rel => "Rel" };
+};
+
+fn eq_NormKind(a: NormKind, b: NormKind) => Binary{1} =
+  match a { L1 => match b { L1 => 0b1, _ => 0b0 }, L2 => match b { L2 => 0b1, _ => 0b0 }, Linf => match b { Linf => 0b1, _ => 0b0 }, Rel => match b { Rel => 0b1, _ => 0b0 } };

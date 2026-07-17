@@ -1,0 +1,213 @@
+{
+  "source": "/root/git/isolated/mycelium/crates/mycelium-core/src/datum.rs",
+  "emitted_items": [
+    "co-emit:Option",
+    "co-include:GuaranteeStrength",
+    "co-include:ContentHash",
+    "CoreValue",
+    "impl CoreValue"
+  ],
+  "gaps": [
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/datum.rs",
+      "line": 20,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "use crate :: content :: Canon ;",
+      "reason": "`use content::Canon` — `Canon` is not among sibling `content`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": null
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/datum.rs",
+      "line": 21,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "use crate :: data :: CtorRef ;",
+      "reason": "`use data::CtorRef` — `CtorRef` is not among sibling `data`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": null
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/datum.rs",
+      "line": 24,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "use crate :: value :: Value ;",
+      "reason": "`use value::Value` — `Value` is not among sibling `value`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": null
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/datum.rs",
+      "line": 26,
+      "col": 1,
+      "category": "Struct",
+      "rust_construct": "Struct",
+      "snippet": "# [doc = \" A constructed data value: a saturated constructor application (RFC-0011 §4.1, W6) with a\"] # [doc = \" meet-summary guarantee.\"] # [doc = \"\"] # [doc = \" **Recursion-safety (RFC-0041 §4.5, W3):** [`Clone`], [`PartialEq`], and [`Drop`] are **manual,\"] # [doc = \" iterative** (below), *not* `#[derive]`d, and the content hash ([`Canon::datum`]) is iterative —\"] # [doc = \" a derived (recursive) form overflows the native stack (`SIGABRT`, violating never-silent G2) on a\"] # [doc = \" deeply-nested `Datum`↔[`CoreValue`] chain (e.g. a `S(S(S(…Z)))` numeral). All four are\"] # [doc = \" bit-identical to the derived forms (mutation-witnessed; §6 within-freeze hardening bar (a)).\"] # [derive (Debug)] pub struct Datum { ctor : CtorRef , fields : Vec < CoreValue > , guarantee : GuaranteeStrength , }",
+      "reason": "struct `Datum` uses named fields and references a type not resolvable in-file — emitting it positionally would introduce an unresolved reference that poisons the file's `myc check`; left gapped under the M-1006 resolvability gate (VR-5/G2)",
+      "item_name": "Datum"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/datum.rs",
+      "line": 41,
+      "col": 1,
+      "category": "Impl",
+      "rust_construct": "Impl",
+      "snippet": "impl Datum { # [doc = \" Construct a datum from a constructor reference and its field values, computing the\"] # [doc = \" meet-summary guarantee = `meet` of the fields' guarantees with the intrinsic `Exact`\"] # [doc = \" (construction adds no approximation — RFC-0011 §4.6). With all-`Exact` fields the summary is\"] # [doc = \" `Exact`, consistent with M-I1 (no bound).\"] # [must_use] pub fn new (ctor : CtorRef , fields : Vec < CoreValue >) -> Self { let guarantee = GuaranteeStrength :: meet_all (fields . iter () . map (CoreValue :: guarantee)) ; Datum { ctor , fields , guarantee , } } # [doc = \" The constructor reference (`#T#i`).\"] # [must_use] pub fn ctor (& self) -> & CtorRef { & self . ctor } # [doc = \" The field values, in declaration order.\"] # [must_use] pub fn fields (& self) -> & [CoreValue] { & self . fields } # [doc = \" The meet-summary guarantee.\"] # [must_use] pub fn guarantee (& self) -> GuaranteeStrength { self . guarantee } # [doc = \" This datum with its summary guarantee met against `g` (weakest-wins). Used by `Match` to\"] # [doc = \" fold the scrutinee's guarantee into a data result (RFC-0011 §4.6); never upgrades (VR-5).\"] # [must_use] pub fn meet_guarantee (mut self , g : GuaranteeStrength) -> Self { self . guarantee = self . guarantee . meet (g) ; self } # [doc = \" The identity-bearing content hash of this datum: its constructor reference and its fields'\"] # [doc = \" content (the guarantee summary is dynamic metadata — excluded, like `Meta` on a [`Value`];\"] # [doc = \" RFC-0001 §4.6).\"] # [must_use] pub fn content_hash (& self) -> ContentHash { let mut c = Canon :: new () ; c . datum (self) ; c . finish () } }",
+      "reason": "no member of this impl block could be transpiled (6 sub-issue(s)): impl method `new` body: qualified/associated-function call `GuaranteeStrength :: meet_all` did not resolve to a known-emitted associated fn — Mycelium calls are bare identifiers, and the only sound surface form for `Type::method(...)` is the mangled `Type__method` name the declaration side already emits for a receiver-less inherent-impl associated fn (DN-34 §8.13/8.14), referenced only when that exact declaration is PROVEN present (same-file, or a resolved M-1084 cross-nodule sibling). A primitive/std associated fn with no emitted decl (e.g. `i128::try_from`), an unresolved type, or a `self`-receiving method (excluded by construction — it stays reachable only from its own bare call site) all gap here rather than fabricate a call (G2/VR-5, DN-133); impl method `ctor` body: field projection `self.ctor` on `Datum` — not an in-file single-ctor struct that emits (an enum / external / non-resolvable type has no constructor to `match` against); impl method `fields` body: field projection `self.fields` on `Datum` — not an in-file single-ctor struct that emits (an enum / external / non-resolvable type has no constructor to `match` against); impl method `guarantee` body: field projection `self.guarantee` on `Datum` — not an in-file single-ctor struct that emits (an enum / external / non-resolvable type has no constructor to `match` against); impl method `meet_guarantee` body: function body has a semicolon-terminated (value-discarding) statement expression before the tail — a `let`-chain body maps only simple `let x = e;` bindings plus a single trailing expression; impl method `content_hash` body: qualified/associated-function call `Canon :: new` did not resolve to a known-emitted associated fn — Mycelium calls are bare identifiers, and the only sound surface form for `Type::method(...)` is the mangled `Type__method` name the declaration side already emits for a receiver-less inherent-impl associated fn (DN-34 §8.13/8.14), referenced only when that exact declaration is PROVEN present (same-file, or a resolved M-1084 cross-nodule sibling). A primitive/std associated fn with no emitted decl (e.g. `i128::try_from`), an unresolved type, or a `self`-receiving method (excluded by construction — it stays reachable only from its own bare call site) all gap here rather than fabricate a call (G2/VR-5, DN-133)",
+      "item_name": "Datum"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/datum.rs",
+      "line": 108,
+      "col": 1,
+      "category": "DeriveAttr",
+      "rust_construct": "DeriveAttr",
+      "snippet": "impl CoreValue { # [doc = \" The underlying representation value, if this is a [`CoreValue::Repr`].\"] # [must_use] pub fn as_repr (& self) -> Option < & Value > { match self { CoreValue :: Repr (v) => Some (v) , CoreValue :: Data (_) => None , } } # [doc = \" The underlying datum, if this is a [`CoreValue::Data`].\"] # [must_use] pub fn as_data (& self) -> Option < & Datum > { match self { CoreValue :: Data (d) => Some (d) , CoreValue :: Repr (_) => None , } } # [doc = \" This value's guarantee: a representation value's own `Meta.guarantee`, or a datum's\"] # [doc = \" meet-summary. The single honesty accessor the `Construct`/`Match` meet rules fold over.\"] # [must_use] pub fn guarantee (& self) -> GuaranteeStrength { match self { CoreValue :: Repr (v) => v . meta () . guarantee () , CoreValue :: Data (d) => d . guarantee () , } } # [doc = \" The identity-bearing content hash (RFC-0001 §4.6): a representation value's repr+payload, or\"] # [doc = \" a datum's constructor+fields.\"] # [must_use] pub fn content_hash (& self) -> ContentHash { let mut c = Canon :: new () ; c . core_value (self) ; c . finish () } }",
+      "reason": "dropped non-doc attribute(s) on method `as_repr`: # [must_use]",
+      "item_name": "impl CoreValue"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/datum.rs",
+      "line": 108,
+      "col": 1,
+      "category": "DeriveAttr",
+      "rust_construct": "DeriveAttr",
+      "snippet": "impl CoreValue { # [doc = \" The underlying representation value, if this is a [`CoreValue::Repr`].\"] # [must_use] pub fn as_repr (& self) -> Option < & Value > { match self { CoreValue :: Repr (v) => Some (v) , CoreValue :: Data (_) => None , } } # [doc = \" The underlying datum, if this is a [`CoreValue::Data`].\"] # [must_use] pub fn as_data (& self) -> Option < & Datum > { match self { CoreValue :: Data (d) => Some (d) , CoreValue :: Repr (_) => None , } } # [doc = \" This value's guarantee: a representation value's own `Meta.guarantee`, or a datum's\"] # [doc = \" meet-summary. The single honesty accessor the `Construct`/`Match` meet rules fold over.\"] # [must_use] pub fn guarantee (& self) -> GuaranteeStrength { match self { CoreValue :: Repr (v) => v . meta () . guarantee () , CoreValue :: Data (d) => d . guarantee () , } } # [doc = \" The identity-bearing content hash (RFC-0001 §4.6): a representation value's repr+payload, or\"] # [doc = \" a datum's constructor+fields.\"] # [must_use] pub fn content_hash (& self) -> ContentHash { let mut c = Canon :: new () ; c . core_value (self) ; c . finish () } }",
+      "reason": "dropped non-doc attribute(s) on method `as_data`: # [must_use]",
+      "item_name": "impl CoreValue"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/datum.rs",
+      "line": 108,
+      "col": 1,
+      "category": "Other",
+      "rust_construct": "Other",
+      "snippet": "impl CoreValue { # [doc = \" The underlying representation value, if this is a [`CoreValue::Repr`].\"] # [must_use] pub fn as_repr (& self) -> Option < & Value > { match self { CoreValue :: Repr (v) => Some (v) , CoreValue :: Data (_) => None , } } # [doc = \" The underlying datum, if this is a [`CoreValue::Data`].\"] # [must_use] pub fn as_data (& self) -> Option < & Datum > { match self { CoreValue :: Data (d) => Some (d) , CoreValue :: Repr (_) => None , } } # [doc = \" This value's guarantee: a representation value's own `Meta.guarantee`, or a datum's\"] # [doc = \" meet-summary. The single honesty accessor the `Construct`/`Match` meet rules fold over.\"] # [must_use] pub fn guarantee (& self) -> GuaranteeStrength { match self { CoreValue :: Repr (v) => v . meta () . guarantee () , CoreValue :: Data (d) => d . guarantee () , } } # [doc = \" The identity-bearing content hash (RFC-0001 §4.6): a representation value's repr+payload, or\"] # [doc = \" a datum's constructor+fields.\"] # [must_use] pub fn content_hash (& self) -> ContentHash { let mut c = Canon :: new () ; c . core_value (self) ; c . finish () } }",
+      "reason": "impl method `guarantee` body: method call `.guarantee(...)` has no proven-emitted free-fn referent in this file (neither a D4-mangled inherent `Type__guarantee` nor a bare inherent recorded by this file's left-to-right pass, nor a prim_map / combinator row). Emitting bare `guarantee(recv, …)` would fabricate an unknown prim and file-poison myc-check (G-β Rank A / G2/VR-5; residual when the method body itself gapped — e.g. M-1037 `.to_vec()` inside `read_to_end` — so the declaration was never registered)",
+      "item_name": "impl CoreValue"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/datum.rs",
+      "line": 108,
+      "col": 1,
+      "category": "Other",
+      "rust_construct": "Other",
+      "snippet": "impl CoreValue { # [doc = \" The underlying representation value, if this is a [`CoreValue::Repr`].\"] # [must_use] pub fn as_repr (& self) -> Option < & Value > { match self { CoreValue :: Repr (v) => Some (v) , CoreValue :: Data (_) => None , } } # [doc = \" The underlying datum, if this is a [`CoreValue::Data`].\"] # [must_use] pub fn as_data (& self) -> Option < & Datum > { match self { CoreValue :: Data (d) => Some (d) , CoreValue :: Repr (_) => None , } } # [doc = \" This value's guarantee: a representation value's own `Meta.guarantee`, or a datum's\"] # [doc = \" meet-summary. The single honesty accessor the `Construct`/`Match` meet rules fold over.\"] # [must_use] pub fn guarantee (& self) -> GuaranteeStrength { match self { CoreValue :: Repr (v) => v . meta () . guarantee () , CoreValue :: Data (d) => d . guarantee () , } } # [doc = \" The identity-bearing content hash (RFC-0001 §4.6): a representation value's repr+payload, or\"] # [doc = \" a datum's constructor+fields.\"] # [must_use] pub fn content_hash (& self) -> ContentHash { let mut c = Canon :: new () ; c . core_value (self) ; c . finish () } }",
+      "reason": "impl method `content_hash` body: qualified/associated-function call `Canon :: new` did not resolve to a known-emitted associated fn — Mycelium calls are bare identifiers, and the only sound surface form for `Type::method(...)` is the mangled `Type__method` name the declaration side already emits for a receiver-less inherent-impl associated fn (DN-34 §8.13/8.14), referenced only when that exact declaration is PROVEN present (same-file, or a resolved M-1084 cross-nodule sibling). A primitive/std associated fn with no emitted decl (e.g. `i128::try_from`), an unresolved type, or a `self`-receiving method (excluded by construction — it stays reachable only from its own bare call site) all gap here rather than fabricate a call (G2/VR-5, DN-133)",
+      "item_name": "impl CoreValue"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/datum.rs",
+      "line": 150,
+      "col": 1,
+      "category": "Impl",
+      "rust_construct": "Impl",
+      "snippet": "impl From < Value > for CoreValue { fn from (v : Value) -> Self { CoreValue :: Repr (v) } }",
+      "reason": "trait-impl of non-prelude trait `From` — no ambient trait definition and synthetic trait emission is refused (DN-34 §8.8 / DN-122 MVP); gapped the whole impl so the residual cannot file-poison myc-check (G2; express gap-close 2026-07-16)",
+      "item_name": "CoreValue"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/datum.rs",
+      "line": 156,
+      "col": 1,
+      "category": "Impl",
+      "rust_construct": "Impl",
+      "snippet": "impl From < Datum > for CoreValue { fn from (d : Datum) -> Self { CoreValue :: Data (d) } }",
+      "reason": "trait-impl of non-prelude trait `From` — no ambient trait definition and synthetic trait emission is refused (DN-34 §8.8 / DN-122 MVP); gapped the whole impl so the residual cannot file-poison myc-check (G2; express gap-close 2026-07-16)",
+      "item_name": "CoreValue"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/datum.rs",
+      "line": 171,
+      "col": 1,
+      "category": "MultiStmtBody",
+      "rust_construct": "MultiStmtBody",
+      "snippet": "# [doc = \" Iterative deep clone of a [`CoreValue`] and the `Datum`s it contains, bit-identical to the\"] # [doc = \" derived clone (the stored datum `guarantee` summary is preserved verbatim — **not** recomputed\"] # [doc = \" via [`Datum::new`], which `meet`s and could differ). Expand/assemble worklist over a `CoreValue`\"] # [doc = \" value stack (`done.pop()` yields fields in forward declaration order).\"] fn clone_core (root : & CoreValue) -> CoreValue { enum Task < 'a > { Expand (& 'a CoreValue) , AssembleData { ctor : CtorRef , guarantee : GuaranteeStrength , arity : usize , } , } let mut tasks : Vec < Task < '_ > > = vec ! [Task :: Expand (root)] ; let mut done : Vec < CoreValue > = Vec :: new () ; while let Some (task) = tasks . pop () { match task { Task :: Expand (cv) => match cv { CoreValue :: Repr (v) => done . push (CoreValue :: Repr (v . clone ())) , CoreValue :: Data (d) => { tasks . push (Task :: AssembleData { ctor : d . ctor . clone () , guarantee : d . guarantee , arity : d . fields . len () , }) ; for f in & d . fields { tasks . push (Task :: Expand (f)) ; } } } , Task :: AssembleData { ctor , guarantee , arity , } => { let mut fields = Vec :: with_capacity (arity) ; for _ in 0 .. arity { fields . push (done . pop () . expect (\"clone_core: datum field\")) ; } done . push (CoreValue :: Data (Datum { ctor , fields , guarantee , })) ; } } } done . pop () . expect (\"clone_core: exactly one root value remains\") }",
+      "reason": "function body contains a nested item declaration (e.g. a local `static`/`const`/`fn`) — this grammar fragment has no local-item production; only simple `let x = e;` bindings plus a trailing expression map",
+      "item_name": "clone_core"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/datum.rs",
+      "line": 223,
+      "col": 1,
+      "category": "MultiStmtBody",
+      "rust_construct": "MultiStmtBody",
+      "snippet": "# [doc = \" Iterative structural equality of two [`CoreValue`]s (and their nested `Datum`s), result-identical\"] # [doc = \" to the derived `PartialEq` (which for a `Datum` compares `ctor`, `fields`, **and** the\"] # [doc = \" `guarantee` summary — all reproduced here). Bounded native stack regardless of nesting depth.\"] fn eq_core (a : & CoreValue , b : & CoreValue) -> bool { let mut stack : Vec < (& CoreValue , & CoreValue) > = vec ! [(a , b)] ; while let Some ((x , y)) = stack . pop () { match (x , y) { (CoreValue :: Repr (v1) , CoreValue :: Repr (v2)) => { if v1 != v2 { return false ; } } (CoreValue :: Data (d1) , CoreValue :: Data (d2)) => { if d1 . ctor != d2 . ctor || d1 . guarantee != d2 . guarantee || d1 . fields . len () != d2 . fields . len () { return false ; } for (p , q) in d1 . fields . iter () . zip (& d2 . fields) { stack . push ((p , q)) ; } } _ => return false , } } true }",
+      "reason": "`let` binding uses an unsupported pattern (only simple `let x = e;` is supported)",
+      "item_name": "eq_core"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/datum.rs",
+      "line": 252,
+      "col": 1,
+      "category": "Impl",
+      "rust_construct": "Impl",
+      "snippet": "impl Clone for Datum { fn clone (& self) -> Datum { let fields = self . fields . iter () . map (clone_core) . collect () ; Datum { ctor : self . ctor . clone () , fields , guarantee : self . guarantee , } } }",
+      "reason": "trait-impl of non-prelude trait `Clone` — no ambient trait definition and synthetic trait emission is refused (DN-34 §8.8 / DN-122 MVP); gapped the whole impl so the residual cannot file-poison myc-check (G2; express gap-close 2026-07-16)",
+      "item_name": "Datum"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/datum.rs",
+      "line": 265,
+      "col": 1,
+      "category": "Impl",
+      "rust_construct": "Impl",
+      "snippet": "impl Clone for CoreValue { fn clone (& self) -> CoreValue { clone_core (self) } }",
+      "reason": "trait-impl of non-prelude trait `Clone` — no ambient trait definition and synthetic trait emission is refused (DN-34 §8.8 / DN-122 MVP); gapped the whole impl so the residual cannot file-poison myc-check (G2; express gap-close 2026-07-16)",
+      "item_name": "CoreValue"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/datum.rs",
+      "line": 271,
+      "col": 1,
+      "category": "Impl",
+      "rust_construct": "Impl",
+      "snippet": "impl PartialEq for Datum { fn eq (& self , other : & Datum) -> bool { self . ctor == other . ctor && self . guarantee == other . guarantee && self . fields . len () == other . fields . len () && self . fields . iter () . zip (& other . fields) . all (| (a , b) | eq_core (a , b)) } }",
+      "reason": "trait-impl of non-prelude trait `PartialEq` — no ambient trait definition and synthetic trait emission is refused (DN-34 §8.8 / DN-122 MVP); gapped the whole impl so the residual cannot file-poison myc-check (G2; express gap-close 2026-07-16)",
+      "item_name": "Datum"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/datum.rs",
+      "line": 284,
+      "col": 1,
+      "category": "Impl",
+      "rust_construct": "Impl",
+      "snippet": "impl PartialEq for CoreValue { fn eq (& self , other : & CoreValue) -> bool { eq_core (self , other) } }",
+      "reason": "trait-impl of non-prelude trait `PartialEq` — no ambient trait definition and synthetic trait emission is refused (DN-34 §8.8 / DN-122 MVP); gapped the whole impl so the residual cannot file-poison myc-check (G2; express gap-close 2026-07-16)",
+      "item_name": "CoreValue"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/datum.rs",
+      "line": 290,
+      "col": 1,
+      "category": "Impl",
+      "rust_construct": "Impl",
+      "snippet": "impl Drop for Datum { fn drop (& mut self) { let mut work : Vec < CoreValue > = std :: mem :: take (& mut self . fields) ; while let Some (cv) = work . pop () { if let CoreValue :: Data (mut d) = cv { work . extend (std :: mem :: take (& mut d . fields)) ; } } } }",
+      "reason": "trait-impl of non-prelude trait `Drop` — no ambient trait definition and synthetic trait emission is refused (DN-34 §8.8 / DN-122 MVP); gapped the whole impl so the residual cannot file-poison myc-check (G2; express gap-close 2026-07-16)",
+      "item_name": "Datum"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/datum.rs",
+      "line": 311,
+      "col": 1,
+      "category": "Impl",
+      "rust_construct": "Impl",
+      "snippet": "impl Canon { # [doc = \" Encode a [`CoreValue`]'s identity-bearing content (a representation value's repr+payload, or\"] # [doc = \" a datum's constructor+fields). `Meta` / the datum summary are dynamic and excluded.\"] # [doc = \" Iterative for the `Data` arm (delegates to the iterative [`Canon::datum`]).\"] pub (crate) fn core_value (& mut self , v : & CoreValue) { match v { CoreValue :: Repr (rv) => self . value (rv) , CoreValue :: Data (d) => self . datum (d) , } } # [doc = \" Encode a [`Datum`]: its constructor reference then each field (order significant), **pre-order\"] # [doc = \" and iterative** (RFC-0041 §4.5) — byte-for-byte identical to the former recursive encoding, so\"] # [doc = \" content addresses are unchanged, but with bounded native-stack use on a deep datum spine.\"] pub (crate) fn datum (& mut self , d : & Datum) { self . datum_header (d) ; let mut work : Vec < & CoreValue > = Vec :: new () ; for f in d . fields () . iter () . rev () { work . push (f) ; } while let Some (cv) = work . pop () { match cv { CoreValue :: Repr (rv) => self . value (rv) , CoreValue :: Data (inner) => { self . datum_header (inner) ; for f in inner . fields () . iter () . rev () { work . push (f) ; } } } } } # [doc = \" Emit one datum's header bytes (tag · ctor-ref · field count) — the per-node prefix the\"] # [doc = \" recursive `datum` encoder wrote before recursing into fields.\"] fn datum_header (& mut self , d : & Datum) { self . tag (crate :: content :: tag :: DATUM) ; self . ctor_ref (d . ctor ()) ; self . u64 (d . fields () . len () as u64) ; } }",
+      "reason": "no member of this impl block could be transpiled (3 sub-issue(s)): impl method `core_value` body: mutating method's tail expression is neither a threaded-binding field/whole-value re-assignment nor (with the method's original return type already `()`/self-chain, and either multiple threaded bindings or one already assigned) an extra value — value-threading only supports a flat sequence of `self.<field> = ..`/`*<param> = ..` re-assignments plus, when the source return type is non-unit, one trailing value expression (DN-125 §5, conservative scope per §6.1); impl method `datum` body: mutating method body statement is neither a `let`, a supported `self.<field>`/`*<param>` re-assignment, nor (in tail position) the method's own return value — value-threading deliberately refuses any shape outside a flat re-assignment sequence rather than risk an unsound rebind (DN-125 §6.1, never-silent G2/VR-5); impl method `datum_header` body: mutating method body statement is neither a `let`, a supported `self.<field>`/`*<param>` re-assignment, nor (in tail position) the method's own return value — value-threading deliberately refuses any shape outside a flat re-assignment sequence rather than risk an unsound rebind (DN-125 §6.1, never-silent G2/VR-5)",
+      "item_name": "Canon"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/datum.rs",
+      "line": 355,
+      "col": 1,
+      "category": "TestItem",
+      "rust_construct": "TestItem",
+      "snippet": "# [cfg (test)] mod tests { use super :: * ; use crate :: data :: { CtorSpec , DataRegistry , DeclSpec , FieldSpec } ; use crate :: meta :: { Meta , Provenance } ; use crate :: repr :: Repr ; use crate :: value :: Payload ; use std :: collections :: BTreeMap ; fn nat_registry () -> DataRegistry { let mut m = BTreeMap :: new () ; m . insert (\"Nat\" . to_owned () , DeclSpec { ctors : vec ! [CtorSpec { fields : vec ! [] } , CtorSpec { fields : vec ! [FieldSpec :: Data (\"Nat\" . to_owned ())] , } ,] , } ,) ; DataRegistry :: build (& m) . unwrap () } fn byte (g : GuaranteeStrength) -> Value { let meta = match g { GuaranteeStrength :: Exact => Meta :: exact (Provenance :: Root) , other => Meta :: new (Provenance :: Root , other , Some (crate :: bound :: Bound { kind : crate :: bound :: BoundKind :: Error { eps : 0.1 , norm : crate :: bound :: NormKind :: Linf , } , basis : match other { GuaranteeStrength :: Proven => crate :: bound :: BoundBasis :: ProvenThm { citation : \"t\" . into () , } , GuaranteeStrength :: Empirical => crate :: bound :: BoundBasis :: EmpiricalFit { trials : 1 , method : \"m\" . into () , } , _ => crate :: bound :: BoundBasis :: UserDeclared , } , }) , None , None , None ,) . unwrap () , } ; Value :: new (Repr :: Binary { width : 8 } , Payload :: Bits (vec ! [false ; 8]) , meta ,) . unwrap () } # [test] fn nullary_datum_is_exact () { let reg = nat_registry () ; let z = Datum :: new (reg . ctor_ref (\"Nat\" , 0) . unwrap () , vec ! []) ; assert_eq ! (z . guarantee () , GuaranteeStrength :: Exact) ; } # [test] fn construct_summary_is_the_meet_of_fields () { let reg = nat_registry () ; let s = Datum :: new (reg . ctor_ref (\"Nat\" , 1) . unwrap () , vec ! [CoreValue :: Repr (byte (GuaranteeStrength :: Empirical))] ,) ; assert_eq ! (s . guarantee () , GuaranteeStrength :: Empirical) ; let s2 = Datum :: new (reg . ctor_ref (\"Nat\" , 1) . unwrap () , vec ! [CoreValue :: Repr (byte (GuaranteeStrength :: Exact))] ,) ; assert_eq ! (s2 . guarantee () , GuaranteeStrength :: Exact) ; } # [test] fn meet_guarantee_only_degrades () { let reg = nat_registry () ; let z = Datum :: new (reg . ctor_ref (\"Nat\" , 0) . unwrap () , vec ! []) ; assert_eq ! (z . clone () . meet_guarantee (GuaranteeStrength :: Exact) . guarantee () , GuaranteeStrength :: Exact) ; assert_eq ! (z . meet_guarantee (GuaranteeStrength :: Declared) . guarantee () , GuaranteeStrength :: Declared) ; } # [test] fn content_hash_excludes_the_summary_but_not_the_fields () { let reg = nat_registry () ; let z = | | Datum :: new (reg . ctor_ref (\"Nat\" , 0) . unwrap () , vec ! []) ; let a = Datum :: new (reg . ctor_ref (\"Nat\" , 1) . unwrap () , vec ! [CoreValue :: Data (z ())]) ; let b = Datum :: new (reg . ctor_ref (\"Nat\" , 1) . unwrap () , vec ! [CoreValue :: Data (z ())]) ; assert_eq ! (a . content_hash () , b . content_hash ()) ; assert_ne ! (z () . content_hash () , a . content_hash ()) ; } # [test] fn fields_accessor_returns_actual_fields () { let reg = nat_registry () ; let z = Datum :: new (reg . ctor_ref (\"Nat\" , 0) . unwrap () , vec ! []) ; assert_eq ! (z . fields () . len () , 0) ; let s = Datum :: new (reg . ctor_ref (\"Nat\" , 1) . unwrap () , vec ! [CoreValue :: Data (Datum :: new (reg . ctor_ref (\"Nat\" , 0) . unwrap () , vec ! [] ,))] ,) ; assert_eq ! (s . fields () . len () , 1) ; assert ! (s . fields () [0] . as_data () . is_some ()) ; assert ! (s . fields () [0] . as_repr () . is_none ()) ; } # [test] fn core_value_as_repr_and_as_data_are_discriminated () { let reg = nat_registry () ; let v = byte (GuaranteeStrength :: Exact) ; let repr_val = CoreValue :: Repr (v . clone ()) ; assert ! (repr_val . as_repr () . is_some ()) ; assert ! (repr_val . as_data () . is_none ()) ; assert_eq ! (repr_val . as_repr () . unwrap () , & v) ; let datum = Datum :: new (reg . ctor_ref (\"Nat\" , 0) . unwrap () , vec ! []) ; let data_val = CoreValue :: Data (datum . clone ()) ; assert ! (data_val . as_data () . is_some ()) ; assert ! (data_val . as_repr () . is_none ()) ; assert_eq ! (data_val . as_data () . unwrap () , & datum) ; } # [test] fn datum_hash_depends_on_field_content_not_just_ctor () { let reg = nat_registry () ; let s_zero = Datum :: new (reg . ctor_ref (\"Nat\" , 1) . unwrap () , vec ! [CoreValue :: Repr (Value :: new (Repr :: Binary { width : 8 } , Payload :: Bits (vec ! [false ; 8]) , Meta :: exact (Provenance :: Root) ,) . unwrap () ,)] ,) ; let s_ones = Datum :: new (reg . ctor_ref (\"Nat\" , 1) . unwrap () , vec ! [CoreValue :: Repr (Value :: new (Repr :: Binary { width : 8 } , Payload :: Bits (vec ! [true ; 8]) , Meta :: exact (Provenance :: Root) ,) . unwrap () ,)] ,) ; assert_ne ! (s_zero . content_hash () , s_ones . content_hash () , \"datums with same ctor but different field values must have different hashes\") ; } # [test] fn core_value_content_hash_depends_on_content () { let v1 = CoreValue :: Repr (Value :: new (Repr :: Binary { width : 8 } , Payload :: Bits (vec ! [false ; 8]) , Meta :: exact (Provenance :: Root) ,) . unwrap () ,) ; let v2 = CoreValue :: Repr (Value :: new (Repr :: Binary { width : 8 } , Payload :: Bits (vec ! [true ; 8]) , Meta :: exact (Provenance :: Root) ,) . unwrap () ,) ; assert_ne ! (v1 . content_hash () , v2 . content_hash ()) ; let reg = nat_registry () ; let d = CoreValue :: Data (Datum :: new (reg . ctor_ref (\"Nat\" , 0) . unwrap () , vec ! [])) ; assert_ne ! (v1 . content_hash () , d . content_hash ()) ; } }",
+      "reason": "#[cfg(test)] item — out of scope for this PoC's transpilation surface (excluded from the expressible-fraction denominator, but recorded, never silently skipped)",
+      "item_name": "tests"
+    }
+  ],
+  "total_top_level_items": 20
+}

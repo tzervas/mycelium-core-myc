@@ -1,0 +1,171 @@
+{
+  "source": "/root/git/isolated/mycelium/crates/mycelium-core/src/bound.rs",
+  "emitted_items": [
+    "BoundBasis",
+    "impl BoundBasis",
+    "NormKind"
+  ],
+  "gaps": [
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/bound.rs",
+      "line": 11,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "use serde :: { Deserialize , Serialize } ;",
+      "reason": "`use serde::Deserialize` — `serde` is not a sibling module OR sibling phylum transpiled in this same batch (an external crate, `std`, or simply out of this batch's target set). Flagged, not guessed (VR-5/G2); `use serde::Serialize` — `serde` is not a sibling module OR sibling phylum transpiled in this same batch (an external crate, `std`, or simply out of this batch's target set). Flagged, not guessed (VR-5/G2)",
+      "item_name": null
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/bound.rs",
+      "line": 13,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "use crate :: GuaranteeStrength ;",
+      "reason": "`use ::GuaranteeStrength` — `GuaranteeStrength` is not among sibling ``'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": null
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/bound.rs",
+      "line": 15,
+      "col": 1,
+      "category": "DeriveAttr",
+      "rust_construct": "DeriveAttr",
+      "snippet": "# [doc = \" How a bound was obtained — this determines the honest [`crate::GuaranteeStrength`].\"] # [derive (Debug , Clone , PartialEq , Serialize , Deserialize)] # [serde (tag = \"kind\")] pub enum BoundBasis { # [doc = \" A cited theorem whose side-conditions are checked (e.g. \\\"Clarkson-Ubaru-Yang 2023\\\").\"] ProvenThm { # [doc = \" The citation.\"] citation : String , } , # [doc = \" An empirical fit over `trials` (e.g. method \\\"Frady-Sommer Gaussian\\\").\"] EmpiricalFit { # [doc = \" Number of trials.\"] trials : u64 , # [doc = \" Fitting method.\"] method : String , } , # [doc = \" A user assertion, not yet validated. Tooling must surface a \\\"declared, unverified\\\" marker.\"] UserDeclared , }",
+      "reason": "dropped non-doc non-derive attribute(s) on enum `BoundBasis`: # [serde (tag = \"kind\")]",
+      "item_name": "BoundBasis"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/bound.rs",
+      "line": 15,
+      "col": 1,
+      "category": "NamedFieldDrop",
+      "rust_construct": "NamedFieldDrop",
+      "snippet": "# [doc = \" How a bound was obtained — this determines the honest [`crate::GuaranteeStrength`].\"] # [derive (Debug , Clone , PartialEq , Serialize , Deserialize)] # [serde (tag = \"kind\")] pub enum BoundBasis { # [doc = \" A cited theorem whose side-conditions are checked (e.g. \\\"Clarkson-Ubaru-Yang 2023\\\").\"] ProvenThm { # [doc = \" The citation.\"] citation : String , } , # [doc = \" An empirical fit over `trials` (e.g. method \\\"Frady-Sommer Gaussian\\\").\"] EmpiricalFit { # [doc = \" Number of trials.\"] trials : u64 , # [doc = \" Fitting method.\"] method : String , } , # [doc = \" A user assertion, not yet validated. Tooling must surface a \\\"declared, unverified\\\" marker.\"] UserDeclared , }",
+      "reason": "enum `BoundBasis` variant `ProvenThm` named field(s) `citation` emitted positionally as `ProvenThm(Bytes)` — Mycelium's `constructor` is positional-only (no record surface); product structure preserved, field names dropped",
+      "item_name": "BoundBasis"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/bound.rs",
+      "line": 15,
+      "col": 1,
+      "category": "NamedFieldDrop",
+      "rust_construct": "NamedFieldDrop",
+      "snippet": "# [doc = \" How a bound was obtained — this determines the honest [`crate::GuaranteeStrength`].\"] # [derive (Debug , Clone , PartialEq , Serialize , Deserialize)] # [serde (tag = \"kind\")] pub enum BoundBasis { # [doc = \" A cited theorem whose side-conditions are checked (e.g. \\\"Clarkson-Ubaru-Yang 2023\\\").\"] ProvenThm { # [doc = \" The citation.\"] citation : String , } , # [doc = \" An empirical fit over `trials` (e.g. method \\\"Frady-Sommer Gaussian\\\").\"] EmpiricalFit { # [doc = \" Number of trials.\"] trials : u64 , # [doc = \" Fitting method.\"] method : String , } , # [doc = \" A user assertion, not yet validated. Tooling must surface a \\\"declared, unverified\\\" marker.\"] UserDeclared , }",
+      "reason": "enum `BoundBasis` variant `EmpiricalFit` named field(s) `trials, method` emitted positionally as `EmpiricalFit(Binary{64}, Bytes)` — Mycelium's `constructor` is positional-only (no record surface); product structure preserved, field names dropped",
+      "item_name": "BoundBasis"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/bound.rs",
+      "line": 15,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" How a bound was obtained — this determines the honest [`crate::GuaranteeStrength`].\"] # [derive (Debug , Clone , PartialEq , Serialize , Deserialize)] # [serde (tag = \"kind\")] pub enum BoundBasis { # [doc = \" A cited theorem whose side-conditions are checked (e.g. \\\"Clarkson-Ubaru-Yang 2023\\\").\"] ProvenThm { # [doc = \" The citation.\"] citation : String , } , # [doc = \" An empirical fit over `trials` (e.g. method \\\"Frady-Sommer Gaussian\\\").\"] EmpiricalFit { # [doc = \" Number of trials.\"] trials : u64 , # [doc = \" Fitting method.\"] method : String , } , # [doc = \" A user assertion, not yet validated. Tooling must surface a \\\"declared, unverified\\\" marker.\"] UserDeclared , }",
+      "reason": "enum `BoundBasis` derive(Clone) is a satisfied no-op under Mycelium's value semantics (ADR-003 — every value already copies structurally; DN-128 §6.1) — not emitted as an impl, not a gap",
+      "item_name": "BoundBasis"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/bound.rs",
+      "line": 15,
+      "col": 1,
+      "category": "DeriveAttr",
+      "rust_construct": "DeriveAttr",
+      "snippet": "# [doc = \" How a bound was obtained — this determines the honest [`crate::GuaranteeStrength`].\"] # [derive (Debug , Clone , PartialEq , Serialize , Deserialize)] # [serde (tag = \"kind\")] pub enum BoundBasis { # [doc = \" A cited theorem whose side-conditions are checked (e.g. \\\"Clarkson-Ubaru-Yang 2023\\\").\"] ProvenThm { # [doc = \" The citation.\"] citation : String , } , # [doc = \" An empirical fit over `trials` (e.g. method \\\"Frady-Sommer Gaussian\\\").\"] EmpiricalFit { # [doc = \" Number of trials.\"] trials : u64 , # [doc = \" Fitting method.\"] method : String , } , # [doc = \" A user assertion, not yet validated. Tooling must surface a \\\"declared, unverified\\\" marker.\"] UserDeclared , }",
+      "reason": "enum `BoundBasis` derive(...) names Serialize, Deserialize not in the DN-128 enum-derive set this leaf builds (Debug/PartialEq/Clone/Copy recognized; bare Eq is a satisfied co-occurrence note; Hash/PartialOrd/Ord/Default stay product-only for now) — dropped, no confirmed Mycelium surface",
+      "item_name": "BoundBasis"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/bound.rs",
+      "line": 35,
+      "col": 1,
+      "category": "DeriveAttr",
+      "rust_construct": "DeriveAttr",
+      "snippet": "impl BoundBasis { # [doc = \" The honest [`GuaranteeStrength`] this basis implies (M-I2/M-I3/M-I4): the basis *is* the\"] # [doc = \" evidence class. This is the core-local equivalent of `mycelium_numerics::basis_strength`,\"] # [doc = \" available to kernel code (e.g. [`crate::recon`]) that must rank a basis against the lattice\"] # [doc = \" without depending on a downstream crate. Expressing rules via the lattice rank (rather than a\"] # [doc = \" `matches!` on a specific variant) keeps them correct if a new, stronger basis is ever added.\"] # [must_use] pub fn strength (& self) -> GuaranteeStrength { match self { BoundBasis :: ProvenThm { .. } => GuaranteeStrength :: Proven , BoundBasis :: EmpiricalFit { .. } => GuaranteeStrength :: Empirical , BoundBasis :: UserDeclared => GuaranteeStrength :: Declared , } } }",
+      "reason": "dropped non-doc attribute(s) on method `strength`: # [must_use]",
+      "item_name": "impl BoundBasis"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/bound.rs",
+      "line": 51,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" Norm in which an [`BoundKind::Error`] `eps` is expressed (extensible registry; RFC-0001 §4.3 r2).\"] # [derive (Debug , Clone , Copy , PartialEq , Eq , Serialize , Deserialize)] pub enum NormKind { # [doc = \" ℓ¹.\"] L1 , # [doc = \" ℓ².\"] L2 , # [doc = \" ℓ∞.\"] Linf , # [doc = \" Relative error.\"] Rel , }",
+      "reason": "enum `NormKind` derive(Clone) is a satisfied no-op under Mycelium's value semantics (ADR-003 — every value already copies structurally; DN-128 §6.1) — not emitted as an impl, not a gap",
+      "item_name": "NormKind"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/bound.rs",
+      "line": 51,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" Norm in which an [`BoundKind::Error`] `eps` is expressed (extensible registry; RFC-0001 §4.3 r2).\"] # [derive (Debug , Clone , Copy , PartialEq , Eq , Serialize , Deserialize)] pub enum NormKind { # [doc = \" ℓ¹.\"] L1 , # [doc = \" ℓ².\"] L2 , # [doc = \" ℓ∞.\"] Linf , # [doc = \" Relative error.\"] Rel , }",
+      "reason": "enum `NormKind` derive(Copy) is a satisfied no-op under Mycelium's value semantics (ADR-003 — every value already copies structurally; DN-128 §6.1) — not emitted as an impl, not a gap",
+      "item_name": "NormKind"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/bound.rs",
+      "line": 51,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" Norm in which an [`BoundKind::Error`] `eps` is expressed (extensible registry; RFC-0001 §4.3 r2).\"] # [derive (Debug , Clone , Copy , PartialEq , Eq , Serialize , Deserialize)] pub enum NormKind { # [doc = \" ℓ¹.\"] L1 , # [doc = \" ℓ².\"] L2 , # [doc = \" ℓ∞.\"] Linf , # [doc = \" Relative error.\"] Rel , }",
+      "reason": "enum `NormKind` derive(Eq): covered by co-occurring PartialEq → `fn eq_NormKind` (product-row collision policy; DN-128 / ONESHOT C2) — not a second emission",
+      "item_name": "NormKind"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/bound.rs",
+      "line": 51,
+      "col": 1,
+      "category": "DeriveAttr",
+      "rust_construct": "DeriveAttr",
+      "snippet": "# [doc = \" Norm in which an [`BoundKind::Error`] `eps` is expressed (extensible registry; RFC-0001 §4.3 r2).\"] # [derive (Debug , Clone , Copy , PartialEq , Eq , Serialize , Deserialize)] pub enum NormKind { # [doc = \" ℓ¹.\"] L1 , # [doc = \" ℓ².\"] L2 , # [doc = \" ℓ∞.\"] Linf , # [doc = \" Relative error.\"] Rel , }",
+      "reason": "enum `NormKind` derive(...) names Serialize, Deserialize not in the DN-128 enum-derive set this leaf builds (Debug/PartialEq/Clone/Copy recognized; bare Eq is a satisfied co-occurrence note; Hash/PartialOrd/Ord/Default stay product-only for now) — dropped, no confirmed Mycelium surface",
+      "item_name": "NormKind"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/bound.rs",
+      "line": 64,
+      "col": 1,
+      "category": "PayloadVariant",
+      "rust_construct": "PayloadVariant",
+      "snippet": "# [doc = \" The bound payload, per kind (RFC-0001 §4.3). The `serde` tag values match `bound.schema.json`'s\"] # [doc = \" `*Bound` discriminants (Rust drops the redundant `Bound` suffix on the variant names).\"] # [derive (Debug , Clone , PartialEq , Serialize , Deserialize)] # [serde (tag = \"kind\")] pub enum BoundKind { # [doc = \" ε-magnitude bound (composes via ADR-010's affine-arithmetic kernel).\"] # [serde (rename = \"ErrorBound\")] Error { # [doc = \" Error magnitude (`>= 0`).\"] eps : f64 , # [doc = \" Norm in which `eps` is measured.\"] norm : NormKind , } , # [doc = \" Failure-probability bound (composes via the union-bound kernel).\"] # [serde (rename = \"ProbabilityBound\")] Probability { # [doc = \" Failure probability in `[0, 1]`.\"] delta : f64 , } , # [doc = \" Expected crosstalk with an optional tail.\"] # [serde (rename = \"CrosstalkBound\")] Crosstalk { # [doc = \" Expected crosstalk (`>= 0`).\"] expected : f64 , # [doc = \" Optional tail bound (omitted from the wire form when absent).\"] # [serde (default , skip_serializing_if = \"Option::is_none\")] tail : Option < f64 > , } , # [doc = \" VSA superposition capacity (`items` into `dim`).\"] # [serde (rename = \"CapacityBound\")] Capacity { # [doc = \" Number of superposed items (`>= 1`).\"] items : u64 , # [doc = \" Hypervector dimension (`>= 1`).\"] dim : u64 , } , }",
+      "reason": "enum `BoundKind` has a named-field variant referencing a type not resolvable in-file — emitting it positionally would introduce an unresolved reference that poisons the file's `myc check`; left gapped under the M-1006 resolvability gate (VR-5/G2)",
+      "item_name": "BoundKind"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/bound.rs",
+      "line": 102,
+      "col": 1,
+      "category": "Struct",
+      "rust_construct": "Struct",
+      "snippet": "# [doc = \" A sound bound plus the basis by which it was obtained (ADR-011: `basis` is universal). Serializes\"] # [doc = \" as a single flat object: the `kind`-tagged payload with a sibling `basis` (`bound.schema.json`).\"] # [derive (Debug , Clone , PartialEq , Serialize , Deserialize)] pub struct Bound { # [doc = \" The kind-specific payload.\"] # [serde (flatten)] pub kind : BoundKind , # [doc = \" How the bound was obtained.\"] pub basis : BoundBasis , }",
+      "reason": "struct `Bound` uses named fields and references a type not resolvable in-file — emitting it positionally would introduce an unresolved reference that poisons the file's `myc check`; left gapped under the M-1006 resolvability gate (VR-5/G2)",
+      "item_name": "Bound"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/bound.rs",
+      "line": 113,
+      "col": 1,
+      "category": "Impl",
+      "rust_construct": "Impl",
+      "snippet": "impl Bound { # [doc = \" Well-formedness per `bound.schema.json`: the payload ranges (magnitudes finite and in range)\"] # [doc = \" **and** the basis constraints. Independent of the guarantee↔basis coupling, which\"] # [doc = \" [`crate::meta::Meta`] enforces; this is re-run on every deserialize, so the schema is a\"] # [doc = \" contract the wire form cannot evade.\"] # [must_use] pub fn well_formed (& self) -> bool { let payload_ok = match self . kind { BoundKind :: Error { eps , .. } => eps . is_finite () && eps >= 0.0 , BoundKind :: Probability { delta } => (0.0 ..= 1.0) . contains (& delta) , BoundKind :: Crosstalk { expected , tail } => { expected . is_finite () && expected >= 0.0 && tail . is_none_or (| t | t . is_finite () && t >= 0.0) } BoundKind :: Capacity { items , dim } => items >= 1 && dim >= 1 , } ; payload_ok && self . basis_well_formed () } # [doc = \" Basis constraints from `bound.schema.json` (A6-02/B2-03): a cited theorem names its citation;\"] # [doc = \" an empirical fit rests on **at least one** trial with a named method — an `Empirical` tag must\"] # [doc = \" never be evidence-free (`trials: 0`); a user declaration carries nothing.\"] # [must_use] fn basis_well_formed (& self) -> bool { match & self . basis { BoundBasis :: ProvenThm { citation } => ! citation . trim () . is_empty () , BoundBasis :: EmpiricalFit { trials , method } => { * trials >= 1 && ! method . trim () . is_empty () } BoundBasis :: UserDeclared => true , } } }",
+      "reason": "no member of this impl block could be transpiled (2 sub-issue(s)): impl method `well_formed` body: field projection `self.kind` on `Bound` — not an in-file single-ctor struct that emits (an enum / external / non-resolvable type has no constructor to `match` against); impl method `basis_well_formed` body: field projection `self.basis` on `Bound` — not an in-file single-ctor struct that emits (an enum / external / non-resolvable type has no constructor to `match` against)",
+      "item_name": "Bound"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/bound.rs",
+      "line": 150,
+      "col": 1,
+      "category": "TestItem",
+      "rust_construct": "TestItem",
+      "snippet": "# [cfg (test)] mod tests { use super :: * ; fn proven () -> BoundBasis { BoundBasis :: ProvenThm { citation : \"thm\" . to_owned () , } } # [test] fn well_formed_rejects_non_finite_magnitudes () { assert ! (! Bound { kind : BoundKind :: Error { eps : f64 :: INFINITY , norm : NormKind :: Linf } , basis : proven () , } . well_formed ()) ; assert ! (! Bound { kind : BoundKind :: Crosstalk { expected : f64 :: INFINITY , tail : None } , basis : proven () , } . well_formed ()) ; assert ! (Bound { kind : BoundKind :: Error { eps : 0.5 , norm : NormKind :: Linf } , basis : proven () , } . well_formed ()) ; } # [test] fn well_formed_rejects_zero_capacity_and_infinite_tail () { let proven = proven () ; assert ! (! Bound { kind : BoundKind :: Capacity { items : 0 , dim : 1 } , basis : proven . clone () , } . well_formed ()) ; assert ! (! Bound { kind : BoundKind :: Capacity { items : 1 , dim : 0 } , basis : proven . clone () , } . well_formed ()) ; assert ! (Bound { kind : BoundKind :: Capacity { items : 2 , dim : 4 } , basis : proven . clone () , } . well_formed ()) ; assert ! (! Bound { kind : BoundKind :: Crosstalk { expected : 0.5 , tail : Some (f64 :: INFINITY) , } , basis : proven . clone () , } . well_formed ()) ; assert ! (Bound { kind : BoundKind :: Crosstalk { expected : 0.5 , tail : Some (0.1) , } , basis : proven , } . well_formed ()) ; } # [test] fn well_formed_rejects_evidence_free_basis () { let zero_trials = Bound { kind : BoundKind :: Error { eps : 0.5 , norm : NormKind :: Linf , } , basis : BoundBasis :: EmpiricalFit { trials : 0 , method : \"frady\" . to_owned () , } , } ; assert ! (! zero_trials . well_formed ()) ; let empty_method = Bound { kind : BoundKind :: Error { eps : 0.5 , norm : NormKind :: Linf , } , basis : BoundBasis :: EmpiricalFit { trials : 10 , method : String :: new () , } , } ; assert ! (! empty_method . well_formed ()) ; let empty_citation = Bound { kind : BoundKind :: Error { eps : 0.5 , norm : NormKind :: Linf , } , basis : BoundBasis :: ProvenThm { citation : \"  \" . to_owned () , } , } ; assert ! (! empty_citation . well_formed ()) ; } }",
+      "reason": "#[cfg(test)] item — out of scope for this PoC's transpilation surface (excluded from the expressible-fraction denominator, but recorded, never silently skipped)",
+      "item_name": "tests"
+    }
+  ],
+  "total_top_level_items": 9
+}

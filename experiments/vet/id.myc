@@ -1,0 +1,48 @@
+// nodule: core.id
+// Content addresses (RFC-0001 §4.6): `<algo>:<digest>`.
+// @summary: best-effort transpilation via mycelium-transpile (M-873). Declared,
+// unvalidated — no Mycelium parser/typechecker confirms this output; see the
+// accompanying .gap.json for every construct this pass could not express.
+nodule core.id;
+
+// A content address, e.g. `blake3:af13…` (64 hex). The kernel hash is **BLAKE3** (fixed in M-103),
+// rendered as `blake3:<64-hex>`; this type fixes the shape (`<algo>:<digest>`, matching the
+// `provenance.schema.json` pattern) and stays algorithm-agnostic so a future migration is a value
+// change, not a type change.
+//
+// Two validation strengths are offered, deliberately distinct (DN-40 wave-2):
+// - [`ContentHash::parse`] / [`ContentHash::from_parts`] — **shape-only**, exactly matching the
+//   normative JSON-Schema pattern `^[a-z0-9]+:[A-Za-z0-9_-]+$` (which documents that it "fixes only
+//   the shape"). This is what (de)serialization uses, so the Rust type and the schema agree.
+// - [`ContentHash::parse_digest`] — **algorithm-aware**: additionally requires that a `blake3`
+//   address carry a *real* 64-lowercase-hex digest, so a shape-valid-but-bogus stub like
+//   `"blake3:abc"` is rejected (G2). This is the **centralized** check consumers that hold a
+//   genuine, identity-bearing pin (e.g. a manifest dependency hash — DN-40 A3) should call, instead
+//   of each re-deriving the 64-hex rule. See [`ContentHash::digest_well_formed`].
+pub type ContentHash = ContentHash(Bytes);
+
+impl Show[ContentHash] for ContentHash {
+  fn render(x: ContentHash) => Bytes =
+    match x { ContentHash(p0) => bytes_concat(bytes_concat("ContentHash(", render(p0)), ")") };
+};
+
+fn eq_ContentHash(a: ContentHash, b: ContentHash) => Binary{1} =
+    match a { ContentHash(p0) => match b { ContentHash(q0) => bytes_eq(p0, q0) } };
+
+fn hash_ContentHash(a: ContentHash) => Bytes =
+    match a { ContentHash(p0) => hash_blake3(bytes_concat("ContentHash", hash_blake3(p0))) };
+
+impl Ord3[ContentHash] for ContentHash {
+  fn cmp(a: ContentHash, b: ContentHash) => Binary{8} =
+    match a { ContentHash(p0) => match b { ContentHash(q0) => cmp(p0, q0) } };
+};
+
+// Width of a `blake3` digest in hex characters — `blake3::hash().to_hex()` emits a 256-bit hash as
+// exactly 64 lowercase hex (M-103). `pub(crate)` so the in-crate test module can assert the bound.
+// Declared: co-emitted private const as zero-arg fn returning a BinLit — Mycelium has no const item production (`item` covers use/default/type/trait/impl/fn/object/lower/derive only); hand-port precedent `max_expr_depth()` (ORACLE-R1 A4; G2/VR-5: value from the Rust initializer or a known workspace-floor path, never fabricated). Use sites rewrite `NAME` → `NAME()`.
+fn BLAKE3_HEX_LEN() => Binary{64} = 0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0100_0000; // 64
+
+impl ContentHash {
+  // The address as a string slice.
+  fn as_str(self: ContentHash) => Bytes = (match self { ContentHash(p0) => p0 });
+};

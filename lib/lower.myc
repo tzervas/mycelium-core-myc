@@ -1,0 +1,89 @@
+// nodule: core.lower_kw
+// Inspectable lowering — `≥2` dumpable/diffable stages (M-112; RFC-0004 §5/§6; SC-4; WF5).
+//
+// The interpreter is the reference semantics (M-110); *lowering* is the backend-agnostic path
+// toward codegen, and its defining property here is **inspectability**: every stage has a
+// canonical textual [`dump`](Stage::text) (deterministic — structurally identical programs render
+// identically, SC-4), each pass **preserves `Meta`** (WF5 — guarantee tags survive, never silently
+// dropped), and the packing decision is an **explicit, recorded** schedule choice (RFC-0004 §5; no
+// hidden layout). [`stages`] returns the pipeline so adjacent stages can be diffed.
+//
+// The two stages shipped:
+// - **`core`** — the Core IR node tree (RFC-0001 §4.5), rendered canonically.
+// - **`substrate`** — an **A-normal form**: nested `Op`/`Swap`/`Let` flattened to a linear list of
+//   named bindings (the classic pre-codegen shape every backend consumes), with each binding whose
+//   result representation is *statically known* (a `Const` or a `Swap` target) annotated with its
+//   **scheduled [`PhysicalLayout`]** (the default schedule, RFC-0004 §5 / DN-01).
+//
+// Layout for `Op` results is intentionally left unannotated: the kernel has no operator-typing yet
+// (a later RFC), so inferring it would be a black box (G2). The omission is explicit, not silent.
+// @summary: best-effort transpilation via mycelium-transpile (M-873). Declared,
+// unvalidated — no Mycelium parser/typechecker confirms this output; see the
+// accompanying .gap.json for every construct this pass could not express.
+nodule core.lower_kw;
+
+// Declared: co-emitted guarantee-lattice type — referenced in this file but not declared here and not available via a resolved batch `use` (ORACLE-R1 A2; never silent unknown-type file poison — G2/VR-5). Variants use DN-140 `*_kw` renames for the reserved lattice keywords (Exact/Proven/Empirical/Declared).
+// Declared: renamed Exact -> Exact_kw (reserved-word collision, DN-140)
+// Declared: renamed Proven -> Proven_kw (reserved-word collision, DN-140)
+// Declared: renamed Empirical -> Empirical_kw (reserved-word collision, DN-140)
+// Declared: renamed Declared -> Declared_kw (reserved-word collision, DN-140)
+type GuaranteeStrength = Exact_kw | Proven_kw | Empirical_kw | Declared_kw;
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.meta) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type PackScheme = Unpacked | TwoBitPerTrit | FiveTritPerByte | I2S | Tl1 | Tl2;
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.repr) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type FloatWidth = F64_kw;
+type ScalarKind = F16_kw | Bf16 | F32_kw | F64_kw;
+type SparsityClass = Dense_kw | Sparse_kw(Binary{32});
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.value) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type Trit = Neg | Zero | Pos;
+type Payload = Bits(Vec[Bool]) | Trits(Vec[Trit]) | Scalars(Vec[Float]) | Hypervector(Vec[Float]) | Float_kw(Float) | Seq_kw(Vec[Value]) | Bytes_kw(Vec[Binary{8}]);
+
+// One lowering stage: a name and its canonical, diffable textual dump.
+type Stage = Stage(Bytes, Bytes);
+
+impl Show[Stage] for Stage {
+  fn render(x: Stage) => Bytes =
+    match x { Stage(p0, p1) => bytes_concat(bytes_concat(bytes_concat(bytes_concat("Stage(", render(p0)), ", "), render(p1)), ")") };
+};
+
+fn eq_Stage(a: Stage, b: Stage) => Binary{1} =
+    match a { Stage(p0, p1) => match b { Stage(q0, q1) => and(bytes_eq(p0, q0), bytes_eq(p1, q1)) } };
+
+fn render_scalar_kind(k: ScalarKind) => Bytes = match k { F16_kw => "F16", Bf16 => "BF16", F32_kw => "F32", F64_kw => "F64" };
+
+fn render_guarantee(g: GuaranteeStrength) => Bytes = match g { Exact_kw => ":exact", Proven_kw => ":proven", Empirical_kw => ":empirical", Declared_kw => ":declared" };
+
+// The canonical, deterministic textual rendering of a Core IR node (the `core` stage). A
+// projection: it does not affect content identity (RFC-0001 §4.6/§4.8), and structurally identical
+// nodes render identically (SC-4). Reused as the basis of the formatter (M-142).
+fn dump_node(node: Node) => Bytes = dump_core(node);
+
+// An operand of a lowered binding: a reference to a named/temp binding. (Public so backends — the
+// MLIR emitter / AOT path, M-150 — can consume the lowered IR.)
+type Atom = Named(Bytes) | Temp(Binary{64});
+
+impl Show[Atom] for Atom {
+  fn render(x: Atom) => Bytes =
+    match x { Named(p0) => bytes_concat(bytes_concat("Named(", render(p0)), ")"), Temp(p0) => bytes_concat(bytes_concat("Temp(", render(p0)), ")") };
+};
+
+fn eq_Atom(a: Atom, b: Atom) => Binary{1} =
+  match a { Named(p0) => match b { Named(q0) => bytes_eq(p0, q0), _ => 0b0 }, Temp(p0) => match b { Temp(q0) => eq(p0, q0), _ => 0b0 } };
+
+// Lower a Core IR node into A-normal form (flatten nested nodes to a linear binding list). Pure and
+// deterministic; `Meta` rides along on `Const` bindings (WF5).
+//
+// **Full v0 calculus (RFC-0011 §4.4 Q5 closed; M-342).** The ANF substrate / AOT env-machine path
+// covers the whole v0 calculus: `Const/Var/Let/Op/Swap` plus the r3/r4 data + recursion nodes
+// (`Construct`/`Match`/`Lam`/`App`/`Fix`). Body-bearing nodes (`Lam`/`Fix` bodies, `Match` arm/default
+// bodies) lower to **nested** ANF blocks evaluated lazily by the env-machine (so the binding list
+// stays acyclic and arms/closures are not eagerly run); a single program-wide temp counter keeps
+// every `Temp` globally unique, so a nested scope can never shadow an enclosing temp.
+//
+// The native LLVM backend (`mycelium-mlir::llvm`) remains the **bit/trit subset** and refuses
+// data/closure nodes with an explicit `UnsupportedNode` (VR-5); this ANF + the `aot::run` env-machine
+// are the path the three-way differential exercises on the full calculus.
+fn lower_to_anf(node: Node) => Anf = let next = 0 in lower_block(node, next);

@@ -1,0 +1,63 @@
+// nodule: core.data
+// The **data registry `Σ`** and constructor references (`#T#i`) — RFC-0001 §4.3 (r3); RFC-0007
+// §4.2; ADR-003 (Unison identity). M-320.
+//
+// r3 folds algebraic data into the Core IR (RFC-0011). A data **value** is built by a
+// [`Node::Construct`](crate::Node) and scrutinised by a [`Node::Match`](crate::Node); the data
+// **declarations** those nodes reference live **here, in the registry — not in the term grammar**
+// (the GHC-Core/Lean/Coq/Unison convergence, RFC-0007 §4.2). Keeping declarations out of the term
+// language is what preserves WF4: a `Construct`/`Match` node hashes over its structure plus the
+// [`CtorRef`] hashes it mentions, and the term grammar does not grow with every data type.
+//
+// # Identity (RFC-0007 §4.2; ADR-003)
+// A declaration `type T<a…> = C₁(τ…) | … | Cₙ(τ…)` is content-addressed over its **α-normalised
+// structure** — constructor order is significant, field types (incl. their `Repr`) are
+// significant, **names are not identity**. A constructor reference is `#T#i` ([`CtorRef`]): the
+// declaration hash ‖ the constructor index. A **self-recursive** declaration hashes its own
+// occurrences as a cycle **placeholder** (the Unison scheme): `Nat = Z | S(Nat)`'s `S` field is a
+// back-reference, so it is encoded as a placeholder, never the (circular) final hash.
+//
+// # Scope (honesty)
+// **Self-recursion is fully realised and tested** (`Nat`, `Bytes`, `List`-shaped types). **Mutual
+// recursion** (a multi-member cycle) now content-addresses **canonically and name-independently**
+// via `canonical_cycle_order` (the Unison recipe; R7-Q3 cycle-ordering closed in RFC-0001 r4).
+// The surface→registry *elaboration* of mutual recursion stays deferred (the L1 prototype accepts
+// only self-recursion), but the **identity** of a mutually-recursive group is now correct, not
+// provisional — so when the surface grows mutual recursion, the hashes do not change underneath it.
+//
+// # ADR-033 FLAG-1 Path A — full function signature encoding (`Empirical` post-test, `Declared` claim)
+// `FieldSpec::Fn` carries a full `FnSig` (all parameter types + return type) so two function-typed
+// fields with different signatures hash to distinct content addresses. The soundness gap described
+// in ADR-033 §10.1 is closed at the kernel level: `MkDict_Eq8 ≠ MkDict_Eq16` as content-addressed
+// declarations, so a type-confused `Match`/projection is a **never-silent no-match** by
+// construction (G2). Tag: `Empirical` (tested — `src/tests/data.rs`); NOT `Proven` (no mechanized
+// injectivity proof; VR-5 forbids the upgrade).
+// @summary: best-effort transpilation via mycelium-transpile (M-873). Declared,
+// unvalidated — no Mycelium parser/typechecker confirms this output; see the
+// accompanying .gap.json for every construct this pass could not express.
+nodule core.data;
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.id) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type ContentHash = ContentHash(Bytes);
+
+// A resolved field-type reference that can appear inside a function signature: a `Repr` leaf, a
+// `Data` leaf (resolved to its declaration hash), or a nested function type. This is the resolved
+// analogue of [`FieldTyRef`] (ADR-033 §10 PATH-A).
+pub type ResolvedFieldTyRef = Repr(Repr) | Data(ContentHash) | Fn(Box[ResolvedFnSig]);
+
+// A build-time field-type reference for function signatures: the same leaf set as a data field
+// can hold, plus nested functions. Every leaf bottoms out in `Repr` (already injective via
+// `Canon::repr`) or `Data(name)` (resolved to `ContentHash` at build time) — no unbounded
+// recursion. `Declared`-with-argument: recursion is well-founded (ADR-033 §10.2).
+pub type FieldTyRef = Repr(Repr) | Data(Bytes) | Fn(Box[FnSig]);
+
+// Why building a [`DataRegistry`] from specs failed — always explicit (never a silent drop).
+pub type RegistryError = UnknownTypeRef(Bytes, Bytes) | FnArityMismatch(Bytes, Binary{32}, Binary{64});
+
+impl Show[RegistryError] for RegistryError {
+  fn render(x: RegistryError) => Bytes =
+    match x { UnknownTypeRef(p0, p1) => bytes_concat(bytes_concat(bytes_concat(bytes_concat("UnknownTypeRef(", render(p0)), ", "), render(p1)), ")"), FnArityMismatch(p0, p1, p2) => bytes_concat(bytes_concat(bytes_concat(bytes_concat(bytes_concat(bytes_concat("FnArityMismatch(", render(p0)), ", "), render(width_cast(p1, 0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000))), ", "), render(p2)), ")") };
+};
+
+fn eq_RegistryError(a: RegistryError, b: RegistryError) => Binary{1} =
+  match a { UnknownTypeRef(p0, p1) => match b { UnknownTypeRef(q0, q1) => and(bytes_eq(p0, q0), bytes_eq(p1, q1)), _ => 0b0 }, FnArityMismatch(p0, p1, p2) => match b { FnArityMismatch(q0, q1, q2) => and(and(bytes_eq(p0, q0), eq(p1, q1)), eq(p2, q2)), _ => 0b0 } };

@@ -1,0 +1,121 @@
+// nodule: core.prim
+// The **prim table `Π`** as content-addressed declarations — RFC-0007 §4.4 (T-Op); RFC-0007 §8
+// R7-Q4; DN-10 §3; ADR-003 (Unison identity); RFC-0001 §4.7 (the intrinsic guarantee `g_f`). M-390.
+//
+// RFC-0007 §4.4 gives every primitive `p` a signature `Π(p) = (τ₁…τₙ) → τ` and (RFC-0001 §4.7) an
+// *intrinsic guarantee* `g_f` it contributes to the result's guarantee meet. Historically `Π` was a
+// fixed builtin table hard-coded in the elaborator/typechecker and an `Exact` constant in the
+// interpreter. Here it becomes **declarations with their own content addresses** — exactly the model
+// the data registry `Σ` ([`crate::data::DataRegistry`]) already uses for constructors (RFC-0001
+// §4.3 r3): each prim is keyed by the content hash of its *signature + intrinsic guarantee*, with
+// its (kernel) name kept separately as metadata (ADR-003 — names are not identity). A prim is then
+// an inspectable, EXPLAIN-able registry entry (G2/SC-3), not a black box.
+//
+// # Scope (honesty)
+// Nearly every builtin is `intrinsic = Exact` (the exact, elementwise/arithmetic fragment). The
+// table stores that intrinsic *as data* so a non-`Exact` prim is a registry entry carrying its own
+// honest tag — and the **dense elementwise group** (`dense.add`/`dense.sub`/`dense.scale`, M-890,
+// `enb` Gap C) is the first to use that capacity: their intrinsic is **`Proven`**, carried
+// verbatim from the kernel's per-op tag (`mycelium-dense`'s `DenseSpace::op_guarantee` — the
+// round-to-nearest relative-error theorem with per-element *checked* side-conditions; `dense.neg`
+// stays `Exact`, negation never rounds). The **dense measurement pair**
+// (`dense.dot`/`dense.similarity`, M-891) is likewise `Proven`, its bound the binary64
+// *accumulation* theorem (absolute/`Linf`, dimension-dependent) rather than the dtype's
+// per-element `op_rel_eps` — see the entry comment in [`PrimTable::builtins`]. *How* a non-`Exact` prim's bound-basis is stored **with
+// the declaration** (a cited theorem vs an empirical fit, with its [`crate::BoundBasis`]) is the
+// **RP-7** spike (DN-10 §3.6), deliberately *not* settled here — the declaration stores the
+// *strength* only, and the checked basis (theorem citation + per-element ε) rides the runtime
+// result `Value`'s `Meta`, attached by the kernel itself (`mycelium-dense::DenseSpace`), never
+// fabricated at the table level (VR-5). This crate cannot depend on `mycelium-dense` (dependency
+// direction), so the table↔kernel tag consistency is guarded by a test in `mycelium-interp`
+// (which sees both).
+//
+// The migration preserves `Π`-lookup semantics exactly: for every prim `p`,
+// `Π_new(hash(p)) = Π_old(name(p))` (DN-10 §3.4) — guarded by the `Π_new == Π_old` equivalence
+// tests in `mycelium-l1` (the surface table) and `mycelium-interp` (the intrinsic).
+// @summary: best-effort transpilation via mycelium-transpile (M-873). Declared,
+// unvalidated — no Mycelium parser/typechecker confirms this output; see the
+// accompanying .gap.json for every construct this pass could not express.
+nodule core.prim;
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.guarantee) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type GuaranteeStrength = Exact_kw | Proven_kw | Empirical_kw | Declared_kw;
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.id) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type ContentHash = ContentHash(Bytes);
+
+// The representation paradigm of a prim operand or result (the `τ`'s paradigm in `Π(p)`). `Any` is
+// the paradigm-polymorphic identity (`core.id : a → a`); the concrete paradigms pin a prim to
+// `Binary{·}` or `Ternary{·}` (RFC-0007 §4.4). Width is governed separately by [`WidthRel`].
+// Declared: renamed Binary -> Binary_kw (reserved-word collision, DN-140)
+// Declared: renamed Ternary -> Ternary_kw (reserved-word collision, DN-140)
+pub type PrimParadigm = Any | Binary_kw | Ternary_kw;
+
+impl Show[PrimParadigm] for PrimParadigm {
+  fn render(x: PrimParadigm) => Bytes =
+    match x { Any => "Any", Binary_kw => "Binary_kw", Ternary_kw => "Ternary_kw" };
+};
+
+fn eq_PrimParadigm(a: PrimParadigm, b: PrimParadigm) => Binary{1} =
+  match a { Any => match b { Any => 0b1, _ => 0b0 }, Binary_kw => match b { Binary_kw => 0b1, _ => 0b0 }, Ternary_kw => match b { Ternary_kw => 0b1, _ => 0b0 } };
+
+// How a prim's operand and result *widths* relate. Most of the builtin set is width-preserving —
+// every operand and the result share one width (`bit.xor : Binary{n} × Binary{n} → Binary{n}`,
+// `trit.add : Ternary{m} × Ternary{m} → Ternary{m}`, the unary cases trivially: [`WidthRel::Uniform`]).
+// The reduce-to-`Bool` comparison prims (`cmp.eq`/`cmp.lt`, RFC-0032 D1) are the exception — they
+// **collapse** to a fixed `Binary{1}` independent of the operand width ([`WidthRel::Collapse`]). New
+// rules (e.g. a width-changing pack) are added as variants, never silently assumed.
+pub type WidthRel = Uniform | Collapse;
+
+impl Show[WidthRel] for WidthRel {
+  fn render(x: WidthRel) => Bytes =
+    match x { Uniform => "Uniform", Collapse => "Collapse" };
+};
+
+fn eq_WidthRel(a: WidthRel, b: WidthRel) => Binary{1} =
+  match a { Uniform => match b { Uniform => 0b1, _ => 0b0 }, Collapse => match b { Collapse => 0b1, _ => 0b0 } };
+
+// A prim's signature `Π(p) = (τ₁…τₙ) → τ` (RFC-0007 §4.4): the per-operand paradigms (arity is their
+// count), the result paradigm, and the width relation. Identity-bearing; names are excluded.
+pub type PrimSig = PrimSig(Vec[PrimParadigm], PrimParadigm, WidthRel);
+
+fn show_vec_PrimParadigm(xs: Vec[PrimParadigm]) => Bytes =
+  match xs { Nil => "Nil", Cons(h, t) => bytes_concat("Cons(", bytes_concat(render(h), bytes_concat(", ", bytes_concat(show_vec_PrimParadigm(t), ")")))) };
+
+impl Show[PrimSig] for PrimSig {
+  fn render(x: PrimSig) => Bytes =
+    match x { PrimSig(p0, p1, p2) => bytes_concat(bytes_concat(bytes_concat(bytes_concat(bytes_concat(bytes_concat("PrimSig(", show_vec_PrimParadigm(p0)), ", "), render(p1)), ", "), render(p2)), ")") };
+};
+
+fn eq_vec_PrimParadigm(a: Vec[PrimParadigm], b: Vec[PrimParadigm]) => Binary{1} =
+  match a { Nil => match b { Nil => 0b1, Cons(_, _) => 0b0 }, Cons(ha, ta) => match b { Nil => 0b0, Cons(hb, tb) => and(eq_PrimParadigm(ha, hb), eq_vec_PrimParadigm(ta, tb)) } };
+
+fn eq_PrimSig(a: PrimSig, b: PrimSig) => Binary{1} =
+    match a { PrimSig(p0, p1, p2) => match b { PrimSig(q0, q1, q2) => and(and(eq_vec_PrimParadigm(p0, q0), eq_PrimParadigm(p1, q1)), eq_WidthRel(p2, q2)) } };
+
+// A prim reference `#p` (the prim analogue of [`CtorRef`](crate::CtorRef) `#T#i`): the content hash
+// of a [`PrimDecl`]. A term referring to a prim by *identity* refers to it by this hash, not its
+// name (ADR-003).
+pub type PrimRef = PrimRef(ContentHash);
+
+impl Show[PrimRef] for PrimRef {
+  fn render(x: PrimRef) => Bytes =
+    match x { PrimRef(p0) => bytes_concat(bytes_concat("PrimRef(", render(p0)), ")") };
+};
+
+fn eq_PrimRef(a: PrimRef, b: PrimRef) => Binary{1} =
+    match a { PrimRef(p0) => match b { PrimRef(q0) => eq_ContentHash(p0, q0) } };
+
+impl Ord3[PrimRef] for PrimRef {
+  fn cmp(a: PrimRef, b: PrimRef) => Binary{8} =
+    match a { PrimRef(p0) => match b { PrimRef(q0) => cmp(p0, q0) } };
+};
+
+fn hash_PrimRef(a: PrimRef) => Bytes =
+    match a { PrimRef(p0) => hash_blake3(bytes_concat("PrimRef", hash_ContentHash(p0))) };
+
+impl PrimRef {
+  // Build a prim reference from a declaration hash.
+  // Declared: renamed `impl PrimRef { fn new }` -> `_7PrimRef3new` (D4 inherent-impl flat-fn desugar + DN-140 length-prefix mangle, M-664).
+  fn _7PrimRef3new(decl: ContentHash) => PrimRef = PrimRef(decl);
+};

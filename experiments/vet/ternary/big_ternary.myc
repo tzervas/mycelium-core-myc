@@ -1,0 +1,47 @@
+// nodule: core.ternary.big_ternary
+// Arbitrary-width balanced-ternary **integer** arithmetic (E20-1 / M-756; RFC-0033 §4.2; ADR-029).
+//
+// # Why this file exists
+// The fixed-width path in [`super`] (M-111) is `i64`-internal and **already never-silent** about its
+// ~40-trit cap ([`super::max_magnitude`] returns `None` at `m ≥ 41`; [`super::add`]/[`super::mul`]
+// return `None` on overflow). This module **removes the cap** by adding a growable representation that
+// *grows a new trit* instead of returning `None` — the bignum need the fixed-width comment
+// anticipated. It is **not** a bug-fix in Mycelium's code: the silent-overflow defect that motivates
+// an arbitrary-width path is `embeddonator`'s `dimensional::Tryte::max_value` (a different upstream
+// codebase, on the do-not-lift list), never `core::ternary`.
+//
+// # Design (KC-3: TRUSTED)
+// [`BigTernary`] is a digit-serial `Vec<Trit>` (least-significant-first, canonicalized) — the
+// obviously-correct, never-overflowing reference. A limbed/packed perf path (`PackedTernary`,
+// ≥40 trits/u64) is an explicit YAGNI follow-on (M-758) gated on a benchmark and, if added, MUST be
+// differentially proven bit-exact against this reference (RFC-0033 §4.2.2).
+//
+// # Never-silent boundary (G2)
+// [`BigTernary`] arithmetic NEVER overflows (the carry out of the top digit becomes a new digit). The
+// boundary is the **fixed-width** [`FixedWidthTrits`] (the in-memory image of `Repr::Ternary{N}`):
+// [`BigTernary::checked_to_width`] and [`checked_add_fixed`] return `Option` and yield `None` exactly
+// when the true result needs more than `N` trits — never a wrap or truncation. [`BigTernary::to_i128`]
+// is likewise `Option` (overflow-checked).
+//
+// # Guarantee lattice
+// Every operation here is **Exact** (closed integer arithmetic; the balanced-ternary digit algebra is
+// an exact integer identity, Knuth 4.1 / `docs/spec/swaps/binary-ternary.md` §1). The binary↔ternary
+// swap is `LosslessWithinRange` — lossless for the growable path, range-bounded for fixed width
+// (RFC-0033 §6.1).
+//
+// # Endianness
+// [`BigTernary`] is **least-significant-first** (index 0 least significant); the fixed-width [`super`]
+// codec/arithmetic is **most-significant-first**. The two are reconciled **only through the integer
+// value** ([`BigTernary::to_i128`] / [`super::trits_to_int`]), never by comparing trit vectors.
+// @summary: best-effort transpilation via mycelium-transpile (M-873). Declared,
+// unvalidated — no Mycelium parser/typechecker confirms this output; see the
+// accompanying .gap.json for every construct this pass could not express.
+nodule core.ternary.big_ternary;
+
+// EXPLAIN (G-α L2-B/DN-124): Declared co-include of batch-sibling free-fn surface (homes: core.ternary) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Type deps on the fn line are co-included above when present in-batch. Body free-fn/method callees may still residual-poison oracle (FLAG, not silent). G2/VR-5.
+fn digit(t: Trit) => Binary{64} = match t { Neg => -1, Zero => 0, Pos => 1 };
+fn is_nonzero(t: Trit) => Bool = !is_zero(t);
+fn neg_trit(t: Trit) => Trit = match t { Neg => Pos, Zero => Zero, Pos => Neg };
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.value) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type Trit = Neg | Zero | Pos;

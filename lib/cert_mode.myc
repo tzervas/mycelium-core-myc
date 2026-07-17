@@ -1,0 +1,52 @@
+// nodule: core.cert_mode
+// The certification mode (RFC-0034 §3.1, §5) — the tunable certification *policy* a value was
+// produced under.
+//
+// Carried on every [`Meta`](crate::meta::Meta) as a **never-silent** tag (RFC-0034 §3.1) and
+// deliberately **excluded from the content hash**: it rides `Meta`, which RFC-0001 §4.6 excludes
+// wholesale, so switching modes never perturbs a value's content identity (ADR-003). That exclusion
+// is therefore by construction, not a special case — see the `content_hash` exclusion test.
+//
+// Two **first-class** modes — [`Fast`](CertMode::Fast) (the default) and
+// [`Certified`](CertMode::Certified) — with [`Balanced`](CertMode::Balanced) an optional
+// intermediate (RFC-0034 §5). The mode is *disclosure of how much certification ran*, ordered by
+// [`depth`](CertMode::depth) `Fast < Balanced < Certified`. It is **not** a guarantee strength and
+// never upgrades one (VR-5): a `Fast` value sits at the structural `Exact`/`Declared` tags and never
+// claims an `Empirical`/`Proven` it did not earn. M-786 introduces the type + the never-silent tag;
+// M-787 adds [`gate_guarantee`](CertMode::gate_guarantee) — the policy that floors `fast` to the
+// structural tags.
+// @summary: best-effort transpilation via mycelium-transpile (M-873). Declared,
+// unvalidated — no Mycelium parser/typechecker confirms this output; see the
+// accompanying .gap.json for every construct this pass could not express.
+nodule core.cert_mode;
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.bound) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type BoundBasis = ProvenThm(Bytes) | EmpiricalFit(Binary{64}, Bytes) | UserDeclared;
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.guarantee) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type GuaranteeStrength = Exact_kw | Proven_kw | Empirical_kw | Declared_kw;
+
+// The active certification mode a value was produced under (RFC-0034). Default
+// [`Fast`](CertMode::Fast) — the project default (RFC-0034 §5).
+//
+// The `serde` form is the bare string `"Fast" | "Balanced" | "Certified"` (mirroring
+// [`GuaranteeStrength`](crate::guarantee::GuaranteeStrength)).
+pub type CertMode = Fast | Balanced | Certified;
+
+impl Show[CertMode] for CertMode {
+  fn render(x: CertMode) => Bytes =
+    match x { Fast => "Fast", Balanced => "Balanced", Certified => "Certified" };
+};
+
+fn eq_CertMode(a: CertMode, b: CertMode) => Binary{1} =
+  match a { Fast => match b { Fast => 0b1, _ => 0b0 }, Balanced => match b { Balanced => 0b1, _ => 0b0 }, Certified => match b { Certified => 0b1, _ => 0b0 } };
+
+impl CertMode {
+  // Certification **depth**, `0` = [`Fast`](CertMode::Fast) (least) … `2` =
+  // [`Certified`](CertMode::Certified) (most). Higher = more certification machinery engaged.
+  //
+  // This orders the modes; it is **not** a guarantee strength — a stronger mode never upgrades a
+  // value's [`GuaranteeStrength`](crate::guarantee::GuaranteeStrength) (VR-5). Composing across
+  // modes is an explicit, visible event (RFC-0034 §3.1), never a silent upgrade.
+  fn depth(self: CertMode) => Binary{8} = match self { Fast => 0, Balanced => 1, Certified => 2 };
+};

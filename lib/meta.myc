@@ -1,0 +1,58 @@
+// nodule: core.meta
+// Runtime metadata that travels with every value (RFC-0001 §4.3; `meta.schema.json`).
+//
+// [`Meta`] enforces the schema invariants **M-I1…M-I4** *by construction* — a [`Meta`] cannot be
+// built with an inconsistent guarantee/bound pairing (the honesty rule, mechanically). Its `serde`
+// form is `meta.schema.json` (M-104): `bound` is modelled by **presence** (absent for `Exact`,
+// per M-I1), and `Deserialize` re-runs the M-I1…M-I4 invariants through [`Meta::new`] so a
+// malformed wire `Meta` is rejected, never silently trusted.
+// @summary: best-effort transpilation via mycelium-transpile (M-873). Declared,
+// unvalidated — no Mycelium parser/typechecker confirms this output; see the
+// accompanying .gap.json for every construct this pass could not express.
+nodule core.meta;
+
+// Declared: co-emitted guarantee-lattice type — referenced in this file but not declared here and not available via a resolved batch `use` (ORACLE-R1 A2; never silent unknown-type file poison — G2/VR-5). Variants use DN-140 `*_kw` renames for the reserved lattice keywords (Exact/Proven/Empirical/Declared).
+// Declared: renamed Exact -> Exact_kw (reserved-word collision, DN-140)
+// Declared: renamed Proven -> Proven_kw (reserved-word collision, DN-140)
+// Declared: renamed Empirical -> Empirical_kw (reserved-word collision, DN-140)
+// Declared: renamed Declared -> Declared_kw (reserved-word collision, DN-140)
+type GuaranteeStrength = Exact_kw | Proven_kw | Empirical_kw | Declared_kw;
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.bound) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type BoundBasis = ProvenThm(Bytes) | EmpiricalFit(Binary{64}, Bytes) | UserDeclared;
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.cert_mode) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type CertMode = Fast | Balanced | Certified;
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.id) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type ContentHash = ContentHash(Bytes);
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type WfError = GuaranteeBoundMismatch | MalformedBound | MalformedRepr | DimensionTooLarge(Bytes, Binary{32}, Binary{32}) | PayloadReprMismatch | MalformedReconstruction | MalformedSparsity;
+
+// Measured (dynamic) sparsity — distinct from the declared [`crate::repr::SparsityClass`].
+pub type SparsityObs = SparsityObs(Binary{64}, Float);
+
+// Lossless physical packing schemes (extensible registry; RFC-0001 §4.3; DN-01). The `serde`
+// renderings match `physical-layout.schema.json`'s `PackScheme` enum (`I2S|TL1|TL2`).
+pub type PackScheme = Unpacked | TwoBitPerTrit | FiveTritPerByte | I2S | Tl1 | Tl2;
+
+impl Show[PackScheme] for PackScheme {
+  fn render(x: PackScheme) => Bytes =
+    match x { Unpacked => "Unpacked", TwoBitPerTrit => "TwoBitPerTrit", FiveTritPerByte => "FiveTritPerByte", I2S => "I2S", Tl1 => "Tl1", Tl2 => "Tl2" };
+};
+
+fn eq_PackScheme(a: PackScheme, b: PackScheme) => Binary{1} =
+  match a { Unpacked => match b { Unpacked => 0b1, _ => 0b0 }, TwoBitPerTrit => match b { TwoBitPerTrit => 0b1, _ => 0b0 }, FiveTritPerByte => match b { FiveTritPerByte => 0b1, _ => 0b0 }, I2S => match b { I2S => 0b1, _ => 0b0 }, Tl1 => match b { Tl1 => 0b1, _ => 0b0 }, Tl2 => match b { Tl2 => 0b1, _ => 0b0 } };
+
+// The recorded schedule-staged packing (RFC-0001 §4.3; RFC-0004 §5). A *record*, not the decision.
+// The `serde` form is tagged on `layout`, matching `physical-layout.schema.json`.
+pub type PhysicalLayout = BinaryWords | TritPacked(PackScheme) | DenseArray | VsaStore(Bool);
+
+impl Show[PhysicalLayout] for PhysicalLayout {
+  fn render(x: PhysicalLayout) => Bytes =
+    match x { BinaryWords => "BinaryWords", TritPacked(p0) => bytes_concat(bytes_concat("TritPacked(", render(p0)), ")"), DenseArray => "DenseArray", VsaStore(p0) => bytes_concat(bytes_concat("VsaStore(", render(p0)), ")") };
+};
+
+fn eq_PhysicalLayout(a: PhysicalLayout, b: PhysicalLayout) => Binary{1} =
+  match a { BinaryWords => match b { BinaryWords => 0b1, _ => 0b0 }, TritPacked(p0) => match b { TritPacked(q0) => eq_PackScheme(p0, q0), _ => 0b0 }, DenseArray => match b { DenseArray => 0b1, _ => 0b0 }, VsaStore(p0) => match b { VsaStore(q0) => match p0 { True => match q0 { True => 0b1, False => 0b0 }, False => match q0 { True => 0b0, False => 0b1 } }, _ => 0b0 } };

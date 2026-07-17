@@ -1,0 +1,510 @@
+{
+  "source": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+  "emitted_items": [
+    "co-include:BoundBasis,NormKind",
+    "co-include:CertMode",
+    "co-include:FieldTyRef,RegistryError,ResolvedFieldTyRef",
+    "co-include:CoreValue",
+    "co-include:GuaranteeStrength",
+    "use:ContentHash",
+    "co-include:PackScheme,PhysicalLayout,SparsityObs",
+    "co-include:PrimParadigm,PrimRef,PrimSig,WidthRel",
+    "co-include:CleanupShape,DecodeProcedure,InitStrategy,ReconMode",
+    "co-include:FloatWidth,ScalarKind,SparsityClass",
+    "co-include+use:Payload,Trit,CANONICAL_NAN_BITS",
+    "WfError"
+  ],
+  "gaps": [
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 1,
+      "col": 1,
+      "category": "InnerAttr",
+      "rust_construct": "InnerAttr",
+      "snippet": "# ! [forbid (unsafe_code)]",
+      "reason": "crate/file-level inner attributes (#![...]) are not transpiled (no nodule-header equivalent for these Rust-specific directives)",
+      "item_name": null
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 13,
+      "col": 1,
+      "category": "ModuleDecl",
+      "rust_construct": "ModuleDecl",
+      "snippet": "pub mod binary ;",
+      "reason": "external `mod foo;` declaration — file-linkage, not translatable library surface (Mycelium's nodule-per-file model makes the module tree implicit in the file layout; the sibling file transpiles as its own nodule). Excluded from the expressible-fraction denominator, recorded not dropped",
+      "item_name": "binary"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 14,
+      "col": 1,
+      "category": "ModuleDecl",
+      "rust_construct": "ModuleDecl",
+      "snippet": "pub mod bound ;",
+      "reason": "external `mod foo;` declaration — file-linkage, not translatable library surface (Mycelium's nodule-per-file model makes the module tree implicit in the file layout; the sibling file transpiles as its own nodule). Excluded from the expressible-fraction denominator, recorded not dropped",
+      "item_name": "bound"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 15,
+      "col": 1,
+      "category": "ModuleDecl",
+      "rust_construct": "ModuleDecl",
+      "snippet": "pub mod cert_mode ;",
+      "reason": "external `mod foo;` declaration — file-linkage, not translatable library surface (Mycelium's nodule-per-file model makes the module tree implicit in the file layout; the sibling file transpiles as its own nodule). Excluded from the expressible-fraction denominator, recorded not dropped",
+      "item_name": "cert_mode"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 16,
+      "col": 1,
+      "category": "ModuleDecl",
+      "rust_construct": "ModuleDecl",
+      "snippet": "pub mod content ;",
+      "reason": "external `mod foo;` declaration — file-linkage, not translatable library surface (Mycelium's nodule-per-file model makes the module tree implicit in the file layout; the sibling file transpiles as its own nodule). Excluded from the expressible-fraction denominator, recorded not dropped",
+      "item_name": "content"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 17,
+      "col": 1,
+      "category": "ModuleDecl",
+      "rust_construct": "ModuleDecl",
+      "snippet": "pub mod data ;",
+      "reason": "external `mod foo;` declaration — file-linkage, not translatable library surface (Mycelium's nodule-per-file model makes the module tree implicit in the file layout; the sibling file transpiles as its own nodule). Excluded from the expressible-fraction denominator, recorded not dropped",
+      "item_name": "data"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 18,
+      "col": 1,
+      "category": "ModuleDecl",
+      "rust_construct": "ModuleDecl",
+      "snippet": "pub mod datum ;",
+      "reason": "external `mod foo;` declaration — file-linkage, not translatable library surface (Mycelium's nodule-per-file model makes the module tree implicit in the file layout; the sibling file transpiles as its own nodule). Excluded from the expressible-fraction denominator, recorded not dropped",
+      "item_name": "datum"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 19,
+      "col": 1,
+      "category": "ModuleDecl",
+      "rust_construct": "ModuleDecl",
+      "snippet": "pub mod guarantee ;",
+      "reason": "external `mod foo;` declaration — file-linkage, not translatable library surface (Mycelium's nodule-per-file model makes the module tree implicit in the file layout; the sibling file transpiles as its own nodule). Excluded from the expressible-fraction denominator, recorded not dropped",
+      "item_name": "guarantee"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 20,
+      "col": 1,
+      "category": "ModuleDecl",
+      "rust_construct": "ModuleDecl",
+      "snippet": "pub mod id ;",
+      "reason": "external `mod foo;` declaration — file-linkage, not translatable library surface (Mycelium's nodule-per-file model makes the module tree implicit in the file layout; the sibling file transpiles as its own nodule). Excluded from the expressible-fraction denominator, recorded not dropped",
+      "item_name": "id"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 21,
+      "col": 1,
+      "category": "ModuleDecl",
+      "rust_construct": "ModuleDecl",
+      "snippet": "pub mod lower ;",
+      "reason": "external `mod foo;` declaration — file-linkage, not translatable library surface (Mycelium's nodule-per-file model makes the module tree implicit in the file layout; the sibling file transpiles as its own nodule). Excluded from the expressible-fraction denominator, recorded not dropped",
+      "item_name": "lower"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 22,
+      "col": 1,
+      "category": "ModuleDecl",
+      "rust_construct": "ModuleDecl",
+      "snippet": "pub mod meta ;",
+      "reason": "external `mod foo;` declaration — file-linkage, not translatable library surface (Mycelium's nodule-per-file model makes the module tree implicit in the file layout; the sibling file transpiles as its own nodule). Excluded from the expressible-fraction denominator, recorded not dropped",
+      "item_name": "meta"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 23,
+      "col": 1,
+      "category": "ModuleDecl",
+      "rust_construct": "ModuleDecl",
+      "snippet": "pub mod node ;",
+      "reason": "external `mod foo;` declaration — file-linkage, not translatable library surface (Mycelium's nodule-per-file model makes the module tree implicit in the file layout; the sibling file transpiles as its own nodule). Excluded from the expressible-fraction denominator, recorded not dropped",
+      "item_name": "node"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 24,
+      "col": 1,
+      "category": "ModuleDecl",
+      "rust_construct": "ModuleDecl",
+      "snippet": "pub mod prim ;",
+      "reason": "external `mod foo;` declaration — file-linkage, not translatable library surface (Mycelium's nodule-per-file model makes the module tree implicit in the file layout; the sibling file transpiles as its own nodule). Excluded from the expressible-fraction denominator, recorded not dropped",
+      "item_name": "prim"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 25,
+      "col": 1,
+      "category": "ModuleDecl",
+      "rust_construct": "ModuleDecl",
+      "snippet": "pub mod recon ;",
+      "reason": "external `mod foo;` declaration — file-linkage, not translatable library surface (Mycelium's nodule-per-file model makes the module tree implicit in the file layout; the sibling file transpiles as its own nodule). Excluded from the expressible-fraction denominator, recorded not dropped",
+      "item_name": "recon"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 26,
+      "col": 1,
+      "category": "ModuleDecl",
+      "rust_construct": "ModuleDecl",
+      "snippet": "pub mod repr ;",
+      "reason": "external `mod foo;` declaration — file-linkage, not translatable library surface (Mycelium's nodule-per-file model makes the module tree implicit in the file layout; the sibling file transpiles as its own nodule). Excluded from the expressible-fraction denominator, recorded not dropped",
+      "item_name": "repr"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 27,
+      "col": 1,
+      "category": "ModuleDecl",
+      "rust_construct": "ModuleDecl",
+      "snippet": "pub mod ternary ;",
+      "reason": "external `mod foo;` declaration — file-linkage, not translatable library surface (Mycelium's nodule-per-file model makes the module tree implicit in the file layout; the sibling file transpiles as its own nodule). Excluded from the expressible-fraction denominator, recorded not dropped",
+      "item_name": "ternary"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 28,
+      "col": 1,
+      "category": "ModuleDecl",
+      "rust_construct": "ModuleDecl",
+      "snippet": "pub mod value ;",
+      "reason": "external `mod foo;` declaration — file-linkage, not translatable library surface (Mycelium's nodule-per-file model makes the module tree implicit in the file layout; the sibling file transpiles as its own nodule). Excluded from the expressible-fraction denominator, recorded not dropped",
+      "item_name": "value"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 29,
+      "col": 1,
+      "category": "ModuleDecl",
+      "rust_construct": "ModuleDecl",
+      "snippet": "pub mod wrapping ;",
+      "reason": "external `mod foo;` declaration — file-linkage, not translatable library surface (Mycelium's nodule-per-file model makes the module tree implicit in the file layout; the sibling file transpiles as its own nodule). Excluded from the expressible-fraction denominator, recorded not dropped",
+      "item_name": "wrapping"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 31,
+      "col": 1,
+      "category": "TestItem",
+      "rust_construct": "TestItem",
+      "snippet": "# [cfg (test)] mod tests ;",
+      "reason": "#[cfg(test)] item — out of scope for this PoC's transpilation surface (excluded from the expressible-fraction denominator, but recorded, never silently skipped)",
+      "item_name": "tests"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 34,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use bound :: { Bound , BoundBasis , BoundKind , NormKind } ;",
+      "reason": "`use bound::Bound` — `Bound` is not among sibling `bound`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": "co-include:BoundBasis,NormKind"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 34,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use bound :: { Bound , BoundBasis , BoundKind , NormKind } ;",
+      "reason": "`use bound::BoundKind` — `BoundKind` is not among sibling `bound`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": "co-include:BoundBasis,NormKind"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 36,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use content :: { operation_hash , Names } ;",
+      "reason": "`use content::operation_hash` — `operation_hash` is not among sibling `content`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2); `use content::Names` — `Names` is not among sibling `content`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": null
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 37,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use data :: { CtorDecl , CtorRef , CtorSpec , DataDecl , DataRegistry , DeclSpec , FieldSpec , FieldTy , FieldTyRef , FnSig , RegistryError , ResolvedFieldTyRef , ResolvedFnSig , } ;",
+      "reason": "`use data::CtorDecl` — `CtorDecl` is not among sibling `data`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": "co-include:FieldTyRef,RegistryError,ResolvedFieldTyRef"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 37,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use data :: { CtorDecl , CtorRef , CtorSpec , DataDecl , DataRegistry , DeclSpec , FieldSpec , FieldTy , FieldTyRef , FnSig , RegistryError , ResolvedFieldTyRef , ResolvedFnSig , } ;",
+      "reason": "`use data::CtorRef` — `CtorRef` is not among sibling `data`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": "co-include:FieldTyRef,RegistryError,ResolvedFieldTyRef"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 37,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use data :: { CtorDecl , CtorRef , CtorSpec , DataDecl , DataRegistry , DeclSpec , FieldSpec , FieldTy , FieldTyRef , FnSig , RegistryError , ResolvedFieldTyRef , ResolvedFnSig , } ;",
+      "reason": "`use data::CtorSpec` — `CtorSpec` is not among sibling `data`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": "co-include:FieldTyRef,RegistryError,ResolvedFieldTyRef"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 37,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use data :: { CtorDecl , CtorRef , CtorSpec , DataDecl , DataRegistry , DeclSpec , FieldSpec , FieldTy , FieldTyRef , FnSig , RegistryError , ResolvedFieldTyRef , ResolvedFnSig , } ;",
+      "reason": "`use data::DataDecl` — `DataDecl` is not among sibling `data`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": "co-include:FieldTyRef,RegistryError,ResolvedFieldTyRef"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 37,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use data :: { CtorDecl , CtorRef , CtorSpec , DataDecl , DataRegistry , DeclSpec , FieldSpec , FieldTy , FieldTyRef , FnSig , RegistryError , ResolvedFieldTyRef , ResolvedFnSig , } ;",
+      "reason": "`use data::DataRegistry` — `DataRegistry` is not among sibling `data`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": "co-include:FieldTyRef,RegistryError,ResolvedFieldTyRef"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 37,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use data :: { CtorDecl , CtorRef , CtorSpec , DataDecl , DataRegistry , DeclSpec , FieldSpec , FieldTy , FieldTyRef , FnSig , RegistryError , ResolvedFieldTyRef , ResolvedFnSig , } ;",
+      "reason": "`use data::DeclSpec` — `DeclSpec` is not among sibling `data`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": "co-include:FieldTyRef,RegistryError,ResolvedFieldTyRef"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 37,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use data :: { CtorDecl , CtorRef , CtorSpec , DataDecl , DataRegistry , DeclSpec , FieldSpec , FieldTy , FieldTyRef , FnSig , RegistryError , ResolvedFieldTyRef , ResolvedFnSig , } ;",
+      "reason": "`use data::FieldSpec` — `FieldSpec` is not among sibling `data`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": "co-include:FieldTyRef,RegistryError,ResolvedFieldTyRef"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 37,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use data :: { CtorDecl , CtorRef , CtorSpec , DataDecl , DataRegistry , DeclSpec , FieldSpec , FieldTy , FieldTyRef , FnSig , RegistryError , ResolvedFieldTyRef , ResolvedFnSig , } ;",
+      "reason": "`use data::FieldTy` — `FieldTy` is not among sibling `data`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": "co-include:FieldTyRef,RegistryError,ResolvedFieldTyRef"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 37,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use data :: { CtorDecl , CtorRef , CtorSpec , DataDecl , DataRegistry , DeclSpec , FieldSpec , FieldTy , FieldTyRef , FnSig , RegistryError , ResolvedFieldTyRef , ResolvedFnSig , } ;",
+      "reason": "`use data::FnSig` — `FnSig` is not among sibling `data`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": "co-include:FieldTyRef,RegistryError,ResolvedFieldTyRef"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 37,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use data :: { CtorDecl , CtorRef , CtorSpec , DataDecl , DataRegistry , DeclSpec , FieldSpec , FieldTy , FieldTyRef , FnSig , RegistryError , ResolvedFieldTyRef , ResolvedFnSig , } ;",
+      "reason": "`use data::ResolvedFnSig` — `ResolvedFnSig` is not among sibling `data`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": "co-include:FieldTyRef,RegistryError,ResolvedFieldTyRef"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 41,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use datum :: { CoreValue , Datum } ;",
+      "reason": "`use datum::Datum` — `Datum` is not among sibling `datum`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": "co-include:CoreValue"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 44,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use meta :: { Meta , PackScheme , PhysicalLayout , Provenance , SparsityObs } ;",
+      "reason": "`use meta::Meta` — `Meta` is not among sibling `meta`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": "co-include:PackScheme,PhysicalLayout,SparsityObs"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 44,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use meta :: { Meta , PackScheme , PhysicalLayout , Provenance , SparsityObs } ;",
+      "reason": "`use meta::Provenance` — `Provenance` is not among sibling `meta`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": "co-include:PackScheme,PhysicalLayout,SparsityObs"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 45,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use node :: { Alt , Node , PolicyRef , Prim , VarId } ;",
+      "reason": "`use node::Alt` — `Alt` is not among sibling `node`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2); `use node::Node` — `Node` is not among sibling `node`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2); `use node::PolicyRef` — `PolicyRef` is not among sibling `node`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2); `use node::Prim` — `Prim` is not among sibling `node`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2); `use node::VarId` — `VarId` is not among sibling `node`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": null
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 46,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use prim :: { PrimDecl , PrimParadigm , PrimRef , PrimSig , PrimTable , WidthRel } ;",
+      "reason": "`use prim::PrimDecl` — `PrimDecl` is not among sibling `prim`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": "co-include:PrimParadigm,PrimRef,PrimSig,WidthRel"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 46,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use prim :: { PrimDecl , PrimParadigm , PrimRef , PrimSig , PrimTable , WidthRel } ;",
+      "reason": "`use prim::PrimTable` — `PrimTable` is not among sibling `prim`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": "co-include:PrimParadigm,PrimRef,PrimSig,WidthRel"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 47,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use recon :: { CleanupShape , DecodeProcedure , DecodeSpec , InitStrategy , Recipe , ReconInfo , ReconMode , } ;",
+      "reason": "`use recon::DecodeSpec` — `DecodeSpec` is not among sibling `recon`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": "co-include:CleanupShape,DecodeProcedure,InitStrategy,ReconMode"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 47,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use recon :: { CleanupShape , DecodeProcedure , DecodeSpec , InitStrategy , Recipe , ReconInfo , ReconMode , } ;",
+      "reason": "`use recon::Recipe` — `Recipe` is not among sibling `recon`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": "co-include:CleanupShape,DecodeProcedure,InitStrategy,ReconMode"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 47,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use recon :: { CleanupShape , DecodeProcedure , DecodeSpec , InitStrategy , Recipe , ReconInfo , ReconMode , } ;",
+      "reason": "`use recon::ReconInfo` — `ReconInfo` is not among sibling `recon`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": "co-include:CleanupShape,DecodeProcedure,InitStrategy,ReconMode"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 50,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use repr :: { FloatWidth , Repr , ScalarKind , SparsityClass } ;",
+      "reason": "`use repr::Repr` — `Repr` is not among sibling `repr`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": "co-include:FloatWidth,ScalarKind,SparsityClass"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 51,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use value :: { Payload , Trit , Value , CANONICAL_NAN_BITS } ;",
+      "reason": "`use value::Value` — `Value` is not among sibling `value`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": "co-include+use:Payload,Trit,CANONICAL_NAN_BITS"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 52,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use wrapping :: WrappingOpt ;",
+      "reason": "`use wrapping::WrappingOpt` — `WrappingOpt` is not among sibling `wrapping`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": null
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 54,
+      "col": 1,
+      "category": "NamedFieldDrop",
+      "rust_construct": "NamedFieldDrop",
+      "snippet": "# [doc = \" Well-formedness errors for Core IR construction (RFC-0001 §4.3/§4.5 invariants).\"] # [derive (Debug , Clone , PartialEq , Eq)] pub enum WfError { # [doc = \" The guarantee/bound pairing violates M-I1…M-I4 (the honesty rule).\"] GuaranteeBoundMismatch , # [doc = \" A bound's numeric payload is out of range (e.g. `delta ∉ [0,1]`).\"] MalformedBound , # [doc = \" A representation has a non-positive width/dim/trits or an empty VSA model id.\"] MalformedRepr , # [doc = \" A representation declares a dimension above [`repr::MAX_DIM`] — rejected as an\"] # [doc = \" over-allocation (DoS) guard before any value of that `Repr` is materialized. Names the\"] # [doc = \" offending field, its declared value, and the cap (never-silent, G2). See\"] # [doc = \" [`Repr::check_well_formed`](crate::Repr::check_well_formed).\"] DimensionTooLarge { # [doc = \" The offending dimension field (`\\\"width\\\"` / `\\\"trits\\\"` / `\\\"dim\\\"` / `\\\"max_active\\\"`).\"] field : & 'static str , # [doc = \" The declared (rejected) value.\"] value : u32 , # [doc = \" The enforced upper bound ([`repr::MAX_DIM`]).\"] cap : u32 , } , # [doc = \" A payload does not match its representation (paradigm or length).\"] PayloadReprMismatch , # [doc = \" A reconstruction manifest violates its schema invariants (RFC-0003 §6;\"] # [doc = \" `reconstruction-manifest.schema.json`).\"] MalformedReconstruction , # [doc = \" A measured sparsity observation is out of range (e.g. `density ∉ [0,1]`). Distinct from\"] # [doc = \" [`WfError::MalformedBound`]: a [`SparsityObs`] is an observation, not a\"] # [doc = \" guarantee bound (A6-08).\"] MalformedSparsity , }",
+      "reason": "enum `WfError` variant `DimensionTooLarge` named field(s) `field, value, cap` emitted positionally as `DimensionTooLarge(Bytes, Binary{32}, Binary{32})` — Mycelium's `constructor` is positional-only (no record surface); product structure preserved, field names dropped",
+      "item_name": "WfError"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 54,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" Well-formedness errors for Core IR construction (RFC-0001 §4.3/§4.5 invariants).\"] # [derive (Debug , Clone , PartialEq , Eq)] pub enum WfError { # [doc = \" The guarantee/bound pairing violates M-I1…M-I4 (the honesty rule).\"] GuaranteeBoundMismatch , # [doc = \" A bound's numeric payload is out of range (e.g. `delta ∉ [0,1]`).\"] MalformedBound , # [doc = \" A representation has a non-positive width/dim/trits or an empty VSA model id.\"] MalformedRepr , # [doc = \" A representation declares a dimension above [`repr::MAX_DIM`] — rejected as an\"] # [doc = \" over-allocation (DoS) guard before any value of that `Repr` is materialized. Names the\"] # [doc = \" offending field, its declared value, and the cap (never-silent, G2). See\"] # [doc = \" [`Repr::check_well_formed`](crate::Repr::check_well_formed).\"] DimensionTooLarge { # [doc = \" The offending dimension field (`\\\"width\\\"` / `\\\"trits\\\"` / `\\\"dim\\\"` / `\\\"max_active\\\"`).\"] field : & 'static str , # [doc = \" The declared (rejected) value.\"] value : u32 , # [doc = \" The enforced upper bound ([`repr::MAX_DIM`]).\"] cap : u32 , } , # [doc = \" A payload does not match its representation (paradigm or length).\"] PayloadReprMismatch , # [doc = \" A reconstruction manifest violates its schema invariants (RFC-0003 §6;\"] # [doc = \" `reconstruction-manifest.schema.json`).\"] MalformedReconstruction , # [doc = \" A measured sparsity observation is out of range (e.g. `density ∉ [0,1]`). Distinct from\"] # [doc = \" [`WfError::MalformedBound`]: a [`SparsityObs`] is an observation, not a\"] # [doc = \" guarantee bound (A6-08).\"] MalformedSparsity , }",
+      "reason": "enum `WfError` derive(Clone) is a satisfied no-op under Mycelium's value semantics (ADR-003 — every value already copies structurally; DN-128 §6.1) — not emitted as an impl, not a gap",
+      "item_name": "WfError"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 54,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" Well-formedness errors for Core IR construction (RFC-0001 §4.3/§4.5 invariants).\"] # [derive (Debug , Clone , PartialEq , Eq)] pub enum WfError { # [doc = \" The guarantee/bound pairing violates M-I1…M-I4 (the honesty rule).\"] GuaranteeBoundMismatch , # [doc = \" A bound's numeric payload is out of range (e.g. `delta ∉ [0,1]`).\"] MalformedBound , # [doc = \" A representation has a non-positive width/dim/trits or an empty VSA model id.\"] MalformedRepr , # [doc = \" A representation declares a dimension above [`repr::MAX_DIM`] — rejected as an\"] # [doc = \" over-allocation (DoS) guard before any value of that `Repr` is materialized. Names the\"] # [doc = \" offending field, its declared value, and the cap (never-silent, G2). See\"] # [doc = \" [`Repr::check_well_formed`](crate::Repr::check_well_formed).\"] DimensionTooLarge { # [doc = \" The offending dimension field (`\\\"width\\\"` / `\\\"trits\\\"` / `\\\"dim\\\"` / `\\\"max_active\\\"`).\"] field : & 'static str , # [doc = \" The declared (rejected) value.\"] value : u32 , # [doc = \" The enforced upper bound ([`repr::MAX_DIM`]).\"] cap : u32 , } , # [doc = \" A payload does not match its representation (paradigm or length).\"] PayloadReprMismatch , # [doc = \" A reconstruction manifest violates its schema invariants (RFC-0003 §6;\"] # [doc = \" `reconstruction-manifest.schema.json`).\"] MalformedReconstruction , # [doc = \" A measured sparsity observation is out of range (e.g. `density ∉ [0,1]`). Distinct from\"] # [doc = \" [`WfError::MalformedBound`]: a [`SparsityObs`] is an observation, not a\"] # [doc = \" guarantee bound (A6-08).\"] MalformedSparsity , }",
+      "reason": "enum `WfError` derive(Eq): covered by co-occurring PartialEq → `fn eq_WfError` (product-row collision policy; DN-128 / ONESHOT C2) — not a second emission",
+      "item_name": "WfError"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 86,
+      "col": 1,
+      "category": "Impl",
+      "rust_construct": "Impl",
+      "snippet": "impl core :: fmt :: Display for WfError { fn fmt (& self , f : & mut core :: fmt :: Formatter < '_ >) -> core :: fmt :: Result { if let WfError :: DimensionTooLarge { field , value , cap } = self { return write ! (f , \"representation dimension '{field}' = {value} exceeds the cap {cap} \\\n                 (over-allocation guard)\") ; } let s = match self { WfError :: GuaranteeBoundMismatch => \"guarantee/bound inconsistency (M-I1..M-I4)\" , WfError :: MalformedBound => \"bound payload out of range\" , WfError :: MalformedRepr => { \"representation has non-positive width/dim/trits or empty model\" } WfError :: PayloadReprMismatch => \"payload does not match its representation\" , WfError :: MalformedReconstruction => { \"reconstruction manifest violates its schema invariants (RFC-0003 §6)\" } WfError :: MalformedSparsity => \"sparsity observation out of range (density ∉ [0,1])\" , WfError :: DimensionTooLarge { .. } => unreachable ! (\"handled above\") , } ; f . write_str (s) } }",
+      "reason": "trait-impl of non-prelude trait `Display` — no ambient trait definition and synthetic trait emission is refused (DN-34 §8.8 / DN-122 MVP); gapped the whole impl so the residual cannot file-poison myc-check (G2; express gap-close 2026-07-16)",
+      "item_name": "WfError"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "line": 114,
+      "col": 1,
+      "category": "Impl",
+      "rust_construct": "Impl",
+      "snippet": "impl std :: error :: Error for WfError { }",
+      "reason": "trait-impl of non-prelude trait `Error` — no ambient trait definition and synthetic trait emission is refused (DN-34 §8.8 / DN-122 MVP); gapped the whole impl so the residual cannot file-poison myc-check (G2; express gap-close 2026-07-16)",
+      "item_name": "WfError"
+    }
+  ],
+  "total_top_level_items": 35
+}

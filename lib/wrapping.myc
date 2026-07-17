@@ -1,0 +1,37 @@
+// nodule: core.wrapping_kw
+// The named Axis-B `wrapping` opt-out (RFC-0034 §10; M-791).
+//
+// **Never-silent failability (Axis B)** — out-of-range yields `Option`/`Result`/`SwapError` —
+// is **default-on in every mode**, including `fast`. It is O(1) and is the cheapest part of the
+// transparency floor (RFC-0034 §3.3). A developer who genuinely wants wraparound arithmetic
+// opts in via the **named, explicit [`WrappingOpt`]** marker — and choosing it is itself
+// never-silent: the opt-out is visible at the use site and does **not** silence Axis-A
+// (guarantee tags, `cert_mode`) or any other transparency dimension (G2/VR-5).
+//
+// ## Design
+//
+// `WrappingOpt` is a **marker** carried on [`Meta`](crate::meta::Meta) when the operation that
+// produced the value was given an explicit, named `wrapping` opt-out. It is:
+//
+// - **Absent by default** (`Meta::wrapping_opt() == None`) — Axis-B never-silent failability is
+//   the default; no annotation needed for the safe path.
+// - **Explicit to attach** — only [`Meta::with_wrapping`](crate::meta::Meta::with_wrapping)
+//   sets it; there is no ambient "wrapping mode" or implicit coercion.
+// - **Does not affect guarantee strength or cert_mode** — a `wrapping` value can be `Exact` or
+//   `Declared`, `fast` or `certified`; the Axis-A / certification axes are orthogonal (VR-5:
+//   opt-out of one axis never upgrades another).
+// - **Excluded from the content hash** — like all of `Meta`, it rides `Meta` which RFC-0001 §4.6
+//   excludes wholesale. The same value with vs without `wrapping` annotation is content-identical.
+//
+// ## Downstream (FLAG — M-791)
+//
+// The **op-layer wiring** — arithmetic/swap operations that actually honor the `WrappingOpt`
+// marker by electing wraparound instead of returning `Option`/`Result`/`SwapError` — is a
+// downstream task (M-788 onward). This module and the `Meta` tag are the **representation-layer**
+// groundwork; the op layer is wired once arithmetic/swap operations exist.
+// @summary: best-effort transpilation via mycelium-transpile (M-873). Declared,
+// unvalidated — no Mycelium parser/typechecker confirms this output; see the
+// accompanying .gap.json for every construct this pass could not express.
+nodule core.wrapping_kw;
+
+

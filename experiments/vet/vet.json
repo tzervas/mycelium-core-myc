@@ -1,0 +1,342 @@
+{
+  "records": [
+    {
+      "myc_file": "/tmp/myc-decompose/work/mycelium-core-myc/experiments/vet/binary.myc",
+      "source_file": "/root/git/isolated/mycelium/crates/mycelium-core/src/binary.rs",
+      "class": "Clean",
+      "exit_code": 0,
+      "diagnostic": "",
+      "non_test_items": 34,
+      "emitted_items": 5
+    },
+    {
+      "myc_file": "/tmp/myc-decompose/work/mycelium-core-myc/experiments/vet/bound.myc",
+      "source_file": "/root/git/isolated/mycelium/crates/mycelium-core/src/bound.rs",
+      "class": "CheckError",
+      "exit_code": 3,
+      "diagnostic": "check-error: check error in `strength`: unknown type `GuaranteeStrength`",
+      "non_test_items": 8,
+      "emitted_items": 3
+    },
+    {
+      "myc_file": "/tmp/myc-decompose/work/mycelium-core-myc/experiments/vet/cert_mode.myc",
+      "source_file": "/root/git/isolated/mycelium/crates/mycelium-core/src/cert_mode.rs",
+      "class": "CheckError",
+      "exit_code": 3,
+      "diagnostic": "check-error: check error in `depth`: a bare integer literal has no representation family (no cross-family defaulting, Q6) — write a binary/ternary literal, declare a `default paradigm` (RFC-0012), or ascribe a Dense element",
+      "non_test_items": 5,
+      "emitted_items": 4
+    },
+    {
+      "myc_file": "/tmp/myc-decompose/work/mycelium-core-myc/experiments/vet/content.myc",
+      "source_file": "/root/git/isolated/mycelium/crates/mycelium-core/src/content.rs",
+      "class": "CheckError",
+      "exit_code": 3,
+      "diagnostic": "check-error: check error in `Payload`: unknown type `Value`",
+      "non_test_items": 14,
+      "emitted_items": 3
+    },
+    {
+      "myc_file": "/tmp/myc-decompose/work/mycelium-core-myc/experiments/vet/data.myc",
+      "source_file": "/root/git/isolated/mycelium/crates/mycelium-core/src/data.rs",
+      "class": "CheckError",
+      "exit_code": 3,
+      "diagnostic": "check-error: check error in `ResolvedFieldTyRef`: unknown type `Repr`",
+      "non_test_items": 37,
+      "emitted_items": 4
+    },
+    {
+      "myc_file": "/tmp/myc-decompose/work/mycelium-core-myc/experiments/vet/datum.myc",
+      "source_file": "/root/git/isolated/mycelium/crates/mycelium-core/src/datum.rs",
+      "class": "CheckError",
+      "exit_code": 3,
+      "diagnostic": "check-error: check error in `CoreValue`: unknown type `Value`",
+      "non_test_items": 19,
+      "emitted_items": 5
+    },
+    {
+      "myc_file": "/tmp/myc-decompose/work/mycelium-core-myc/experiments/vet/guarantee.myc",
+      "source_file": "/root/git/isolated/mycelium/crates/mycelium-core/src/guarantee.rs",
+      "class": "CheckError",
+      "exit_code": 3,
+      "diagnostic": "check-error: check error in `meet`: unknown function/constructor/prim `gte`",
+      "non_test_items": 2,
+      "emitted_items": 2
+    },
+    {
+      "myc_file": "/tmp/myc-decompose/work/mycelium-core-myc/experiments/vet/id.myc",
+      "source_file": "/root/git/isolated/mycelium/crates/mycelium-core/src/id.rs",
+      "class": "Clean",
+      "exit_code": 0,
+      "diagnostic": "",
+      "non_test_items": 6,
+      "emitted_items": 3
+    },
+    {
+      "myc_file": "/tmp/myc-decompose/work/mycelium-core-myc/experiments/vet/lib.myc",
+      "source_file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lib.rs",
+      "class": "CheckError",
+      "exit_code": 3,
+      "diagnostic": "check-error: check error in `ContentHash`: duplicate type declaration",
+      "non_test_items": 17,
+      "emitted_items": 12
+    },
+    {
+      "myc_file": "/tmp/myc-decompose/work/mycelium-core-myc/experiments/vet/lower.myc",
+      "source_file": "/root/git/isolated/mycelium/crates/mycelium-core/src/lower.rs",
+      "class": "CheckError",
+      "exit_code": 3,
+      "diagnostic": "check-error: check error in `Payload`: unknown type `Value`",
+      "non_test_items": 35,
+      "emitted_items": 10
+    },
+    {
+      "myc_file": "/tmp/myc-decompose/work/mycelium-core-myc/experiments/vet/meta.myc",
+      "source_file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "class": "Clean",
+      "exit_code": 0,
+      "diagnostic": "",
+      "non_test_items": 17,
+      "emitted_items": 8
+    },
+    {
+      "myc_file": "/tmp/myc-decompose/work/mycelium-core-myc/experiments/vet/node.myc",
+      "source_file": "/root/git/isolated/mycelium/crates/mycelium-core/src/node.rs",
+      "class": "Clean",
+      "exit_code": 0,
+      "diagnostic": "",
+      "non_test_items": 15,
+      "emitted_items": 1
+    },
+    {
+      "myc_file": "/tmp/myc-decompose/work/mycelium-core-myc/experiments/vet/prim.myc",
+      "source_file": "/root/git/isolated/mycelium/crates/mycelium-core/src/prim.rs",
+      "class": "CheckError",
+      "exit_code": 3,
+      "diagnostic": "check-error: check error in `eq_PrimRef`: unknown function/constructor/prim `eq_ContentHash`",
+      "non_test_items": 15,
+      "emitted_items": 7
+    },
+    {
+      "myc_file": "/tmp/myc-decompose/work/mycelium-core-myc/experiments/vet/recon.myc",
+      "source_file": "/root/git/isolated/mycelium/crates/mycelium-core/src/recon.rs",
+      "class": "Clean",
+      "exit_code": 0,
+      "diagnostic": "",
+      "non_test_items": 16,
+      "emitted_items": 6
+    },
+    {
+      "myc_file": "/tmp/myc-decompose/work/mycelium-core-myc/experiments/vet/repr.myc",
+      "source_file": "/root/git/isolated/mycelium/crates/mycelium-core/src/repr.rs",
+      "class": "CheckError",
+      "exit_code": 3,
+      "diagnostic": "check-error: check error in `_10FloatWidth3tag`: a bare integer literal has no representation family (no cross-family defaulting, Q6) — write a binary/ternary literal, declare a `default paradigm` (RFC-0012), or ascribe a Dense element",
+      "non_test_items": 12,
+      "emitted_items": 6
+    },
+    {
+      "myc_file": "/tmp/myc-decompose/work/mycelium-core-myc/experiments/vet/ternary/big_ternary.myc",
+      "source_file": "/root/git/isolated/mycelium/crates/mycelium-core/src/ternary/big_ternary.rs",
+      "class": "CheckError",
+      "exit_code": 3,
+      "diagnostic": "check-error: check error in `digit`: a bare integer literal has no representation family (no cross-family defaulting, Q6) — write a binary/ternary literal, declare a `default paradigm` (RFC-0012), or ascribe a Dense element",
+      "non_test_items": 7,
+      "emitted_items": 2
+    },
+    {
+      "myc_file": "/tmp/myc-decompose/work/mycelium-core-myc/experiments/vet/ternary/mod.myc",
+      "source_file": "/root/git/isolated/mycelium/crates/mycelium-core/src/ternary/mod.rs",
+      "class": "CheckError",
+      "exit_code": 3,
+      "diagnostic": "check-error: check error in `digit`: a bare integer literal has no representation family (no cross-family defaulting, Q6) — write a binary/ternary literal, declare a `default paradigm` (RFC-0012), or ascribe a Dense element",
+      "non_test_items": 15,
+      "emitted_items": 4
+    },
+    {
+      "myc_file": "/tmp/myc-decompose/work/mycelium-core-myc/experiments/vet/value.myc",
+      "source_file": "/root/git/isolated/mycelium/crates/mycelium-core/src/value.rs",
+      "class": "CheckError",
+      "exit_code": 3,
+      "diagnostic": "check-error: check error in `Payload`: unknown type `Value`",
+      "non_test_items": 18,
+      "emitted_items": 5
+    },
+    {
+      "myc_file": "/tmp/myc-decompose/work/mycelium-core-myc/experiments/vet/wrapping.myc",
+      "source_file": "/root/git/isolated/mycelium/crates/mycelium-core/src/wrapping.rs",
+      "class": "Clean",
+      "exit_code": 0,
+      "diagnostic": "",
+      "non_test_items": 3,
+      "emitted_items": 0
+    }
+  ],
+  "total_non_test_items": 295,
+  "total_emitted_items": 90,
+  "total_checked_clean_items": 23,
+  "class_counts": {
+    "CheckError": 13,
+    "Clean": 6
+  },
+  "phylum": {
+    "ran": true,
+    "ok": false,
+    "nodules": [
+      {
+        "nodule": "core.binary",
+        "file": "binary.myc",
+        "class": "Clean",
+        "site": null,
+        "on": null,
+        "message": null
+      },
+      {
+        "nodule": "core.bound",
+        "file": "bound.myc",
+        "class": "CheckError",
+        "site": "strength",
+        "on": null,
+        "message": "unknown type `GuaranteeStrength`"
+      },
+      {
+        "nodule": "core.cert_mode",
+        "file": "cert_mode.myc",
+        "class": "CheckError",
+        "site": "depth",
+        "on": null,
+        "message": "a bare integer literal has no representation family (no cross-family defaulting, Q6) — write a binary/ternary literal, declare a `default paradigm` (RFC-0012), or ascribe a Dense element"
+      },
+      {
+        "nodule": "core.content",
+        "file": "content.myc",
+        "class": "CheckError",
+        "site": "Payload",
+        "on": null,
+        "message": "unknown type `Value`"
+      },
+      {
+        "nodule": "core.data",
+        "file": "data.myc",
+        "class": "CheckError",
+        "site": "ResolvedFieldTyRef",
+        "on": null,
+        "message": "unknown type `Repr`"
+      },
+      {
+        "nodule": "core.datum",
+        "file": "datum.myc",
+        "class": "CheckError",
+        "site": "CoreValue",
+        "on": null,
+        "message": "unknown type `Value`"
+      },
+      {
+        "nodule": "core.guarantee",
+        "file": "guarantee.myc",
+        "class": "CheckError",
+        "site": "meet",
+        "on": null,
+        "message": "unknown function/constructor/prim `gte`"
+      },
+      {
+        "nodule": "core.id",
+        "file": "id.myc",
+        "class": "Clean",
+        "site": null,
+        "on": null,
+        "message": null
+      },
+      {
+        "nodule": "core",
+        "file": "lib.myc",
+        "class": "CheckError",
+        "site": "ContentHash",
+        "on": null,
+        "message": "duplicate type declaration"
+      },
+      {
+        "nodule": "core.lower_kw",
+        "file": "lower.myc",
+        "class": "CheckError",
+        "site": "Payload",
+        "on": null,
+        "message": "unknown type `Value`"
+      },
+      {
+        "nodule": "core.meta",
+        "file": "meta.myc",
+        "class": "Clean",
+        "site": null,
+        "on": null,
+        "message": null
+      },
+      {
+        "nodule": "core.node",
+        "file": "node.myc",
+        "class": "Clean",
+        "site": null,
+        "on": null,
+        "message": null
+      },
+      {
+        "nodule": "core.prim",
+        "file": "prim.myc",
+        "class": "CheckError",
+        "site": "eq_PrimRef",
+        "on": null,
+        "message": "unknown function/constructor/prim `eq_ContentHash`"
+      },
+      {
+        "nodule": "core.recon",
+        "file": "recon.myc",
+        "class": "Clean",
+        "site": null,
+        "on": null,
+        "message": null
+      },
+      {
+        "nodule": "core.repr",
+        "file": "repr.myc",
+        "class": "CheckError",
+        "site": "_10FloatWidth3tag",
+        "on": null,
+        "message": "a bare integer literal has no representation family (no cross-family defaulting, Q6) — write a binary/ternary literal, declare a `default paradigm` (RFC-0012), or ascribe a Dense element"
+      },
+      {
+        "nodule": "core.ternary.big_ternary",
+        "file": "ternary/big_ternary.myc",
+        "class": "CheckError",
+        "site": "digit",
+        "on": null,
+        "message": "a bare integer literal has no representation family (no cross-family defaulting, Q6) — write a binary/ternary literal, declare a `default paradigm` (RFC-0012), or ascribe a Dense element"
+      },
+      {
+        "nodule": "core.ternary",
+        "file": "ternary/mod.myc",
+        "class": "CheckError",
+        "site": "digit",
+        "on": null,
+        "message": "a bare integer literal has no representation family (no cross-family defaulting, Q6) — write a binary/ternary literal, declare a `default paradigm` (RFC-0012), or ascribe a Dense element"
+      },
+      {
+        "nodule": "core.value",
+        "file": "value.myc",
+        "class": "CheckError",
+        "site": "Payload",
+        "on": null,
+        "message": "unknown type `Value`"
+      },
+      {
+        "nodule": "core.wrapping_kw",
+        "file": "wrapping.myc",
+        "class": "Clean",
+        "site": null,
+        "on": null,
+        "message": null
+      }
+    ],
+    "diagnostic": "unknown type `Value`"
+  },
+  "total_checked_clean_items_phylum": 23
+}

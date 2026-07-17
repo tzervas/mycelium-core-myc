@@ -1,0 +1,99 @@
+// nodule: core.binary
+// Two's-complement binary integer semantics (M-120 support; extended by M-887 with fixed-width
+// multiply, M-888 with fixed-width unsigned division/remainder, M-889 with fixed-width logical
+// shifts).
+//
+// An `n`-bit value is read **most-significant-first** as a two's-complement integer with range
+// `B_n = [−2^(n-1), 2^(n-1) − 1]` (`docs/spec/swaps/binary-ternary.md` §2). This is the binary-side
+// codec the binary↔ternary swap (M-120) uses; the balanced-ternary side lives in
+// [`crate::ternary`]. Values use `i64`, exact for every `n ≤ 64`. [`mul`] (M-887) reuses this same
+// `n ≤ 64` cap (via an `i128` intermediate product) and gives the never-silent fixed-width multiply
+// contract `mycelium-interp`'s `bin.mul` prim (RFC-0033 §4.1.2/§4.1.3; ADR-028) delegates to —
+// mirroring how [`crate::ternary::mul`] is the kernel side of the `trit.mul` prim.
+//
+// [`div_rem`] (M-888) reads its operands under the **unsigned** bitvector interpretation instead
+// ([`bits_to_uint`]/[`uint_to_bits`], not [`bits_to_int`]/[`int_to_bits`]) — RFC-0033 §4.1.1's
+// `Repr::Binary` stored value has no signedness, and §4.1.2 requires division to be a **distinct
+// named op per signedness** (unlike `add`/`sub`/`mul`/`neg`, which MAY be shared across the
+// signed/unsigned reading). This lands the unsigned reading first, under the `bin.div`/`bin.rem`
+// names the M-888 task specifies; the signed (two's-complement) `div`/`rem` ride M-767 under their
+// own distinct name (FLAGged in the `mycelium-interp` prim doc comment — `bin.*` was M-887's
+// namespace for the *signed* two's-complement multiply, so an *unsigned* op sharing it is a naming
+// tension worth a maintainer look, even though it is what the M-888 task text names).
+//
+// [`shl`]/[`shr`] (M-889) round out the signedness-split `shift` op set (RFC-0033 §4.1.2) with the
+// **logical** (unsigned) reading — same unsigned bitvector codec as [`div_rem`]. Shift-amount `>=`
+// width is an explicit never-silent refusal (never UB, wrap, or a silently-zeroed result); the
+// **arithmetic** (sign-extending) right shift is the distinct signed op M-767 lands later.
+//
+// [`add`]/[`sub`]/[`neg`] (M-766, `enb` Gap B) complete the **shared** two's-complement arithmetic
+// set RFC-0033 §4.1.2 names (`add`/`sub`/`mul`/`neg` — identical bit pattern across the signed/
+// unsigned reading, so they MAY be a single named op each; ADR-028). They read operands through the
+// same signed [`bits_to_int`]/[`int_to_bits`] codec [`mul`] already uses, and refuse an out-of-`B_n`
+// result explicitly — never a silent wrap. **Inventory note (verified against the registry before
+// landing these, per the M-766 task):** the pre-existing `bit.add`/`bit.sub` (kpr/E19-1, RFC-0032
+// D2) are a **different, unsigned-committed** family — their overflow criterion is unsigned
+// carry/borrow-out, which *under-refuses* relative to the signed range `B_n` (e.g. at `Binary{4}`,
+// `5 + 3 = 8` is unsigned-in-range `[0,15]` but signed-out-of-range `B_4 = [-8,7]`), so they cannot
+// stand in for the two's-complement `add`/`sub` this RFC names. [`mul`] (M-887) already established
+// the `bin.*`-namespaced, signed-committed reading this module follows; [`add`]/[`sub`] complete
+// that pair and [`neg`] is the genuinely-missing fourth member (there is no existing unsigned
+// "negate" to reconcile against — negation is inherently a signed concept).
+//
+// [`div_signed`]/[`rem_signed`]/[`shr_signed`]/[`cmp_signed`] (M-767, `enb` Gap B) complete the
+// **signedness-split** op set RFC-0033 §4.1.2 requires as *distinct named ops* — the signed
+// counterparts to the unsigned [`div_rem`] and the logical [`shr`], plus the two's-complement
+// ordering (ADR-028: signedness is a property of the *operation*, not the stored bitvector; its
+// Consequences section pins the SMT-LIB alignment — split `bvsdiv`/`bvudiv`, `bvslt`/`bvult`,
+// `bvashr`/`bvlshr`). **Rounding convention (grounding, VR-5):** RFC-0033 §4.1.2/§4.1.3 requires
+// the signedness *split* and never-silent overflow but does not literally pin the signed-division
+// rounding; the implemented convention is **truncation toward zero** with the remainder's sign
+// following the dividend (`a == q·b + r`, `|r| < |b|`) — the ADR-028-cited SMT-LIB `bvsdiv`/
+// `bvsrem` semantics (also Rust's `/`/`%`). That choice is `Declared` against the RFC text alone
+// and grounded by the ADR-028 SMT-LIB citation — FLAGged in the M-767 report for ratification,
+// never silently chosen. The single signed-division **overflow** case (`B_n`'s minimum ÷ −1: the
+// true quotient `+2^(n-1)` exceeds `B_n`'s maximum) is an explicit refusal, never an
+// SMT-LIB-style wrap — §4.1.3's never-silent overflow rule outranks the wrap SMT-LIB defines
+// there.
+// @summary: best-effort transpilation via mycelium-transpile (M-873). Declared,
+// unvalidated — no Mycelium parser/typechecker confirms this output; see the
+// accompanying .gap.json for every construct this pass could not express.
+nodule core.binary;
+
+// The current [`mul`] operand-width cap (`n ≤ 64`) — exact via an `i128` intermediate product, the
+// same cap [`bits_to_int`]/[`int_to_bits`] already declare. Public so callers (the `bin.mul` prim)
+// can distinguish an over-cap *width* refusal from an in-range-width arithmetic *overflow* refusal
+// without duplicating the constant (G2 — the two refusal reasons stay honestly distinct at the
+// caller's `EvalError` layer, even though this function collapses both to `None`).
+// Declared: co-emitted private const as zero-arg fn returning a BinLit — Mycelium has no const item production (`item` covers use/default/type/trait/impl/fn/object/lower/derive only); hand-port precedent `max_expr_depth()` (ORACLE-R1 A4; G2/VR-5: value from the Rust initializer or a known workspace-floor path, never fabricated). Use sites rewrite `NAME` → `NAME()`.
+fn MUL_MAX_WIDTH() => Binary{64} = 0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0100_0000; // 64
+
+// The current [`div_rem`] operand-width cap (`n ≤ 64`) — exact via a `u64` unsigned magnitude, the
+// same cap [`bits_to_uint`]/[`uint_to_bits`] already declare. Public so callers (the `bin.div`/
+// `bin.rem` prims) can distinguish an over-cap *width* refusal from a *div-by-zero* refusal without
+// duplicating the constant (G2 — the two refusal reasons stay honestly distinct at the caller's
+// `EvalError` layer, even though this function collapses both to `None`).
+// Declared: co-emitted private const as zero-arg fn returning a BinLit — Mycelium has no const item production (`item` covers use/default/type/trait/impl/fn/object/lower/derive only); hand-port precedent `max_expr_depth()` (ORACLE-R1 A4; G2/VR-5: value from the Rust initializer or a known workspace-floor path, never fabricated). Use sites rewrite `NAME` → `NAME()`.
+fn DIV_MAX_WIDTH() => Binary{64} = 0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0100_0000; // 64
+
+// The current [`shl`]/[`shr`] operand-width cap (`n ≤ 64`) — exact via a `u64`/`u128` unsigned
+// intermediate, the same cap [`bits_to_uint`]/[`uint_to_bits`] already declare. Public so callers
+// (the `bin.shl`/`bin.shr` prims) can distinguish an over-cap *width* refusal from an
+// out-of-range *shift-amount* refusal without duplicating the constant (G2 — the two refusal
+// reasons stay honestly distinct at the caller's `EvalError` layer, mirroring [`MUL_MAX_WIDTH`]/
+// [`DIV_MAX_WIDTH`]).
+// Declared: co-emitted private const as zero-arg fn returning a BinLit — Mycelium has no const item production (`item` covers use/default/type/trait/impl/fn/object/lower/derive only); hand-port precedent `max_expr_depth()` (ORACLE-R1 A4; G2/VR-5: value from the Rust initializer or a known workspace-floor path, never fabricated). Use sites rewrite `NAME` → `NAME()`.
+fn SHIFT_MAX_WIDTH() => Binary{64} = 0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0100_0000; // 64
+
+// The current [`add`]/[`sub`]/[`neg`] operand-width cap (`n ≤ 64`) — exact via the `i64` two's-
+// complement codec ([`bits_to_int`]/[`int_to_bits`]), the same cap those functions already declare.
+// Shared by all three two's-complement arithmetic ops, mirroring how [`DIV_MAX_WIDTH`] is shared by
+// [`div_rem`]'s quotient/remainder pair and [`SHIFT_MAX_WIDTH`] by [`shl`]/[`shr`].
+// Declared: co-emitted private const as zero-arg fn returning a BinLit — Mycelium has no const item production (`item` covers use/default/type/trait/impl/fn/object/lower/derive only); hand-port precedent `max_expr_depth()` (ORACLE-R1 A4; G2/VR-5: value from the Rust initializer or a known workspace-floor path, never fabricated). Use sites rewrite `NAME` → `NAME()`.
+fn TC_MAX_WIDTH() => Binary{64} = 0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0100_0000; // 64
+
+// The current [`checked_uint_to_f64`]/[`checked_f64_to_uint`] operand-width cap (`n ≤ 64`),
+// mirroring [`MUL_MAX_WIDTH`]/[`TC_MAX_WIDTH`] — the same `u64` exactness bound [`bits_to_uint`]/
+// [`uint_to_bits`] already declare.
+// Declared: co-emitted private const as zero-arg fn returning a BinLit — Mycelium has no const item production (`item` covers use/default/type/trait/impl/fn/object/lower/derive only); hand-port precedent `max_expr_depth()` (ORACLE-R1 A4; G2/VR-5: value from the Rust initializer or a known workspace-floor path, never fabricated). Use sites rewrite `NAME` → `NAME()`.
+fn FLOAT_CONV_MAX_WIDTH() => Binary{64} = 0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0100_0000; // 64

@@ -1,0 +1,225 @@
+{
+  "source": "/root/git/isolated/mycelium/crates/mycelium-core/src/prim.rs",
+  "emitted_items": [
+    "co-include:GuaranteeStrength",
+    "co-include:ContentHash",
+    "PrimParadigm",
+    "WidthRel",
+    "PrimSig",
+    "PrimRef",
+    "impl PrimRef"
+  ],
+  "gaps": [
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/prim.rs",
+      "line": 36,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "use std :: collections :: BTreeMap ;",
+      "reason": "`use std.collections::BTreeMap` — `std.collections` is not a sibling module OR sibling phylum transpiled in this same batch (an external crate, `std`, or simply out of this batch's target set). Flagged, not guessed (VR-5/G2)",
+      "item_name": null
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/prim.rs",
+      "line": 38,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "use crate :: content :: Canon ;",
+      "reason": "`use content::Canon` — `Canon` is not among sibling `content`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": null
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/prim.rs",
+      "line": 42,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" The representation paradigm of a prim operand or result (the `τ`'s paradigm in `Π(p)`). `Any` is\"] # [doc = \" the paradigm-polymorphic identity (`core.id : a → a`); the concrete paradigms pin a prim to\"] # [doc = \" `Binary{·}` or `Ternary{·}` (RFC-0007 §4.4). Width is governed separately by [`WidthRel`].\"] # [derive (Debug , Clone , Copy , PartialEq , Eq)] pub enum PrimParadigm { # [doc = \" Paradigm-polymorphic (the identity prim): any single paradigm, passed through.\"] Any , # [doc = \" A `Binary{n}` operand/result.\"] Binary , # [doc = \" A `Ternary{m}` operand/result.\"] Ternary , }",
+      "reason": "enum `PrimParadigm` derive(Clone) is a satisfied no-op under Mycelium's value semantics (ADR-003 — every value already copies structurally; DN-128 §6.1) — not emitted as an impl, not a gap",
+      "item_name": "PrimParadigm"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/prim.rs",
+      "line": 42,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" The representation paradigm of a prim operand or result (the `τ`'s paradigm in `Π(p)`). `Any` is\"] # [doc = \" the paradigm-polymorphic identity (`core.id : a → a`); the concrete paradigms pin a prim to\"] # [doc = \" `Binary{·}` or `Ternary{·}` (RFC-0007 §4.4). Width is governed separately by [`WidthRel`].\"] # [derive (Debug , Clone , Copy , PartialEq , Eq)] pub enum PrimParadigm { # [doc = \" Paradigm-polymorphic (the identity prim): any single paradigm, passed through.\"] Any , # [doc = \" A `Binary{n}` operand/result.\"] Binary , # [doc = \" A `Ternary{m}` operand/result.\"] Ternary , }",
+      "reason": "enum `PrimParadigm` derive(Copy) is a satisfied no-op under Mycelium's value semantics (ADR-003 — every value already copies structurally; DN-128 §6.1) — not emitted as an impl, not a gap",
+      "item_name": "PrimParadigm"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/prim.rs",
+      "line": 42,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" The representation paradigm of a prim operand or result (the `τ`'s paradigm in `Π(p)`). `Any` is\"] # [doc = \" the paradigm-polymorphic identity (`core.id : a → a`); the concrete paradigms pin a prim to\"] # [doc = \" `Binary{·}` or `Ternary{·}` (RFC-0007 §4.4). Width is governed separately by [`WidthRel`].\"] # [derive (Debug , Clone , Copy , PartialEq , Eq)] pub enum PrimParadigm { # [doc = \" Paradigm-polymorphic (the identity prim): any single paradigm, passed through.\"] Any , # [doc = \" A `Binary{n}` operand/result.\"] Binary , # [doc = \" A `Ternary{m}` operand/result.\"] Ternary , }",
+      "reason": "enum `PrimParadigm` derive(Eq): covered by co-occurring PartialEq → `fn eq_PrimParadigm` (product-row collision policy; DN-128 / ONESHOT C2) — not a second emission",
+      "item_name": "PrimParadigm"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/prim.rs",
+      "line": 55,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" How a prim's operand and result *widths* relate. Most of the builtin set is width-preserving —\"] # [doc = \" every operand and the result share one width (`bit.xor : Binary{n} × Binary{n} → Binary{n}`,\"] # [doc = \" `trit.add : Ternary{m} × Ternary{m} → Ternary{m}`, the unary cases trivially: [`WidthRel::Uniform`]).\"] # [doc = \" The reduce-to-`Bool` comparison prims (`cmp.eq`/`cmp.lt`, RFC-0032 D1) are the exception — they\"] # [doc = \" **collapse** to a fixed `Binary{1}` independent of the operand width ([`WidthRel::Collapse`]). New\"] # [doc = \" rules (e.g. a width-changing pack) are added as variants, never silently assumed.\"] # [derive (Debug , Clone , Copy , PartialEq , Eq)] pub enum WidthRel { # [doc = \" All operands and the result share one width.\"] Uniform , # [doc = \" The result width is **fixed and independent** of the operands' shared width — the\"] # [doc = \" width-collapsing rule of the reduce-to-`Bool` comparison prims (`cmp.eq`/`cmp.lt`, RFC-0032\"] # [doc = \" D1): two equal-width operands reduce to a one-bit `Binary{1}` truth value. (Operand widths\"] # [doc = \" must still agree; only the result is decoupled.)\"] Collapse , }",
+      "reason": "enum `WidthRel` derive(Clone) is a satisfied no-op under Mycelium's value semantics (ADR-003 — every value already copies structurally; DN-128 §6.1) — not emitted as an impl, not a gap",
+      "item_name": "WidthRel"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/prim.rs",
+      "line": 55,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" How a prim's operand and result *widths* relate. Most of the builtin set is width-preserving —\"] # [doc = \" every operand and the result share one width (`bit.xor : Binary{n} × Binary{n} → Binary{n}`,\"] # [doc = \" `trit.add : Ternary{m} × Ternary{m} → Ternary{m}`, the unary cases trivially: [`WidthRel::Uniform`]).\"] # [doc = \" The reduce-to-`Bool` comparison prims (`cmp.eq`/`cmp.lt`, RFC-0032 D1) are the exception — they\"] # [doc = \" **collapse** to a fixed `Binary{1}` independent of the operand width ([`WidthRel::Collapse`]). New\"] # [doc = \" rules (e.g. a width-changing pack) are added as variants, never silently assumed.\"] # [derive (Debug , Clone , Copy , PartialEq , Eq)] pub enum WidthRel { # [doc = \" All operands and the result share one width.\"] Uniform , # [doc = \" The result width is **fixed and independent** of the operands' shared width — the\"] # [doc = \" width-collapsing rule of the reduce-to-`Bool` comparison prims (`cmp.eq`/`cmp.lt`, RFC-0032\"] # [doc = \" D1): two equal-width operands reduce to a one-bit `Binary{1}` truth value. (Operand widths\"] # [doc = \" must still agree; only the result is decoupled.)\"] Collapse , }",
+      "reason": "enum `WidthRel` derive(Copy) is a satisfied no-op under Mycelium's value semantics (ADR-003 — every value already copies structurally; DN-128 §6.1) — not emitted as an impl, not a gap",
+      "item_name": "WidthRel"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/prim.rs",
+      "line": 55,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" How a prim's operand and result *widths* relate. Most of the builtin set is width-preserving —\"] # [doc = \" every operand and the result share one width (`bit.xor : Binary{n} × Binary{n} → Binary{n}`,\"] # [doc = \" `trit.add : Ternary{m} × Ternary{m} → Ternary{m}`, the unary cases trivially: [`WidthRel::Uniform`]).\"] # [doc = \" The reduce-to-`Bool` comparison prims (`cmp.eq`/`cmp.lt`, RFC-0032 D1) are the exception — they\"] # [doc = \" **collapse** to a fixed `Binary{1}` independent of the operand width ([`WidthRel::Collapse`]). New\"] # [doc = \" rules (e.g. a width-changing pack) are added as variants, never silently assumed.\"] # [derive (Debug , Clone , Copy , PartialEq , Eq)] pub enum WidthRel { # [doc = \" All operands and the result share one width.\"] Uniform , # [doc = \" The result width is **fixed and independent** of the operands' shared width — the\"] # [doc = \" width-collapsing rule of the reduce-to-`Bool` comparison prims (`cmp.eq`/`cmp.lt`, RFC-0032\"] # [doc = \" D1): two equal-width operands reduce to a one-bit `Binary{1}` truth value. (Operand widths\"] # [doc = \" must still agree; only the result is decoupled.)\"] Collapse , }",
+      "reason": "enum `WidthRel` derive(Eq): covered by co-occurring PartialEq → `fn eq_WidthRel` (product-row collision policy; DN-128 / ONESHOT C2) — not a second emission",
+      "item_name": "WidthRel"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/prim.rs",
+      "line": 72,
+      "col": 1,
+      "category": "NamedFieldDrop",
+      "rust_construct": "NamedFieldDrop",
+      "snippet": "# [doc = \" A prim's signature `Π(p) = (τ₁…τₙ) → τ` (RFC-0007 §4.4): the per-operand paradigms (arity is their\"] # [doc = \" count), the result paradigm, and the width relation. Identity-bearing; names are excluded.\"] # [derive (Debug , Clone , PartialEq , Eq)] pub struct PrimSig { # [doc = \" Operand paradigms, in order (the length is the prim's arity).\"] pub operands : Vec < PrimParadigm > , # [doc = \" The result paradigm.\"] pub result : PrimParadigm , # [doc = \" How operand/result widths relate.\"] pub width : WidthRel , }",
+      "reason": "struct `PrimSig` named field(s) `operands, result, width` emitted positionally as `PrimSig(Vec[PrimParadigm], PrimParadigm, WidthRel)` — Mycelium's `constructor` is positional-only (no record surface); product structure preserved, field names dropped (matches `lib/std/*.myc` hand-ports)",
+      "item_name": "PrimSig"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/prim.rs",
+      "line": 72,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" A prim's signature `Π(p) = (τ₁…τₙ) → τ` (RFC-0007 §4.4): the per-operand paradigms (arity is their\"] # [doc = \" count), the result paradigm, and the width relation. Identity-bearing; names are excluded.\"] # [derive (Debug , Clone , PartialEq , Eq)] pub struct PrimSig { # [doc = \" Operand paradigms, in order (the length is the prim's arity).\"] pub operands : Vec < PrimParadigm > , # [doc = \" The result paradigm.\"] pub result : PrimParadigm , # [doc = \" How operand/result widths relate.\"] pub width : WidthRel , }",
+      "reason": "struct `PrimSig` derive(Clone) is a satisfied no-op under Mycelium's value semantics (ADR-003 — every value already copies structurally; DN-128 §6.1) — not emitted as an impl, not a gap",
+      "item_name": "PrimSig"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/prim.rs",
+      "line": 72,
+      "col": 1,
+      "category": "DeriveAttr",
+      "rust_construct": "DeriveAttr",
+      "snippet": "# [doc = \" A prim's signature `Π(p) = (τ₁…τₙ) → τ` (RFC-0007 §4.4): the per-operand paradigms (arity is their\"] # [doc = \" count), the result paradigm, and the width relation. Identity-bearing; names are excluded.\"] # [derive (Debug , Clone , PartialEq , Eq)] pub struct PrimSig { # [doc = \" Operand paradigms, in order (the length is the prim's arity).\"] pub operands : Vec < PrimParadigm > , # [doc = \" The result paradigm.\"] pub result : PrimParadigm , # [doc = \" How operand/result widths relate.\"] pub width : WidthRel , }",
+      "reason": "struct `PrimSig` derive(...) names Eq not in the DN-128 standard-derive set this leaf builds (Debug/Default/Clone/Copy/PartialEq/PartialOrd/Hash all recognized; bare Eq/Ord are deliberately NOT recognized — see emit/derives/mod.rs::TABLE's doc for why) — dropped, no confirmed Mycelium surface",
+      "item_name": "PrimSig"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/prim.rs",
+      "line": 84,
+      "col": 1,
+      "category": "Impl",
+      "rust_construct": "Impl",
+      "snippet": "impl PrimSig { # [doc = \" The prim's arity (operand count).\"] # [must_use] pub fn arity (& self) -> usize { self . operands . len () } }",
+      "reason": "no member of this impl block could be transpiled (1 sub-issue(s)): impl method `arity` body: method call `.len(...)` has no proven-emitted free-fn referent in this file (neither a D4-mangled inherent `Type__len` nor a bare inherent recorded by this file's left-to-right pass, nor a prim_map / combinator row). Emitting bare `len(recv, …)` would fabricate an unknown prim and file-poison myc-check (G-β Rank A / G2/VR-5; residual when the method body itself gapped — e.g. M-1037 `.to_vec()` inside `read_to_end` — so the declaration was never registered)",
+      "item_name": "PrimSig"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/prim.rs",
+      "line": 92,
+      "col": 1,
+      "category": "Struct",
+      "rust_construct": "Struct",
+      "snippet": "# [doc = \" A resolved, content-addressed prim declaration: its signature and the *intrinsic guarantee* `g_f`\"] # [doc = \" it contributes to a result's guarantee meet (RFC-0001 §4.7). The (kernel) name is stored\"] # [doc = \" separately in the [`PrimTable`] (it is not identity — ADR-003).\"] # [derive (Debug , Clone , PartialEq , Eq)] pub struct PrimDecl { # [doc = \" The signature `(τ₁…τₙ) → τ`.\"] pub sig : PrimSig , # [doc = \" The intrinsic guarantee `g_f` (RFC-0001 §4.7). `Exact` for every v0 builtin.\"] pub intrinsic : GuaranteeStrength , }",
+      "reason": "struct `PrimDecl` uses named fields and references a type not resolvable in-file — emitting it positionally would introduce an unresolved reference that poisons the file's `myc check`; left gapped under the M-1006 resolvability gate (VR-5/G2)",
+      "item_name": "PrimDecl"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/prim.rs",
+      "line": 103,
+      "col": 1,
+      "category": "Impl",
+      "rust_construct": "Impl",
+      "snippet": "impl PrimDecl { # [doc = \" The content hash of this declaration's identity-bearing content (signature + intrinsic\"] # [doc = \" guarantee), with the name excluded (ADR-003). Two prims are the *same* prim iff their\"] # [doc = \" signature and intrinsic agree — domain-separated from node/data hashes so a prim can never\"] # [doc = \" collide with a structural node hash.\"] # [must_use] pub fn content_hash (& self) -> ContentHash { let mut c = Canon :: new () ; c . prim_decl (& self . sig , self . intrinsic) ; c . finish () } }",
+      "reason": "no member of this impl block could be transpiled (1 sub-issue(s)): impl method `content_hash` body: qualified/associated-function call `Canon :: new` did not resolve to a known-emitted associated fn — Mycelium calls are bare identifiers, and the only sound surface form for `Type::method(...)` is the mangled `Type__method` name the declaration side already emits for a receiver-less inherent-impl associated fn (DN-34 §8.13/8.14), referenced only when that exact declaration is PROVEN present (same-file, or a resolved M-1084 cross-nodule sibling). A primitive/std associated fn with no emitted decl (e.g. `i128::try_from`), an unresolved type, or a `self`-receiving method (excluded by construction — it stays reachable only from its own bare call site) all gap here rather than fabricate a call (G2/VR-5, DN-133)",
+      "item_name": "PrimDecl"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/prim.rs",
+      "line": 116,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" A prim reference `#p` (the prim analogue of [`CtorRef`](crate::CtorRef) `#T#i`): the content hash\"] # [doc = \" of a [`PrimDecl`]. A term referring to a prim by *identity* refers to it by this hash, not its\"] # [doc = \" name (ADR-003).\"] # [derive (Debug , Clone , PartialEq , Eq , PartialOrd , Ord , Hash)] pub struct PrimRef (ContentHash) ;",
+      "reason": "struct `PrimRef` derive(Clone) is a satisfied no-op under Mycelium's value semantics (ADR-003 — every value already copies structurally; DN-128 §6.1) — not emitted as an impl, not a gap",
+      "item_name": "PrimRef"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/prim.rs",
+      "line": 116,
+      "col": 1,
+      "category": "DeriveAttr",
+      "rust_construct": "DeriveAttr",
+      "snippet": "# [doc = \" A prim reference `#p` (the prim analogue of [`CtorRef`](crate::CtorRef) `#T#i`): the content hash\"] # [doc = \" of a [`PrimDecl`]. A term referring to a prim by *identity* refers to it by this hash, not its\"] # [doc = \" name (ADR-003).\"] # [derive (Debug , Clone , PartialEq , Eq , PartialOrd , Ord , Hash)] pub struct PrimRef (ContentHash) ;",
+      "reason": "struct `PrimRef` derive(...) names Eq, Ord not in the DN-128 standard-derive set this leaf builds (Debug/Default/Clone/Copy/PartialEq/PartialOrd/Hash all recognized; bare Eq/Ord are deliberately NOT recognized — see emit/derives/mod.rs::TABLE's doc for why) — dropped, no confirmed Mycelium surface",
+      "item_name": "PrimRef"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/prim.rs",
+      "line": 122,
+      "col": 1,
+      "category": "DeriveAttr",
+      "rust_construct": "DeriveAttr",
+      "snippet": "impl PrimRef { # [doc = \" Build a prim reference from a declaration hash.\"] # [must_use] pub fn new (decl : ContentHash) -> Self { PrimRef (decl) } # [doc = \" The referenced declaration's content hash.\"] # [must_use] pub fn decl (& self) -> & ContentHash { & self . 0 } }",
+      "reason": "dropped non-doc attribute(s) on method `new`: # [must_use]",
+      "item_name": "impl PrimRef"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/prim.rs",
+      "line": 122,
+      "col": 1,
+      "category": "Other",
+      "rust_construct": "Other",
+      "snippet": "impl PrimRef { # [doc = \" Build a prim reference from a declaration hash.\"] # [must_use] pub fn new (decl : ContentHash) -> Self { PrimRef (decl) } # [doc = \" The referenced declaration's content hash.\"] # [must_use] pub fn decl (& self) -> & ContentHash { & self . 0 } }",
+      "reason": "impl method `decl` body: field projection `self.0` on `PrimRef` — not an in-file single-ctor struct that emits (an enum / external / non-resolvable type has no constructor to `match` against)",
+      "item_name": "impl PrimRef"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/prim.rs",
+      "line": 136,
+      "col": 1,
+      "category": "Impl",
+      "rust_construct": "Impl",
+      "snippet": "impl core :: fmt :: Display for PrimRef { # [doc = \" The Unison-style spelling `#<declhash>` (a prim has no constructor index, unlike `#T#i`).\"] fn fmt (& self , f : & mut core :: fmt :: Formatter < '_ >) -> core :: fmt :: Result { write ! (f , \"#{}\" , self . 0 . as_str ()) } }",
+      "reason": "trait-impl of non-prelude trait `Display` — no ambient trait definition and synthetic trait emission is refused (DN-34 §8.8 / DN-122 MVP); gapped the whole impl so the residual cannot file-poison myc-check (G2; express gap-close 2026-07-16)",
+      "item_name": "PrimRef"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/prim.rs",
+      "line": 143,
+      "col": 1,
+      "category": "Struct",
+      "rust_construct": "Struct",
+      "snippet": "# [doc = \" The content-addressed **prim table `Π`** (RFC-0007 §4.4; R7-Q4): resolved declarations keyed by\"] # [doc = \" their content hash, plus the build-time `name → hash` resolution used to form [`PrimRef`]s — the\"] # [doc = \" same two-map shape as [`DataRegistry`](crate::DataRegistry), so a prim's identity (`#p`) is the\"] # [doc = \" same on every path (the NFR-7 differential is over *one* prim set, never two).\"] # [doc = \"\"] # [doc = \" Prims have no inter-references (unlike data, which can be mutually recursive), so building is a\"] # [doc = \" flat hash-and-insert — no SCC/cycle handling is needed.\"] # [derive (Debug , Clone , Default , PartialEq , Eq)] pub struct PrimTable { # [doc = \" Resolved declarations, keyed by content hash.\"] decls : BTreeMap < ContentHash , PrimDecl > , # [doc = \" Build-time (kernel) name → content hash (names are metadata — ADR-003).\"] by_name : BTreeMap < String , ContentHash > , }",
+      "reason": "struct `PrimTable` uses named fields and references a type not resolvable in-file — emitting it positionally would introduce an unresolved reference that poisons the file's `myc check`; left gapped under the M-1006 resolvability gate (VR-5/G2)",
+      "item_name": "PrimTable"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/prim.rs",
+      "line": 158,
+      "col": 1,
+      "category": "Impl",
+      "rust_construct": "Impl",
+      "snippet": "impl PrimTable { # [doc = \" An empty table.\"] # [must_use] pub fn new () -> Self { PrimTable :: default () } # [doc = \" Register (or replace) a prim declaration under build-time kernel name `name`, returning its\"] # [doc = \" [`PrimRef`]. Re-registering a name re-points it; identity is the decl hash, not the name.\"] pub fn insert (& mut self , name : impl Into < String > , decl : PrimDecl) -> PrimRef { let hash = decl . content_hash () ; self . by_name . insert (name . into () , hash . clone ()) ; self . decls . insert (hash . clone () , decl) ; PrimRef :: new (hash) } # [doc = \" The default table: the closed v0 kernel-prim set — the identity, the elementwise binary logic\"] # [doc = \" (`bit.*`), the fixed-width balanced-ternary arithmetic (`trit.*`, M-111), the reduce-to-`Bool`\"] # [doc = \" comparison prims (`cmp.eq`/`cmp.lt`, RFC-0032 D1), the never-silent binary arithmetic\"] # [doc = \" (`bit.add`/`bit.sub`, RFC-0032 D2), the never-silent two's-complement multiply\"] # [doc = \" (`bin.mul`, RFC-0033 §4.1.2/§4.1.3, M-887 — the first Gap-B `enb` prim), the never-silent\"] # [doc = \" **unsigned** division/remainder (`bin.div`/`bin.rem`, RFC-0033 §4.1.2/§4.1.3, M-888), the\"] # [doc = \" never-silent **logical** left/right shift (`bin.shl`/`bin.shr`, RFC-0033 §4.1.2/§4.1.3,\"] # [doc = \" M-889 — the signed/arithmetic variants ride M-767 under distinct names), and the never-silent\"] # [doc = \" two's-complement `add`/`sub`/`neg` (`bin.add`/`bin.sub`/`bin.neg`, RFC-0033 §4.1.2/§4.1.3,\"] # [doc = \" M-766 — completes the shared two's-complement op set `add`/`sub`/`mul`/`neg`; distinct from\"] # [doc = \" the pre-existing unsigned `bit.add`/`bit.sub`, which under-refuse relative to the signed\"] # [doc = \" domain), and the **signedness-split signed op set** (`bin.div_s`/`bin.rem_s`/`bin.shr_s` +\"] # [doc = \" `cmp.lt_s`, RFC-0033 §4.1.2/§4.1.3, M-767 — signed truncated division/remainder, the\"] # [doc = \" arithmetic right shift, and the two's-complement ordering, each a distinct named op from\"] # [doc = \" its unsigned counterpart per ADR-028), and the **dense elementwise group**\"] # [doc = \" (`dense.add`/`dense.sub`/`dense.neg`/`dense.scale`, RFC-0001 §4.1/RFC-0002 §5, M-890 —\"] # [doc = \" `enb` Gap C; the first *tensor-valued* prims, and the first non-`Exact` intrinsics — see\"] # [doc = \" the crate-level Scope note), plus the **dense measurement pair**\"] # [doc = \" (`dense.dot`/`dense.similarity`, M-891 — two `Dense{d, s}` operands reduce to a\"] # [doc = \" `Dense{1, F64}` measurement carrying the kernel's proven binary64 accumulation bound),\"] # [doc = \" and the **scalar-float arithmetic group**\"] # [doc = \" (`flt.add`/`flt.sub`/`flt.mul`/`flt.div`/`flt.neg`, ADR-040 §2.5, M-898 — `enb` Gap A;\"] # [doc = \" IEEE-754 binary64 under RNE over `Repr::Float`, in-band specials per the ratified FLAG-2),\"] # [doc = \" and the **scalar-float comparison group**\"] # [doc = \" (`flt.lt`/`flt.le`/`flt.gt`/`flt.ge`/`flt.eq` — the IEEE-754 §5.11 partial-order\"] # [doc = \" predicates, NaN explicitly unordered — plus the named opt-in total order `flt.total_le`\"] # [doc = \" (IEEE-754 §5.10 `totalOrder`), ADR-040 §2.4, M-899 — `enb` Gap A; the total-order\"] # [doc = \" *property* stays `Empirical` until the M-511 proof debt is discharged),\"] # [doc = \" and the **VSA bind group** (`vsa.bind`/`vsa.unbind`/`vsa.permute`, RFC-0003 §3/§4/ADR-008,\"] # [doc = \" M-892 — `enb` Gap C; model-dispatched MAP-I/FHRR/BSC, tags per model carried from the\"] # [doc = \" `mycelium-vsa` kernel — see the entry comment for the meet-tag rule), plus the **certified\"] # [doc = \" VSA superposition** (`vsa.bundle`, RFC-0003 §4/§5/ADR-008, M-893 — `enb` Gap C; the\"] # [doc = \" certified path via MAP-I's `bundle_values_certified`, dispatch set the certified singleton\"] # [doc = \" {MAP-I}; the runtime value carries the kernel-checked `Proven` `CapacityBound` — see the\"] # [doc = \" entry comment), and the **VSA cleanup/reconstruction pair + capacity query**\"] # [doc = \" (`vsa.cleanup`/`vsa.reconstruct`/`vsa.required_dim`, RFC-0003 §3/§5/§6/ADR-008, M-894 —\"] # [doc = \" `enb` Gap C; the FR-S4 cleanup-memory retrieval returning the `[index, confidence,\"] # [doc = \" margin]` decision triple, the §6 compositional role-reconstruction with an explicit\"] # [doc = \" threshold, and the M-131 `requiredDim`/`proven_capacity_bound` query — see the entry\"] # [doc = \" comment), plus **`bytes.eq`** (M-912, `enb` — the folded-in equality gap the diag/error/\"] # [doc = \" recover ports flagged: byte-wise equality over two `Bytes` operands) and **`hash.blake3`**\"] # [doc = \" (M-912, `enb` — the kernel's own BLAKE3 content-addressing hash, M-103, surfaced as a\"] # [doc = \" `Bytes -> Bytes` prim; `Exact`, justified by the kernel's own deterministic use).\"] # [doc = \" Every entry is `intrinsic = Exact` **except** `dense.add`/`dense.sub`/`dense.scale`/\"] # [doc = \" `dense.dot`/`dense.similarity` (`Proven`, carried from the kernel's per-op tag), the\"] # [doc = \" `flt.*` group (`Empirical` — the ratified ADR-040 §2.6 host-conformance posture; see the\"] # [doc = \" entry comment), `vsa.unbind` (`Empirical` — the meet over the model set: FHRR's\"] # [doc = \" normative weak-link unbind; see the entry comment), `vsa.bundle` (`Proven` — the meet\"] # [doc = \" over its certified singleton dispatch set {MAP-I}; see the entry comment), and\"] # [doc = \" `vsa.required_dim` (`Proven` — the M-131 checked instantiation of the cited capacity\"] # [doc = \" theorem; see the entry comment); all are\"] # [doc = \" width-`Uniform` **except**\"] # [doc = \" `cmp.eq`/`cmp.lt`/`cmp.lt_s`,\"] # [doc = \" `dense.dot`/`dense.similarity`, and the `flt.*` comparison group, which are\"] # [doc = \" width-`Collapse` (operand width → `Binary{1}` / operand dim → a dim-1 measurement /\"] # [doc = \" two `Float` scalars → a `Binary{1}` truth value). This is the single source of truth the\"] # [doc = \" `mycelium-interp` intrinsic and the `mycelium-l1` surface table are checked against.\"] # [must_use] pub fn builtins () -> Self { use PrimParadigm :: { Any , Binary , Ternary } ; let mut t = PrimTable :: new () ; let exact = | operands : Vec < PrimParadigm > , result : PrimParadigm | PrimDecl { sig : PrimSig { operands , result , width : WidthRel :: Uniform , } , intrinsic : GuaranteeStrength :: Exact , } ; let cmp = | | PrimDecl { sig : PrimSig { operands : vec ! [Any , Any] , result : Binary , width : WidthRel :: Collapse , } , intrinsic : GuaranteeStrength :: Exact , } ; t . insert (\"core.id\" , exact (vec ! [Any] , Any)) ; t . insert (\"bit.not\" , exact (vec ! [Binary] , Binary)) ; t . insert (\"bit.and\" , exact (vec ! [Binary , Binary] , Binary)) ; t . insert (\"bit.or\" , exact (vec ! [Binary , Binary] , Binary)) ; t . insert (\"bit.xor\" , exact (vec ! [Binary , Binary] , Binary)) ; t . insert (\"trit.neg\" , exact (vec ! [Ternary] , Ternary)) ; t . insert (\"trit.add\" , exact (vec ! [Ternary , Ternary] , Ternary)) ; t . insert (\"trit.sub\" , exact (vec ! [Ternary , Ternary] , Ternary)) ; t . insert (\"trit.mul\" , exact (vec ! [Ternary , Ternary] , Ternary)) ; t . insert (\"cmp.eq\" , cmp ()) ; t . insert (\"cmp.lt\" , cmp ()) ; t . insert (\"bit.add\" , exact (vec ! [Binary , Binary] , Binary)) ; t . insert (\"bit.sub\" , exact (vec ! [Binary , Binary] , Binary)) ; t . insert (\"bin.mul\" , exact (vec ! [Binary , Binary] , Binary)) ; t . insert (\"bit.mul\" , exact (vec ! [Binary , Binary] , Binary)) ; t . insert (\"bit.popcount\" , exact (vec ! [Binary] , Binary)) ; t . insert (\"bit.clz\" , exact (vec ! [Binary] , Binary)) ; t . insert (\"bit.ctz\" , exact (vec ! [Binary] , Binary)) ; t . insert (\"bin.div\" , exact (vec ! [Binary , Binary] , Binary)) ; t . insert (\"bin.rem\" , exact (vec ! [Binary , Binary] , Binary)) ; t . insert (\"bin.shl\" , exact (vec ! [Binary , Binary] , Binary)) ; t . insert (\"bin.shr\" , exact (vec ! [Binary , Binary] , Binary)) ; t . insert (\"bin.add\" , exact (vec ! [Binary , Binary] , Binary)) ; t . insert (\"bin.sub\" , exact (vec ! [Binary , Binary] , Binary)) ; t . insert (\"bin.neg\" , exact (vec ! [Binary] , Binary)) ; t . insert (\"bin.div_s\" , exact (vec ! [Binary , Binary] , Binary)) ; t . insert (\"bin.rem_s\" , exact (vec ! [Binary , Binary] , Binary)) ; t . insert (\"bin.shr_s\" , exact (vec ! [Binary , Binary] , Binary)) ; t . insert (\"cmp.lt_s\" , PrimDecl { sig : PrimSig { operands : vec ! [Binary , Binary] , result : Binary , width : WidthRel :: Collapse , } , intrinsic : GuaranteeStrength :: Exact , } ,) ; t . insert (\"bit.width_cast\" , exact (vec ! [Binary , Binary] , Binary)) ; t . insert (\"bit.truncate\" , PrimDecl { sig : PrimSig { operands : vec ! [Binary , Binary] , result : Binary , width : WidthRel :: Uniform , } , intrinsic : GuaranteeStrength :: Declared , } ,) ; t . insert (\"seq.len\" , exact (vec ! [Any] , Binary)) ; t . insert (\"seq.get\" , exact (vec ! [Any , Binary] , Any)) ; t . insert (\"bytes.len\" , exact (vec ! [Any] , Binary)) ; t . insert (\"bytes.get\" , exact (vec ! [Any , Binary] , Binary)) ; t . insert (\"bytes.slice\" , exact (vec ! [Any , Binary , Binary] , Any)) ; t . insert (\"bytes.concat\" , exact (vec ! [Any , Any] , Any)) ; t . insert (\"bytes.eq\" , exact (vec ! [Any , Any] , Binary)) ; t . insert (\"hash.blake3\" , exact (vec ! [Any] , Any)) ; t . insert (\"bit.to_bytes\" , exact (vec ! [Binary] , Any)) ; t . insert (\"fuse_join:binary\" , exact (vec ! [Binary , Binary] , Binary)) ; let dense_proven = | operands : Vec < PrimParadigm > | PrimDecl { sig : PrimSig { operands , result : Any , width : WidthRel :: Uniform , } , intrinsic : GuaranteeStrength :: Proven , } ; t . insert (\"dense.add\" , dense_proven (vec ! [Any , Any])) ; t . insert (\"dense.sub\" , dense_proven (vec ! [Any , Any])) ; t . insert (\"dense.neg\" , exact (vec ! [Any] , Any)) ; t . insert (\"dense.scale\" , dense_proven (vec ! [Any , Any])) ; let dense_measure = | | PrimDecl { sig : PrimSig { operands : vec ! [Any , Any] , result : Any , width : WidthRel :: Collapse , } , intrinsic : GuaranteeStrength :: Proven , } ; t . insert (\"dense.dot\" , dense_measure ()) ; t . insert (\"dense.similarity\" , dense_measure ()) ; let flt = | operands : Vec < PrimParadigm > | PrimDecl { sig : PrimSig { operands , result : Any , width : WidthRel :: Uniform , } , intrinsic : GuaranteeStrength :: Empirical , } ; t . insert (\"flt.add\" , flt (vec ! [Any , Any])) ; t . insert (\"flt.sub\" , flt (vec ! [Any , Any])) ; t . insert (\"flt.mul\" , flt (vec ! [Any , Any])) ; t . insert (\"flt.div\" , flt (vec ! [Any , Any])) ; t . insert (\"flt.neg\" , flt (vec ! [Any])) ; let flt_cmp = | | PrimDecl { sig : PrimSig { operands : vec ! [Any , Any] , result : Binary , width : WidthRel :: Collapse , } , intrinsic : GuaranteeStrength :: Empirical , } ; t . insert (\"flt.lt\" , flt_cmp ()) ; t . insert (\"flt.le\" , flt_cmp ()) ; t . insert (\"flt.gt\" , flt_cmp ()) ; t . insert (\"flt.ge\" , flt_cmp ()) ; t . insert (\"flt.eq\" , flt_cmp ()) ; t . insert (\"flt.total_le\" , flt_cmp ()) ; let flt_class = | | PrimDecl { sig : PrimSig { operands : vec ! [Any] , result : Binary , width : WidthRel :: Collapse , } , intrinsic : GuaranteeStrength :: Empirical , } ; t . insert (\"flt.is_nan\" , flt_class ()) ; t . insert (\"flt.is_finite\" , flt_class ()) ; t . insert (\"flt.is_infinite\" , flt_class ()) ; let empirical = | operands : Vec < PrimParadigm > , result : PrimParadigm | PrimDecl { sig : PrimSig { operands , result , width : WidthRel :: Uniform , } , intrinsic : GuaranteeStrength :: Empirical , } ; t . insert (\"bin.to_flt\" , empirical (vec ! [Any] , Any)) ; t . insert (\"flt.to_bin\" , empirical (vec ! [Any , Any] , Any)) ; let vsa = | operands : Vec < PrimParadigm > , intrinsic : GuaranteeStrength | PrimDecl { sig : PrimSig { operands , result : Any , width : WidthRel :: Uniform , } , intrinsic , } ; t . insert (\"vsa.bind\" , vsa (vec ! [Any , Any] , GuaranteeStrength :: Exact)) ; t . insert (\"vsa.unbind\" , vsa (vec ! [Any , Any] , GuaranteeStrength :: Empirical) ,) ; t . insert (\"vsa.permute\" , vsa (vec ! [Any , Any] , GuaranteeStrength :: Exact)) ; t . insert (\"vsa.bundle\" , vsa (vec ! [Any , Any] , GuaranteeStrength :: Proven)) ; t . insert (\"vsa.cleanup\" , vsa (vec ! [Any , Any] , GuaranteeStrength :: Exact)) ; t . insert (\"vsa.reconstruct\" , vsa (vec ! [Any , Any , Any , Any] , GuaranteeStrength :: Exact) ,) ; t . insert (\"vsa.required_dim\" , vsa (vec ! [Any , Any] , GuaranteeStrength :: Proven) ,) ; t } # [doc = \" The content hash of the prim registered under kernel name `name`, if any.\"] # [must_use] pub fn decl_hash (& self , name : & str) -> Option < & ContentHash > { self . by_name . get (name) } # [doc = \" A [`PrimRef`] for the prim named `name`, if registered.\"] # [must_use] pub fn prim_ref (& self , name : & str) -> Option < PrimRef > { self . by_name . get (name) . cloned () . map (PrimRef :: new) } # [doc = \" The resolved declaration at content hash `hash`, if registered.\"] # [must_use] pub fn decl (& self , hash : & ContentHash) -> Option < & PrimDecl > { self . decls . get (hash) } # [doc = \" The declaration a [`PrimRef`] points at, if registered.\"] # [must_use] pub fn resolve (& self , prim : & PrimRef) -> Option < & PrimDecl > { self . decls . get (prim . decl ()) } # [doc = \" The declaration registered under kernel name `name`, if any.\"] # [must_use] pub fn get (& self , name : & str) -> Option < & PrimDecl > { let hash = self . by_name . get (name) ? ; self . decls . get (hash) } # [doc = \" The intrinsic guarantee `g_f` of the prim named `name` (RFC-0001 §4.7), if registered.\"] # [must_use] pub fn intrinsic (& self , name : & str) -> Option < GuaranteeStrength > { self . get (name) . map (| d | d . intrinsic) } # [doc = \" Whether a prim named `name` is registered.\"] # [must_use] pub fn contains (& self , name : & str) -> bool { self . by_name . contains_key (name) } # [doc = \" The registered kernel names, sorted.\"] # [must_use] pub fn names (& self) -> Vec < & str > { self . by_name . keys () . map (String :: as_str) . collect () } # [doc = \" Every entry as `(name, #p, decl)`, in name order — the inspectable surface for EXPLAIN over\"] # [doc = \" prims (DN-10 §3.2 step 4; G2/SC-3): a prim call can report which content-addressed\"] # [doc = \" declaration it resolves to, its signature, and its intrinsic guarantee.\"] # [must_use] pub fn entries (& self) -> Vec < (& str , PrimRef , & PrimDecl) > { self . by_name . iter () . filter_map (| (name , hash) | { self . decls . get (hash) . map (| d | (name . as_str () , PrimRef :: new (hash . clone ()) , d)) }) . collect () } }",
+      "reason": "no member of this impl block could be transpiled (12 sub-issue(s)): impl method `new` body: qualified/associated-function call `PrimTable :: default` did not resolve to a known-emitted associated fn — Mycelium calls are bare identifiers, and the only sound surface form for `Type::method(...)` is the mangled `Type__method` name the declaration side already emits for a receiver-less inherent-impl associated fn (DN-34 §8.13/8.14), referenced only when that exact declaration is PROVEN present (same-file, or a resolved M-1084 cross-nodule sibling). A primitive/std associated fn with no emitted decl (e.g. `i128::try_from`), an unresolved type, or a `self`-receiving method (excluded by construction — it stays reachable only from its own bare call site) all gap here rather than fabricate a call (G2/VR-5, DN-133); impl method `insert` signature: unsupported Rust type form `impl Into < String >`; impl method `builtins` body: function body contains a nested item declaration (e.g. a local `static`/`const`/`fn`) — this grammar fragment has no local-item production; only simple `let x = e;` bindings plus a trailing expression map; impl method `decl_hash` body: method call `.get(...)` has no proven-emitted free-fn referent in this file (neither a D4-mangled inherent `Type__get` nor a bare inherent recorded by this file's left-to-right pass, nor a prim_map / combinator row). Emitting bare `get(recv, …)` would fabricate an unknown prim and file-poison myc-check (G-β Rank A / G2/VR-5; residual when the method body itself gapped — e.g. M-1037 `.to_vec()` inside `read_to_end` — so the declaration was never registered); impl method `prim_ref` body: method call `.map(...)` has no proven-emitted free-fn referent in this file (neither a D4-mangled inherent `Type__map` nor a bare inherent recorded by this file's left-to-right pass, nor a prim_map / combinator row). Emitting bare `map(recv, …)` would fabricate an unknown prim and file-poison myc-check (G-β Rank A / G2/VR-5; residual when the method body itself gapped — e.g. M-1037 `.to_vec()` inside `read_to_end` — so the declaration was never registered); impl method `decl` body: method call `.get(...)` has no proven-emitted free-fn referent in this file (neither a D4-mangled inherent `Type__get` nor a bare inherent recorded by this file's left-to-right pass, nor a prim_map / combinator row). Emitting bare `get(recv, …)` would fabricate an unknown prim and file-poison myc-check (G-β Rank A / G2/VR-5; residual when the method body itself gapped — e.g. M-1037 `.to_vec()` inside `read_to_end` — so the declaration was never registered); impl method `resolve` body: method call `.get(...)` has no proven-emitted free-fn referent in this file (neither a D4-mangled inherent `Type__get` nor a bare inherent recorded by this file's left-to-right pass, nor a prim_map / combinator row). Emitting bare `get(recv, …)` would fabricate an unknown prim and file-poison myc-check (G-β Rank A / G2/VR-5; residual when the method body itself gapped — e.g. M-1037 `.to_vec()` inside `read_to_end` — so the declaration was never registered); impl method `get` body: unsupported expression form `self . by_name . get (name) ?`; impl method `intrinsic` body: method call `.map(...)` has no proven-emitted free-fn referent in this file (neither a D4-mangled inherent `Type__map` nor a bare inherent recorded by this file's left-to-right pass, nor a prim_map / combinator row). Emitting bare `map(recv, …)` would fabricate an unknown prim and file-poison myc-check (G-β Rank A / G2/VR-5; residual when the method body itself gapped — e.g. M-1037 `.to_vec()` inside `read_to_end` — so the declaration was never registered); impl method `contains` body: method call `.contains_key(...)` has no proven-emitted free-fn referent in this file (neither a D4-mangled inherent `Type__contains_key` nor a bare inherent recorded by this file's left-to-right pass, nor a prim_map / combinator row). Emitting bare `contains_key(recv, …)` would fabricate an unknown prim and file-poison myc-check (G-β Rank A / G2/VR-5; residual when the method body itself gapped — e.g. M-1037 `.to_vec()` inside `read_to_end` — so the declaration was never registered); impl method `names` body: method call `.collect(...)` has no proven-emitted free-fn referent in this file (neither a D4-mangled inherent `Type__collect` nor a bare inherent recorded by this file's left-to-right pass, nor a prim_map / combinator row). Emitting bare `collect(recv, …)` would fabricate an unknown prim and file-poison myc-check (G-β Rank A / G2/VR-5; residual when the method body itself gapped — e.g. M-1037 `.to_vec()` inside `read_to_end` — so the declaration was never registered); impl method `entries` body: method call `.collect(...)` has no proven-emitted free-fn referent in this file (neither a D4-mangled inherent `Type__collect` nor a bare inherent recorded by this file's left-to-right pass, nor a prim_map / combinator row). Emitting bare `collect(recv, …)` would fabricate an unknown prim and file-poison myc-check (G-β Rank A / G2/VR-5; residual when the method body itself gapped — e.g. M-1037 `.to_vec()` inside `read_to_end` — so the declaration was never registered)",
+      "item_name": "PrimTable"
+    }
+  ],
+  "total_top_level_items": 15
+}

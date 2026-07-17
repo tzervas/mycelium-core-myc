@@ -1,0 +1,213 @@
+{
+  "source": "/root/git/isolated/mycelium/crates/mycelium-core/src/value.rs",
+  "emitted_items": [
+    "co-include:WfError",
+    "Trit",
+    "CANONICAL_NAN_BITS",
+    "Payload",
+    "PayloadWire"
+  ],
+  "gaps": [
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/value.rs",
+      "line": 11,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "use serde :: { Deserialize , Serialize } ;",
+      "reason": "`use serde::Deserialize` — `serde` is not a sibling module OR sibling phylum transpiled in this same batch (an external crate, `std`, or simply out of this batch's target set). Flagged, not guessed (VR-5/G2); `use serde::Serialize` — `serde` is not a sibling module OR sibling phylum transpiled in this same batch (an external crate, `std`, or simply out of this batch's target set). Flagged, not guessed (VR-5/G2)",
+      "item_name": null
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/value.rs",
+      "line": 13,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "use crate :: meta :: Meta ;",
+      "reason": "`use meta::Meta` — `Meta` is not among sibling `meta`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": null
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/value.rs",
+      "line": 14,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "use crate :: repr :: Repr ;",
+      "reason": "`use repr::Repr` — `Repr` is not among sibling `repr`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": null
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/value.rs",
+      "line": 17,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" A balanced trit in `{-1, 0, +1}`.\"] # [derive (Debug , Clone , Copy , PartialEq , Eq)] pub enum Trit { # [doc = \" −1.\"] Neg , # [doc = \" 0.\"] Zero , # [doc = \" +1.\"] Pos , }",
+      "reason": "enum `Trit` derive(Clone) is a satisfied no-op under Mycelium's value semantics (ADR-003 — every value already copies structurally; DN-128 §6.1) — not emitted as an impl, not a gap",
+      "item_name": "Trit"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/value.rs",
+      "line": 17,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" A balanced trit in `{-1, 0, +1}`.\"] # [derive (Debug , Clone , Copy , PartialEq , Eq)] pub enum Trit { # [doc = \" −1.\"] Neg , # [doc = \" 0.\"] Zero , # [doc = \" +1.\"] Pos , }",
+      "reason": "enum `Trit` derive(Copy) is a satisfied no-op under Mycelium's value semantics (ADR-003 — every value already copies structurally; DN-128 §6.1) — not emitted as an impl, not a gap",
+      "item_name": "Trit"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/value.rs",
+      "line": 17,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" A balanced trit in `{-1, 0, +1}`.\"] # [derive (Debug , Clone , Copy , PartialEq , Eq)] pub enum Trit { # [doc = \" −1.\"] Neg , # [doc = \" 0.\"] Zero , # [doc = \" +1.\"] Pos , }",
+      "reason": "enum `Trit` derive(Eq): covered by co-occurring PartialEq → `fn eq_Trit` (product-row collision policy; DN-128 / ONESHOT C2) — not a second emission",
+      "item_name": "Trit"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/value.rs",
+      "line": 28,
+      "col": 1,
+      "category": "Impl",
+      "rust_construct": "Impl",
+      "snippet": "impl Trit { # [doc = \" The most-significant-first wire glyph for this trit: `-` / `0` / `+`\"] # [doc = \" (`docs/spec/swaps/binary-ternary.md` §1).\"] # [must_use] fn to_wire_char (self) -> char { match self { Trit :: Neg => '-' , Trit :: Zero => '0' , Trit :: Pos => '+' , } } # [doc = \" Parse a wire glyph back into a trit; `None` for any other character.\"] # [must_use] fn from_wire_char (c : char) -> Option < Trit > { match c { '-' => Some (Trit :: Neg) , '0' => Some (Trit :: Zero) , '+' => Some (Trit :: Pos) , _ => None , } } }",
+      "reason": "no member of this impl block could be transpiled (2 sub-issue(s)): impl method `to_wire_char` body: unsupported literal kind `'-'` (only bool/int/string/float literals map); impl method `from_wire_char` body: unsupported literal pattern kind (only bool/int/string literal patterns map; a float/byte/char literal pattern has no faithful Mycelium surface — VR-5/G2)",
+      "item_name": "Trit"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/value.rs",
+      "line": 58,
+      "col": 1,
+      "category": "Other",
+      "rust_construct": "Other",
+      "snippet": "# [doc = \" Canonicalize a scalar float for the [`Repr::Float`] value form (ADR-040 §2.3): any NaN becomes\"] # [doc = \" the single positive quiet NaN ([`CANONICAL_NAN_BITS`]); every non-NaN — including `-0.0`,\"] # [doc = \" `±inf`, and subnormals — passes through **bit-unchanged**. A reified, documented normalization\"] # [doc = \" at the value boundary, not a silent swap: no observable float operation distinguishes NaN\"] # [doc = \" payloads, so no observable information is dropped (`Declared`; checked as a property test).\"] # [must_use] pub (crate) fn canonical_float (x : f64) -> f64 { if x . is_nan () { f64 :: from_bits (CANONICAL_NAN_BITS) } else { x } }",
+      "reason": "qualified/associated-function call `f64 :: from_bits` did not resolve to a known-emitted associated fn — Mycelium calls are bare identifiers, and the only sound surface form for `Type::method(...)` is the mangled `Type__method` name the declaration side already emits for a receiver-less inherent-impl associated fn (DN-34 §8.13/8.14), referenced only when that exact declaration is PROVEN present (same-file, or a resolved M-1084 cross-nodule sibling). A primitive/std associated fn with no emitted decl (e.g. `i128::try_from`), an unresolved type, or a `self`-receiving method (excluded by construction — it stays reachable only from its own bare call site) all gap here rather than fabricate a call (G2/VR-5, DN-133)",
+      "item_name": "canonical_float"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/value.rs",
+      "line": 72,
+      "col": 1,
+      "category": "DeriveAttr",
+      "rust_construct": "DeriveAttr",
+      "snippet": "# [doc = \" Representation-specific payload. Detailed VSA storage (sparse index/value pairs) lands with the\"] # [doc = \" VSA submodule (M-130); here a hypervector is a dense scalar vector.\"] # [derive (Debug , Clone , PartialEq)] pub enum Payload { # [doc = \" Bits of a `Binary` value (length == `width`).\"] Bits (Vec < bool >) , # [doc = \" Trits of a `Ternary` value (length == `trits`).\"] Trits (Vec < Trit >) , # [doc = \" Scalars of a `Dense` value (length == `dim`).\"] Scalars (Vec < f64 >) , # [doc = \" Components of a `Vsa` value (length == `dim`).\"] Hypervector (Vec < f64 >) , # [doc = \" The scalar of a [`Repr::Float`] value (ADR-040 §2.1; M-896). **Canonical-NaN invariant:**\"] # [doc = \" [`Value::new`] canonicalizes any NaN to the single positive quiet-NaN bit pattern\"] # [doc = \" ([`CANONICAL_NAN_BITS`]) — NaN payload bits are not identity-bearing and not observable\"] # [doc = \" (ADR-040 §2.3). `+0.0`/`-0.0` stay **bit-distinct** in identity while remaining IEEE-equal\"] # [doc = \" under the derived `==` — the documented identity-vs-equality seam (ADR-040 FLAG-4).\"] Float (f64) , # [doc = \" Elements of a [`Repr::Seq`] value (length == the seq's `len`; every element's `repr` matches\"] # [doc = \" the seq's `elem`). RFC-0032 D3 (M-749).\"] Seq (Vec < Value >) , # [doc = \" Bytes of a [`Repr::Bytes`] value — any byte content (no declared length). RFC-0032 D4 (M-750).\"] Bytes (Vec < u8 >) , }",
+      "reason": "enum `Payload` derive(Debug): variant 2 (`Scalars`) field 0 has type `Vec[Float]`, a `Vec` field whose element type `Float` has no `Show` route of its own (DN-138 WU-4 depth-1 scope) — the whole derive is left an honest gap rather than a partial/fabricated render (G2)",
+      "item_name": "Payload"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/value.rs",
+      "line": 72,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" Representation-specific payload. Detailed VSA storage (sparse index/value pairs) lands with the\"] # [doc = \" VSA submodule (M-130); here a hypervector is a dense scalar vector.\"] # [derive (Debug , Clone , PartialEq)] pub enum Payload { # [doc = \" Bits of a `Binary` value (length == `width`).\"] Bits (Vec < bool >) , # [doc = \" Trits of a `Ternary` value (length == `trits`).\"] Trits (Vec < Trit >) , # [doc = \" Scalars of a `Dense` value (length == `dim`).\"] Scalars (Vec < f64 >) , # [doc = \" Components of a `Vsa` value (length == `dim`).\"] Hypervector (Vec < f64 >) , # [doc = \" The scalar of a [`Repr::Float`] value (ADR-040 §2.1; M-896). **Canonical-NaN invariant:**\"] # [doc = \" [`Value::new`] canonicalizes any NaN to the single positive quiet-NaN bit pattern\"] # [doc = \" ([`CANONICAL_NAN_BITS`]) — NaN payload bits are not identity-bearing and not observable\"] # [doc = \" (ADR-040 §2.3). `+0.0`/`-0.0` stay **bit-distinct** in identity while remaining IEEE-equal\"] # [doc = \" under the derived `==` — the documented identity-vs-equality seam (ADR-040 FLAG-4).\"] Float (f64) , # [doc = \" Elements of a [`Repr::Seq`] value (length == the seq's `len`; every element's `repr` matches\"] # [doc = \" the seq's `elem`). RFC-0032 D3 (M-749).\"] Seq (Vec < Value >) , # [doc = \" Bytes of a [`Repr::Bytes`] value — any byte content (no declared length). RFC-0032 D4 (M-750).\"] Bytes (Vec < u8 >) , }",
+      "reason": "enum `Payload` derive(Clone) is a satisfied no-op under Mycelium's value semantics (ADR-003 — every value already copies structurally; DN-128 §6.1) — not emitted as an impl, not a gap",
+      "item_name": "Payload"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/value.rs",
+      "line": 72,
+      "col": 1,
+      "category": "DeriveAttr",
+      "rust_construct": "DeriveAttr",
+      "snippet": "# [doc = \" Representation-specific payload. Detailed VSA storage (sparse index/value pairs) lands with the\"] # [doc = \" VSA submodule (M-130); here a hypervector is a dense scalar vector.\"] # [derive (Debug , Clone , PartialEq)] pub enum Payload { # [doc = \" Bits of a `Binary` value (length == `width`).\"] Bits (Vec < bool >) , # [doc = \" Trits of a `Ternary` value (length == `trits`).\"] Trits (Vec < Trit >) , # [doc = \" Scalars of a `Dense` value (length == `dim`).\"] Scalars (Vec < f64 >) , # [doc = \" Components of a `Vsa` value (length == `dim`).\"] Hypervector (Vec < f64 >) , # [doc = \" The scalar of a [`Repr::Float`] value (ADR-040 §2.1; M-896). **Canonical-NaN invariant:**\"] # [doc = \" [`Value::new`] canonicalizes any NaN to the single positive quiet-NaN bit pattern\"] # [doc = \" ([`CANONICAL_NAN_BITS`]) — NaN payload bits are not identity-bearing and not observable\"] # [doc = \" (ADR-040 §2.3). `+0.0`/`-0.0` stay **bit-distinct** in identity while remaining IEEE-equal\"] # [doc = \" under the derived `==` — the documented identity-vs-equality seam (ADR-040 FLAG-4).\"] Float (f64) , # [doc = \" Elements of a [`Repr::Seq`] value (length == the seq's `len`; every element's `repr` matches\"] # [doc = \" the seq's `elem`). RFC-0032 D3 (M-749).\"] Seq (Vec < Value >) , # [doc = \" Bytes of a [`Repr::Bytes`] value — any byte content (no declared length). RFC-0032 D4 (M-750).\"] Bytes (Vec < u8 >) , }",
+      "reason": "enum `Payload` derive(PartialEq): variant 2 (`Scalars`) field 0 has type `Vec[Float]`, a `Vec` field whose element type `Float` has no equality route of its own (DN-138 WU-4 depth-1 scope) — the whole derive is left an honest gap rather than a partial/fabricated equality (G2)",
+      "item_name": "Payload"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/value.rs",
+      "line": 97,
+      "col": 1,
+      "category": "DeriveAttr",
+      "rust_construct": "DeriveAttr",
+      "snippet": "# [doc = \" The externally-tagged wire projection of [`Payload`] — `{\\\"bits\\\": \\\"…\\\"}`, `{\\\"trits\\\": \\\"…\\\"}`,\"] # [doc = \" `{\\\"scalars\\\": […]}`, `{\\\"hypervector\\\": […]}` — the paradigm-specific `payload` of\"] # [doc = \" `value.schema.json`.\"] # [derive (Serialize , Deserialize)] enum PayloadWire { # [serde (rename = \"bits\")] Bits (String) , # [serde (rename = \"trits\")] Trits (String) , # [serde (rename = \"scalars\")] Scalars (Vec < f64 >) , # [serde (rename = \"hypervector\")] Hypervector (Vec < f64 >) , # [doc = \" A scalar-float payload renders as a **string** (`\\\"1.5\\\"`, `\\\"-0.0\\\"`, `\\\"inf\\\"`, `\\\"-inf\\\"`,\"] # [doc = \" `\\\"NaN\\\"`), not a JSON number: JSON numbers cannot carry the in-band IEEE specials\"] # [doc = \" (ADR-040 §2.4), and `serde_json` would serialize a non-finite `f64` as `null` — a silent\"] # [doc = \" loss (G2). Finite values use Rust's shortest round-trip decimal (`{:?}` — exact by the\"] # [doc = \" std round-trip guarantee, `Declared`; re-checked by a property test); a malformed string\"] # [doc = \" is rejected on the way in, never coerced. ADR-040 (M-896).\"] # [serde (rename = \"float\")] Float (String) , # [doc = \" A sequence payload renders as a JSON array of self-describing element [`Value`]s — each\"] # [doc = \" element round-trips through its own `Value` (de)serialization, so the seq is checked\"] # [doc = \" element-wise on the way in. RFC-0032 D3 (M-749).\"] # [serde (rename = \"seq\")] Seq (Vec < Value >) , # [doc = \" A byte payload renders as a lowercase hex string (`\\\"deadbeef\\\"`), compact and exactly\"] # [doc = \" round-trippable; a non-hex / odd-length string is rejected on the way in (never-silent).\"] # [doc = \" RFC-0032 D4 (M-750).\"] # [serde (rename = \"bytes\")] Bytes (String) , }",
+      "reason": "enum `PayloadWire` derive(...) names Serialize, Deserialize not in the DN-128 enum-derive set this leaf builds (Debug/PartialEq/Clone/Copy recognized; bare Eq is a satisfied co-occurrence note; Hash/PartialOrd/Ord/Default stay product-only for now) — dropped, no confirmed Mycelium surface",
+      "item_name": "PayloadWire"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/value.rs",
+      "line": 130,
+      "col": 1,
+      "category": "Impl",
+      "rust_construct": "Impl",
+      "snippet": "impl Serialize for Payload { fn serialize < S : serde :: Serializer > (& self , serializer : S) -> Result < S :: Ok , S :: Error > { let wire = match self { Payload :: Bits (bits) => { PayloadWire :: Bits (bits . iter () . map (| & b | if b { '1' } else { '0' }) . collect ()) } Payload :: Trits (trits) => { PayloadWire :: Trits (trits . iter () . map (| & t | t . to_wire_char ()) . collect ()) } Payload :: Scalars (xs) => PayloadWire :: Scalars (xs . clone ()) , Payload :: Hypervector (xs) => PayloadWire :: Hypervector (xs . clone ()) , Payload :: Float (x) => PayloadWire :: Float (format ! (\"{x:?}\")) , Payload :: Seq (elems) => PayloadWire :: Seq (elems . clone ()) , Payload :: Bytes (bytes) => { let mut s = String :: with_capacity (bytes . len () * 2) ; for & b in bytes { use core :: fmt :: Write as _ ; let _ = write ! (s , \"{b:02x}\") ; } PayloadWire :: Bytes (s) } } ; wire . serialize (serializer) } }",
+      "reason": "trait-impl of non-prelude trait `Serialize` — no ambient trait definition and synthetic trait emission is refused (DN-34 §8.8 / DN-122 MVP); gapped the whole impl so the residual cannot file-poison myc-check (G2; express gap-close 2026-07-16)",
+      "item_name": "Payload"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/value.rs",
+      "line": 159,
+      "col": 1,
+      "category": "GenericBound",
+      "rust_construct": "GenericBound",
+      "snippet": "impl < 'de > Deserialize < 'de > for Payload { fn deserialize < D : serde :: Deserializer < 'de > > (deserializer : D) -> Result < Self , D :: Error > { use serde :: de :: Error ; Ok (match PayloadWire :: deserialize (deserializer) ? { PayloadWire :: Bits (s) => { let bits = s . chars () . map (| c | match c { '1' => Ok (true) , '0' => Ok (false) , other => Err (Error :: custom (format ! (\"bit string has non-0/1 char {other:?}\"))) , }) . collect :: < Result < Vec < bool > , _ > > () ? ; Payload :: Bits (bits) } PayloadWire :: Trits (s) => { let trits = s . chars () . map (| c | { Trit :: from_wire_char (c) . ok_or_else (| | { Error :: custom (format ! (\"trit string has non-+0- char {c:?}\")) }) }) . collect :: < Result < Vec < Trit > , _ > > () ? ; Payload :: Trits (trits) } PayloadWire :: Scalars (xs) => Payload :: Scalars (xs) , PayloadWire :: Hypervector (xs) => Payload :: Hypervector (xs) , PayloadWire :: Float (s) => { let x = s . parse :: < f64 > () . map_err (| e | { Error :: custom (format ! (\"float string {s:?} is not a valid f64: {e}\")) }) ? ; Payload :: Float (x) } PayloadWire :: Seq (elems) => Payload :: Seq (elems) , PayloadWire :: Bytes (s) => { if s . len () % 2 != 0 { return Err (Error :: custom (format ! (\"byte string hex has odd length {} (expected an even number of hex digits)\" , s . len ()))) ; } let mut bytes = Vec :: with_capacity (s . len () / 2) ; let raw = s . as_bytes () ; let hex_val = | c : u8 | -> Result < u8 , D :: Error > { match c { b'0' ..= b'9' => Ok (c - b'0') , b'a' ..= b'f' => Ok (c - b'a' + 10) , other => Err (Error :: custom (format ! (\"byte string has non-hex char {:?}\" , other as char))) , } } ; for pair in raw . chunks_exact (2) { bytes . push ((hex_val (pair [0]) ? << 4) | hex_val (pair [1]) ?) ; } Payload :: Bytes (bytes) } }) } }",
+      "reason": "impl-level generic parameter(s) on a *trait-instance* impl (`impl<..> Trait for ..`) have no confirmed mapping yet — DN-130 (parametric trait-instance heads + coherence) is the unbuilt scope for that case; DN-131 authorizes only the inherent-impl slot",
+      "item_name": "Payload"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/value.rs",
+      "line": 229,
+      "col": 1,
+      "category": "Struct",
+      "rust_construct": "Struct",
+      "snippet": "# [doc = \" A Mycelium value. The only constructor, [`Value::new`], rejects a malformed `repr` and a\"] # [doc = \" payload that does not match its `repr` (the wire-form well-formedness of `value.schema.json`).\"] # [derive (Debug , Clone , PartialEq)] pub struct Value { repr : Repr , payload : Payload , meta : Meta , }",
+      "reason": "struct `Value` uses named fields and references a type not resolvable in-file — emitting it positionally would introduce an unresolved reference that poisons the file's `myc check`; left gapped under the M-1006 resolvability gate (VR-5/G2)",
+      "item_name": "Value"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/value.rs",
+      "line": 238,
+      "col": 1,
+      "category": "Impl",
+      "rust_construct": "Impl",
+      "snippet": "impl Value { # [doc = \" Build a value, checking [`Repr::check_well_formed`] (positivity, non-empty model, and the\"] # [doc = \" [`crate::repr::MAX_DIM`] over-allocation cap) and that `payload` matches `repr`. (`meta` is\"] # [doc = \" already invariant-checked by [`Meta::new`].)\"] pub fn new (repr : Repr , payload : Payload , meta : Meta) -> Result < Self , WfError > { repr . check_well_formed () ? ; if ! payload_matches (& repr , & payload) { return Err (WfError :: PayloadReprMismatch) ; } let payload = match payload { Payload :: Float (x) => Payload :: Float (canonical_float (x)) , other => other , } ; Ok (Value { repr , payload , meta , }) } # [doc = \" The representation descriptor.\"] # [must_use] pub fn repr (& self) -> & Repr { & self . repr } # [doc = \" The payload.\"] # [must_use] pub fn payload (& self) -> & Payload { & self . payload } # [doc = \" The metadata.\"] # [must_use] pub fn meta (& self) -> & Meta { & self . meta } # [doc = \" The scalar of a [`Repr::Float`] value, or `None` for any other representation\"] # [doc = \" (never-silent — a non-float has no scalar here, G2; ADR-040 / M-896). `Exact`: a total\"] # [doc = \" decidable query. The returned NaN, if any, carries the canonical bits\"] # [doc = \" ([`CANONICAL_NAN_BITS`]) by the construction invariant of [`Value::new`].\"] # [must_use] pub fn float (& self) -> Option < f64 > { match self . payload () { Payload :: Float (x) => Some (* x) , _ => None , } } # [doc = \" The element count of a [`Repr::Seq`] value, or `None` for any other representation\"] # [doc = \" (never-silent — a non-sequence has no length here, G2). `Exact`: a total decidable query.\"] # [must_use] pub fn seq_len (& self) -> Option < usize > { match self . payload () { Payload :: Seq (elems) => Some (elems . len ()) , _ => None , } } # [doc = \" Never-silent indexed access into a [`Repr::Seq`] value (RFC-0032 D3): the `i`-th element, or\"] # [doc = \" `None` when `i` is out of bounds **or** the value is not a sequence — **never** a panic or a\"] # [doc = \" silent default (G2). `Exact`: total over its domain. The `.myc` `Vec::get` surface bottoms\"] # [doc = \" out on this.\"] # [must_use] pub fn seq_get (& self , i : usize) -> Option < & Value > { match self . payload () { Payload :: Seq (elems) => elems . get (i) , _ => None , } } # [doc = \" The elements of a [`Repr::Seq`] value as a slice, or `None` for any other representation\"] # [doc = \" (the fold/iterate basis — RFC-0032 D3). Never-silent: a non-sequence yields `None`, not an\"] # [doc = \" empty slice.\"] # [must_use] pub fn seq_elems (& self) -> Option < & [Value] > { match self . payload () { Payload :: Seq (elems) => Some (elems) , _ => None , } } # [doc = \" The byte length of a [`Repr::Bytes`] value, or `None` for any other representation\"] # [doc = \" (never-silent — a non-bytes value has no byte length here). `Exact`. RFC-0032 D4.\"] # [must_use] pub fn bytes_len (& self) -> Option < usize > { match self . payload () { Payload :: Bytes (b) => Some (b . len ()) , _ => None , } } # [doc = \" Never-silent indexed byte access into a [`Repr::Bytes`] value (RFC-0032 D4): the `i`-th byte,\"] # [doc = \" or `None` when `i` is out of bounds **or** the value is not a byte string — **never** a panic\"] # [doc = \" or a silent default (G2). `Exact`: total over its domain.\"] # [must_use] pub fn bytes_get (& self , i : usize) -> Option < u8 > { match self . payload () { Payload :: Bytes (b) => b . get (i) . copied () , _ => None , } } # [doc = \" Never-silent byte sub-slice `[start, end)` of a [`Repr::Bytes`] value (RFC-0032 D4): `None`\"] # [doc = \" when the range is out of bounds or inverted, or the value is not a byte string — **never** a\"] # [doc = \" panic or a silently-clamped range (G2). `Exact`.\"] # [must_use] pub fn bytes_slice (& self , start : usize , end : usize) -> Option < & [u8] > { match self . payload () { Payload :: Bytes (b) if start <= end && end <= b . len () => Some (& b [start .. end]) , _ => None , } } # [doc = \" The bytes of a [`Repr::Bytes`] value as a slice, or `None` for any other representation\"] # [doc = \" (never-silent — not an empty slice). RFC-0032 D4.\"] # [must_use] pub fn bytes (& self) -> Option < & [u8] > { match self . payload () { Payload :: Bytes (b) => Some (b) , _ => None , } } }",
+      "reason": "no member of this impl block could be transpiled (12 sub-issue(s)): impl method `new` body: function body has a semicolon-terminated (value-discarding) statement expression before the tail — a `let`-chain body maps only simple `let x = e;` bindings plus a single trailing expression; impl method `repr` body: field projection `self.repr` on `Value` — not an in-file single-ctor struct that emits (an enum / external / non-resolvable type has no constructor to `match` against); impl method `payload` body: field projection `self.payload` on `Value` — not an in-file single-ctor struct that emits (an enum / external / non-resolvable type has no constructor to `match` against); impl method `meta` body: field projection `self.meta` on `Value` — not an in-file single-ctor struct that emits (an enum / external / non-resolvable type has no constructor to `match` against); impl method `float` body: method call `.payload(...)` has no proven-emitted free-fn referent in this file (neither a D4-mangled inherent `Type__payload` nor a bare inherent recorded by this file's left-to-right pass, nor a prim_map / combinator row). Emitting bare `payload(recv, …)` would fabricate an unknown prim and file-poison myc-check (G-β Rank A / G2/VR-5; residual when the method body itself gapped — e.g. M-1037 `.to_vec()` inside `read_to_end` — so the declaration was never registered); impl method `seq_len` body: method call `.payload(...)` has no proven-emitted free-fn referent in this file (neither a D4-mangled inherent `Type__payload` nor a bare inherent recorded by this file's left-to-right pass, nor a prim_map / combinator row). Emitting bare `payload(recv, …)` would fabricate an unknown prim and file-poison myc-check (G-β Rank A / G2/VR-5; residual when the method body itself gapped — e.g. M-1037 `.to_vec()` inside `read_to_end` — so the declaration was never registered); impl method `seq_get` body: method call `.payload(...)` has no proven-emitted free-fn referent in this file (neither a D4-mangled inherent `Type__payload` nor a bare inherent recorded by this file's left-to-right pass, nor a prim_map / combinator row). Emitting bare `payload(recv, …)` would fabricate an unknown prim and file-poison myc-check (G-β Rank A / G2/VR-5; residual when the method body itself gapped — e.g. M-1037 `.to_vec()` inside `read_to_end` — so the declaration was never registered); impl method `seq_elems` body: method call `.payload(...)` has no proven-emitted free-fn referent in this file (neither a D4-mangled inherent `Type__payload` nor a bare inherent recorded by this file's left-to-right pass, nor a prim_map / combinator row). Emitting bare `payload(recv, …)` would fabricate an unknown prim and file-poison myc-check (G-β Rank A / G2/VR-5; residual when the method body itself gapped — e.g. M-1037 `.to_vec()` inside `read_to_end` — so the declaration was never registered); impl method `bytes_len` body: method call `.payload(...)` has no proven-emitted free-fn referent in this file (neither a D4-mangled inherent `Type__payload` nor a bare inherent recorded by this file's left-to-right pass, nor a prim_map / combinator row). Emitting bare `payload(recv, …)` would fabricate an unknown prim and file-poison myc-check (G-β Rank A / G2/VR-5; residual when the method body itself gapped — e.g. M-1037 `.to_vec()` inside `read_to_end` — so the declaration was never registered); impl method `bytes_get` body: method call `.payload(...)` has no proven-emitted free-fn referent in this file (neither a D4-mangled inherent `Type__payload` nor a bare inherent recorded by this file's left-to-right pass, nor a prim_map / combinator row). Emitting bare `payload(recv, …)` would fabricate an unknown prim and file-poison myc-check (G-β Rank A / G2/VR-5; residual when the method body itself gapped — e.g. M-1037 `.to_vec()` inside `read_to_end` — so the declaration was never registered); impl method `bytes_slice` body: method call `.payload(...)` has no proven-emitted free-fn referent in this file (neither a D4-mangled inherent `Type__payload` nor a bare inherent recorded by this file's left-to-right pass, nor a prim_map / combinator row). Emitting bare `payload(recv, …)` would fabricate an unknown prim and file-poison myc-check (G-β Rank A / G2/VR-5; residual when the method body itself gapped — e.g. M-1037 `.to_vec()` inside `read_to_end` — so the declaration was never registered); impl method `bytes` body: method call `.payload(...)` has no proven-emitted free-fn referent in this file (neither a D4-mangled inherent `Type__payload` nor a bare inherent recorded by this file's left-to-right pass, nor a prim_map / combinator row). Emitting bare `payload(recv, …)` would fabricate an unknown prim and file-poison myc-check (G-β Rank A / G2/VR-5; residual when the method body itself gapped — e.g. M-1037 `.to_vec()` inside `read_to_end` — so the declaration was never registered)",
+      "item_name": "Value"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/value.rs",
+      "line": 369,
+      "col": 1,
+      "category": "Other",
+      "rust_construct": "Other",
+      "snippet": "fn payload_matches (repr : & Repr , payload : & Payload) -> bool { match (repr , payload) { (Repr :: Binary { width } , Payload :: Bits (b)) => b . len () == * width as usize , (Repr :: Ternary { trits } , Payload :: Trits (t)) => t . len () == * trits as usize , (Repr :: Dense { dim , .. } , Payload :: Scalars (s)) => s . len () == * dim as usize , (Repr :: Vsa { dim , .. } , Payload :: Hypervector (h)) => h . len () == * dim as usize , (Repr :: Float { .. } , Payload :: Float (_)) => true , (Repr :: Seq { elem , len } , Payload :: Seq (elems)) => { elems . len () == * len as usize && elems . iter () . all (| e | e . repr () == elem . as_ref ()) } (Repr :: Bytes , Payload :: Bytes (_)) => true , _ => false , } }",
+      "reason": "struct-variant pattern `Binary_kw { .. }` names a constructor with no confirmed in-file layout -- resolved only for an emitted, in-file struct (or, once DN-132's SS5.1 variant-aware `StructLayout` population lands, an in-file enum's named-field variant); never a guessed field-index arity (DN-132 SS5.1/OQ-4, VR-5/G2)",
+      "item_name": "payload_matches"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/value.rs",
+      "line": 391,
+      "col": 1,
+      "category": "Struct",
+      "rust_construct": "Struct",
+      "snippet": "# [doc = \" The wire projection of [`Value`] (`value.schema.json`): `[Repr] ‖ [Meta] ‖ [payload]`.\"] # [doc = \" `deny_unknown_fields` enforces the schema's `additionalProperties: false` (A6-02).\"] # [derive (Serialize , Deserialize)] # [serde (deny_unknown_fields)] struct ValueWire { repr : Repr , payload : Payload , meta : Meta , }",
+      "reason": "struct `ValueWire` uses named fields and references a type not resolvable in-file — emitting it positionally would introduce an unresolved reference that poisons the file's `myc check`; left gapped under the M-1006 resolvability gate (VR-5/G2)",
+      "item_name": "ValueWire"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/value.rs",
+      "line": 401,
+      "col": 1,
+      "category": "Impl",
+      "rust_construct": "Impl",
+      "snippet": "impl Serialize for Value { fn serialize < S : serde :: Serializer > (& self , serializer : S) -> Result < S :: Ok , S :: Error > { ValueWire { repr : self . repr . clone () , payload : self . payload . clone () , meta : self . meta . clone () , } . serialize (serializer) } }",
+      "reason": "trait-impl of non-prelude trait `Serialize` — no ambient trait definition and synthetic trait emission is refused (DN-34 §8.8 / DN-122 MVP); gapped the whole impl so the residual cannot file-poison myc-check (G2; express gap-close 2026-07-16)",
+      "item_name": "Value"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/value.rs",
+      "line": 412,
+      "col": 1,
+      "category": "GenericBound",
+      "rust_construct": "GenericBound",
+      "snippet": "impl < 'de > Deserialize < 'de > for Value { fn deserialize < D : serde :: Deserializer < 'de > > (deserializer : D) -> Result < Self , D :: Error > { let w = ValueWire :: deserialize (deserializer) ? ; Value :: new (w . repr , w . payload , w . meta) . map_err (serde :: de :: Error :: custom) } }",
+      "reason": "impl-level generic parameter(s) on a *trait-instance* impl (`impl<..> Trait for ..`) have no confirmed mapping yet — DN-130 (parametric trait-instance heads + coherence) is the unbuilt scope for that case; DN-131 authorizes only the inherent-impl slot",
+      "item_name": "Value"
+    }
+  ],
+  "total_top_level_items": 18
+}

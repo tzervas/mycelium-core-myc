@@ -1,0 +1,53 @@
+// nodule: core.datum
+// Algebraic **data values** and the runtime value sum (RFC-0001 §4.2 r3; RFC-0011 §4.6).
+//
+// A [`Construct`](crate::Node) node evaluates to a [`Datum`] — a saturated constructor application
+// (constructor tag + field values). A datum is **not** one of the four paradigm [`Repr`](crate::Repr)
+// kinds (those stay closed — RFC-0011 §4.6); it is a different category of value, so the runtime
+// value the interpreter yields is the sum [`CoreValue`] = a representation [`Value`] **or** a
+// [`Datum`]. This mirrors `crates/mycelium-l1::eval::L1Value` (`Repr(Value) | Data{…}`) so the L1
+// evaluator and the L0 interpreter agree on the data fragment (NFR-7).
+//
+// # Honesty (the meet-summary; maintainer-confirmed)
+// A datum carries **one** honesty field: a [`GuaranteeStrength`] **summary** — the `meet` of its
+// fields' guarantees. It carries **no [`Bound`](crate::Bound)**: a datum is not itself an
+// approximation; the quantitative bounds that justify a non-`Exact` summary live on the **leaf
+// representation values** it contains (drillable via provenance / EXPLAIN). M-I1
+// (`guarantee≠Exact ⟺ bound`) is an invariant of *representation* values — where the bound
+// quantifies *that value's* error — not of structural composites. The datum summary is a derived
+// disclosure (an addendum to RFC-0001 §4.7's propagation), and like every guarantee it is
+// monotone-downward (`Construct`/`Match` only ever `meet`, never upgrade — VR-5).
+// @summary: best-effort transpilation via mycelium-transpile (M-873). Declared,
+// unvalidated — no Mycelium parser/typechecker confirms this output; see the
+// accompanying .gap.json for every construct this pass could not express.
+nodule core.datum;
+
+// Declared: ambient Option type co-emit — oracle self-containment (G-α Rank-1 / L2-A). Type shape cites lib/std/option.myc (Some/None sum); combinators are NOT fabricated (VR-5/G2). Checker does not seed Option as prelude (unlike Bool/Unit unconditional, Vec conditional).
+type Option[A] = Some(A) | None;
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.guarantee) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type GuaranteeStrength = Exact_kw | Proven_kw | Empirical_kw | Declared_kw;
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.id) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type ContentHash = ContentHash(Bytes);
+
+// A runtime value: a representation [`Value`] (one of the four paradigm kinds) or an algebraic
+// [`Datum`]. The interpreter's normal forms (RFC-0011 §4.6).
+//
+// **Recursion-safety (RFC-0041 §4.5, W3):** [`Clone`] and [`PartialEq`] are **manual, iterative**
+// (below) over the shared `Datum`↔`CoreValue` worklist; `Drop` stays derived because a
+// `CoreValue::Data`'s only owned recursive field is a [`Datum`], whose manual iterative `Drop`
+// tears down the whole cluster in one bounded pass.
+pub type CoreValue = Repr(Value) | Data(Datum);
+
+impl Show[CoreValue] for CoreValue {
+  fn render(x: CoreValue) => Bytes =
+    match x { Repr(p0) => bytes_concat(bytes_concat("Repr(", render(p0)), ")"), Data(p0) => bytes_concat(bytes_concat("Data(", render(p0)), ")") };
+};
+
+impl CoreValue {
+  // The underlying representation value, if this is a [`CoreValue::Repr`].
+  fn as_repr(self: CoreValue) => Option[Value] = match self { Repr(v) => Some(v), Data(_) => None };
+  // The underlying datum, if this is a [`CoreValue::Data`].
+  fn as_data(self: CoreValue) => Option[Datum] = match self { Data(d) => Some(d), Repr(_) => None };
+};

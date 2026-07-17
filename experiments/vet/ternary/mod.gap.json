@@ -1,0 +1,172 @@
+{
+  "source": "/root/git/isolated/mycelium/crates/mycelium-core/src/ternary/mod.rs",
+  "emitted_items": [
+    "co-include:Trit",
+    "digit",
+    "neg_trit",
+    "is_nonzero"
+  ],
+  "gaps": [
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/ternary/mod.rs",
+      "line": 32,
+      "col": 1,
+      "category": "ModuleDecl",
+      "rust_construct": "ModuleDecl",
+      "snippet": "mod big_ternary ;",
+      "reason": "external `mod foo;` declaration — file-linkage, not translatable library surface (Mycelium's nodule-per-file model makes the module tree implicit in the file layout; the sibling file transpiles as its own nodule). Excluded from the expressible-fraction denominator, recorded not dropped",
+      "item_name": "big_ternary"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/ternary/mod.rs",
+      "line": 33,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "pub use big_ternary :: { checked_add_fixed , BigTernary , FixedWidthTrits } ;",
+      "reason": "`use big_ternary::checked_add_fixed` — `big_ternary` is not a sibling module OR sibling phylum transpiled in this same batch (an external crate, `std`, or simply out of this batch's target set). Flagged, not guessed (VR-5/G2); `use big_ternary::BigTernary` — `big_ternary` is not a sibling module OR sibling phylum transpiled in this same batch (an external crate, `std`, or simply out of this batch's target set). Flagged, not guessed (VR-5/G2); `use big_ternary::FixedWidthTrits` — `big_ternary` is not a sibling module OR sibling phylum transpiled in this same batch (an external crate, `std`, or simply out of this batch's target set). Flagged, not guessed (VR-5/G2)",
+      "item_name": null
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/ternary/mod.rs",
+      "line": 37,
+      "col": 1,
+      "category": "DeriveAttr",
+      "rust_construct": "DeriveAttr",
+      "snippet": "# [doc = \" The signed value of a single trit.\"] # [must_use] pub fn digit (t : Trit) -> i64 { match t { Trit :: Neg => - 1 , Trit :: Zero => 0 , Trit :: Pos => 1 , } }",
+      "reason": "dropped non-doc attribute(s) on fn `digit`: # [must_use]",
+      "item_name": "digit"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/ternary/mod.rs",
+      "line": 47,
+      "col": 1,
+      "category": "MultiStmtBody",
+      "rust_construct": "MultiStmtBody",
+      "snippet": "fn from_digit (d : i64) -> Trit { match d { - 1 => Trit :: Neg , 1 => Trit :: Pos , 0 => Trit :: Zero , _ => { debug_assert ! (false , \"balanced-ternary digit out of range: {d}\") ; Trit :: Zero } } }",
+      "reason": "function body contains a macro-invocation statement (e.g. `debug_assert!`/`println!`) — no macro system in this grammar fragment",
+      "item_name": "from_digit"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/ternary/mod.rs",
+      "line": 65,
+      "col": 1,
+      "category": "Other",
+      "rust_construct": "Other",
+      "snippet": "# [doc = \" Balanced full-adder over single trits: returns `(digit_out, carry_out)` with the exact invariant\"] # [doc = \" `digit(a) + digit(b) + digit(carry_in) == digit(digit_out) + 3·digit(carry_out)`. The sum\"] # [doc = \" `s = digit(a)+digit(b)+digit(carry_in) ∈ [−3, 3]`, and `(s+1).rem_euclid(3)−1` / `(s+1).div_euclid(3)`\"] # [doc = \" are provably balanced trits, so both outputs are in `{−1, 0, +1}`. This is the **single**\"] # [doc = \" never-silent digit primitive both the fixed-width [`add`] and the growable [`BigTernary`] ripple\"] # [doc = \" (DRY); it is exhaustively oracle-tested over all 27 inputs (`add_with_carry_is_exhaustively_correct`).\"] # [doc = \" Guarantee: **Exact** (C2).\"] # [must_use] pub (crate) fn add_with_carry (a : Trit , b : Trit , carry_in : Trit) -> (Trit , Trit) { let s = digit (a) + digit (b) + digit (carry_in) ; let d = (s + 1) . rem_euclid (3) - 1 ; let c = (s + 1) . div_euclid (3) ; (from_digit (d) , from_digit (c)) }",
+      "reason": "method call `.rem_euclid(...)` has no proven-emitted free-fn referent in this file (neither a D4-mangled inherent `Type__rem_euclid` nor a bare inherent recorded by this file's left-to-right pass, nor a prim_map / combinator row). Emitting bare `rem_euclid(recv, …)` would fabricate an unknown prim and file-poison myc-check (G-β Rank A / G2/VR-5; residual when the method body itself gapped — e.g. M-1037 `.to_vec()` inside `read_to_end` — so the declaration was never registered)",
+      "item_name": "add_with_carry"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/ternary/mod.rs",
+      "line": 80,
+      "col": 1,
+      "category": "DeriveAttr",
+      "rust_construct": "DeriveAttr",
+      "snippet": "# [doc = \" Per-trit negation (sign flip): `value(neg_trit t) = −value(t)` exactly. Total; always in range\"] # [doc = \" (balanced ternary is sign-symmetric, §1).\"] # [must_use] pub (crate) fn neg_trit (t : Trit) -> Trit { match t { Trit :: Neg => Trit :: Pos , Trit :: Zero => Trit :: Zero , Trit :: Pos => Trit :: Neg , } }",
+      "reason": "dropped non-doc attribute(s) on fn `neg_trit`: # [must_use]",
+      "item_name": "neg_trit"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/ternary/mod.rs",
+      "line": 91,
+      "col": 1,
+      "category": "MacroInvocation",
+      "rust_construct": "MacroInvocation",
+      "snippet": "# [doc = \" `true` iff the trit is the additive identity `Zero`.\"] # [inline] # [must_use] pub (crate) fn is_zero (t : Trit) -> bool { matches ! (t , Trit :: Zero) }",
+      "reason": "expression-position macro `matches` — no macro system in this grammar fragment (`write!`/`format!` lower to pure `Bytes` per DN-127/M-1090 WU-3)",
+      "item_name": "is_zero"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/ternary/mod.rs",
+      "line": 98,
+      "col": 1,
+      "category": "DeriveAttr",
+      "rust_construct": "DeriveAttr",
+      "snippet": "# [doc = \" `true` iff the trit is non-zero (`Neg` or `Pos`).\"] # [inline] # [must_use] pub (crate) fn is_nonzero (t : Trit) -> bool { ! is_zero (t) }",
+      "reason": "dropped non-doc attribute(s) on fn `is_nonzero`: # [inline] # [must_use]",
+      "item_name": "is_nonzero"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/ternary/mod.rs",
+      "line": 105,
+      "col": 1,
+      "category": "MultiStmtBody",
+      "rust_construct": "MultiStmtBody",
+      "snippet": "# [doc = \" The maximum representable magnitude in `m` trits: `(3^m − 1) / 2`. The range is the symmetric\"] # [doc = \" `[−max, +max]`. Returns `None` if `3^m` would overflow `i64` (`m ≥ 41`).\"] # [must_use] pub fn max_magnitude (m : u32) -> Option < i64 > { let mut pow : i64 = 1 ; for _ in 0 .. m { pow = pow . checked_mul (3) ? ; } Some ((pow - 1) / 2) }",
+      "reason": "`let` binding uses an unsupported pattern (only simple `let x = e;` is supported)",
+      "item_name": "max_magnitude"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/ternary/mod.rs",
+      "line": 116,
+      "col": 1,
+      "category": "Other",
+      "rust_construct": "Other",
+      "snippet": "# [doc = \" The integer denoted by an MSB-first trit string (`value(t)`, §1). The empty string is `0`.\"] # [must_use] pub fn trits_to_int (trits : & [Trit]) -> i64 { trits . iter () . fold (0i64 , | acc , & t | acc * 3 + digit (t)) }",
+      "reason": "method call `.fold(...)` has no proven-emitted free-fn referent in this file (neither a D4-mangled inherent `Type__fold` nor a bare inherent recorded by this file's left-to-right pass, nor a prim_map / combinator row). Emitting bare `fold(recv, …)` would fabricate an unknown prim and file-poison myc-check (G-β Rank A / G2/VR-5; residual when the method body itself gapped — e.g. M-1037 `.to_vec()` inside `read_to_end` — so the declaration was never registered)",
+      "item_name": "trits_to_int"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/ternary/mod.rs",
+      "line": 123,
+      "col": 1,
+      "category": "Other",
+      "rust_construct": "Other",
+      "snippet": "# [doc = \" The unique `m`-trit balanced representation of `value`, MSB-first — or `None` if `value` lies\"] # [doc = \" outside the `m`-trit range (an explicit out-of-range result, never a silent truncation; §3.1).\"] # [must_use] pub fn int_to_trits (value : i64 , m : u32) -> Option < Vec < Trit > > { let mut v = value ; let mut lsb_first = Vec :: with_capacity (m as usize) ; for _ in 0 .. m { let mut r = v . rem_euclid (3) ; v = v . div_euclid (3) ; if r == 2 { r = - 1 ; v += 1 ; } lsb_first . push (from_digit (r)) ; } if v != 0 { return None ; } lsb_first . reverse () ; Some (lsb_first) }",
+      "reason": "qualified/associated-function call `Vec :: with_capacity` did not resolve to a known-emitted associated fn — Mycelium calls are bare identifiers, and the only sound surface form for `Type::method(...)` is the mangled `Type__method` name the declaration side already emits for a receiver-less inherent-impl associated fn (DN-34 §8.13/8.14), referenced only when that exact declaration is PROVEN present (same-file, or a resolved M-1084 cross-nodule sibling). A primitive/std associated fn with no emitted decl (e.g. `i128::try_from`), an unresolved type, or a `self`-receiving method (excluded by construction — it stays reachable only from its own bare call site) all gap here rather than fabricate a call (G2/VR-5, DN-133)",
+      "item_name": "int_to_trits"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/ternary/mod.rs",
+      "line": 146,
+      "col": 1,
+      "category": "Other",
+      "rust_construct": "Other",
+      "snippet": "# [doc = \" Digit-wise negation: `value(neg t) = −value(t)` exactly (balanced ternary is sign-symmetric, §1).\"] # [doc = \" Width-preserving and always in range.\"] # [must_use] pub fn neg (trits : & [Trit]) -> Vec < Trit > { trits . iter () . map (| & t | match t { Trit :: Neg => Trit :: Pos , Trit :: Zero => Trit :: Zero , Trit :: Pos => Trit :: Neg , }) . collect () }",
+      "reason": "method call `.collect(...)` has no proven-emitted free-fn referent in this file (neither a D4-mangled inherent `Type__collect` nor a bare inherent recorded by this file's left-to-right pass, nor a prim_map / combinator row). Emitting bare `collect(recv, …)` would fabricate an unknown prim and file-poison myc-check (G-β Rank A / G2/VR-5; residual when the method body itself gapped — e.g. M-1037 `.to_vec()` inside `read_to_end` — so the declaration was never registered)",
+      "item_name": "neg"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/ternary/mod.rs",
+      "line": 160,
+      "col": 1,
+      "category": "MultiStmtBody",
+      "rust_construct": "MultiStmtBody",
+      "snippet": "# [doc = \" Ripple-carry add over two equal-length MSB-first trit strings, fixed-width. Returns `None` on\"] # [doc = \" overflow (a non-zero final carry), i.e. when the true sum leaves the `m`-trit range — explicit,\"] # [doc = \" never a silent wrap.\"] # [must_use] pub fn add (a : & [Trit] , b : & [Trit]) -> Option < Vec < Trit > > { if a . len () != b . len () { return None ; } let m = a . len () ; let mut out = vec ! [Trit :: Zero ; m] ; let mut carry = Trit :: Zero ; for i in (0 .. m) . rev () { let (d , c) = add_with_carry (a [i] , b [i] , carry) ; out [i] = d ; carry = c ; } if carry != Trit :: Zero { return None ; } Some (out) }",
+      "reason": "function body has a semicolon-terminated (value-discarding) statement expression before the tail — a `let`-chain body maps only simple `let x = e;` bindings plus a single trailing expression",
+      "item_name": "add"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/ternary/mod.rs",
+      "line": 184,
+      "col": 1,
+      "category": "MultiStmtBody",
+      "rust_construct": "MultiStmtBody",
+      "snippet": "# [doc = \" Fixed-width subtraction `a − b` = `add(a, neg(b))`.\"] # [must_use] pub fn sub (a : & [Trit] , b : & [Trit]) -> Option < Vec < Trit > > { if a . len () != b . len () { return None ; } add (a , & neg (b)) }",
+      "reason": "function body has a semicolon-terminated (value-discarding) statement expression before the tail — a `let`-chain body maps only simple `let x = e;` bindings plus a single trailing expression",
+      "item_name": "sub"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/ternary/mod.rs",
+      "line": 193,
+      "col": 1,
+      "category": "MultiStmtBody",
+      "rust_construct": "MultiStmtBody",
+      "snippet": "# [doc = \" Fixed-width multiplication. Computes the full product by shifted accumulation (independent of\"] # [doc = \" machine integer multiply) in a `2m`-trit buffer, then returns the low `m` trits iff the high\"] # [doc = \" trits are all zero — otherwise `None` (overflow, explicit).\"] # [must_use] pub fn mul (a : & [Trit] , b : & [Trit]) -> Option < Vec < Trit > > { if a . len () != b . len () { return None ; } let m = a . len () ; if m == 0 { return Some (Vec :: new ()) ; } let wide = 2 * m ; let mut acc = vec ! [Trit :: Zero ; wide] ; for (k , & bk) in b . iter () . rev () . enumerate () { let factor = digit (bk) ; if factor == 0 { continue ; } let a_signed : Vec < Trit > = if factor < 0 { neg (a) } else { a . to_vec () } ; let mut partial_lsb = vec ! [Trit :: Zero ; wide] ; for (j , & t) in a_signed . iter () . rev () . enumerate () { partial_lsb [k + j] = t ; } let mut acc_msb : Vec < Trit > = acc . iter () . rev () . copied () . collect () ; let partial_msb : Vec < Trit > = partial_lsb . iter () . rev () . copied () . collect () ; acc_msb = add (& acc_msb , & partial_msb) ? ; acc = acc_msb . iter () . rev () . copied () . collect () ; } if acc [m ..] . iter () . any (| & t | t != Trit :: Zero) { return None ; } let low_msb : Vec < Trit > = acc [.. m] . iter () . rev () . copied () . collect () ; Some (low_msb) }",
+      "reason": "function body has a semicolon-terminated (value-discarding) statement expression before the tail — a `let`-chain body maps only simple `let x = e;` bindings plus a single trailing expression",
+      "item_name": "mul"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/ternary/mod.rs",
+      "line": 234,
+      "col": 1,
+      "category": "TestItem",
+      "rust_construct": "TestItem",
+      "snippet": "# [cfg (test)] mod tests { use super :: * ; # [doc = \" **Exhaustive truth-table proof** of the shared balanced full-adder over all 27 inputs: the\"] # [doc = \" digit identity `a + b + carry_in == digit_out + 3·carry_out` holds exactly. This is the\"] # [doc = \" regression guard for the DRY extraction — both [`add`] and [`BigTernary`] ripple this one\"] # [doc = \" primitive, so a broken row fails here immediately (alongside `add_matches_integer_oracle`).\"] # [test] fn add_with_carry_is_exhaustively_correct () { for a in [Trit :: Neg , Trit :: Zero , Trit :: Pos] { for b in [Trit :: Neg , Trit :: Zero , Trit :: Pos] { for c in [Trit :: Neg , Trit :: Zero , Trit :: Pos] { let (d , carry) = add_with_carry (a , b , c) ; assert_eq ! (digit (a) + digit (b) + digit (c) , digit (d) + 3 * digit (carry) , \"full-adder identity for ({a:?}, {b:?}, {c:?})\") ; } } } } # [doc = \" Walk every integer representable in `m` trits, paired with its codec encoding.\"] fn each_in_range (m : u32 , mut f : impl FnMut (i64 , Vec < Trit >)) { let max = max_magnitude (m) . unwrap () ; for v in - max ..= max { f (v , int_to_trits (v , m) . expect (\"in range\")) ; } } # [test] fn worked_example_matches_spec () { let t = int_to_trits (- 78 , 6) . unwrap () ; assert_eq ! (t , vec ! [Trit :: Zero , Trit :: Neg , Trit :: Zero , Trit :: Zero , Trit :: Pos , Trit :: Zero]) ; assert_eq ! (trits_to_int (& t) , - 78) ; } # [test] fn range_is_symmetric () { assert_eq ! (max_magnitude (1) , Some (1)) ; assert_eq ! (max_magnitude (6) , Some (364)) ; assert_eq ! (int_to_trits (365 , 6) , None) ; assert_eq ! (int_to_trits (- 365 , 6) , None) ; } # [test] fn codec_round_trips_exhaustively () { for m in 1 ..= 5 { each_in_range (m , | v , t | { assert_eq ! (t . len () , m as usize) ; assert_eq ! (trits_to_int (& t) , v , \"round-trip at m={m}\") ; }) ; } } # [test] fn neg_is_value_negation () { for m in 1 ..= 5 { each_in_range (m , | v , t | { assert_eq ! (trits_to_int (& neg (& t)) , - v , \"neg at m={m}\") ; }) ; } } # [doc = \" **Oracle property test (add):** the digit-wise ripple-carry adder agrees with the `i64`\"] # [doc = \" oracle for *every* pair at small widths — in range it equals the encoded sum, out of range\"] # [doc = \" it is `None`.\"] # [test] fn add_matches_integer_oracle () { for m in 1 ..= 4 { let max = max_magnitude (m) . unwrap () ; for x in - max ..= max { for y in - max ..= max { let a = int_to_trits (x , m) . unwrap () ; let b = int_to_trits (y , m) . unwrap () ; let got = add (& a , & b) ; let expected = x + y ; if expected . abs () <= max { assert_eq ! (got , int_to_trits (expected , m) , \"add {x}+{y} at m={m}\") ; } else { assert_eq ! (got , None , \"add {x}+{y} should overflow at m={m}\") ; } } } } } # [test] fn sub_matches_integer_oracle () { for m in 1 ..= 4 { let max = max_magnitude (m) . unwrap () ; for x in - max ..= max { for y in - max ..= max { let a = int_to_trits (x , m) . unwrap () ; let b = int_to_trits (y , m) . unwrap () ; let got = sub (& a , & b) ; let expected = x - y ; if expected . abs () <= max { assert_eq ! (got , int_to_trits (expected , m) , \"sub {x}-{y} at m={m}\") ; } else { assert_eq ! (got , None , \"sub {x}-{y} should overflow at m={m}\") ; } } } } } # [doc = \" **Oracle property test (mul):** the shifted-add multiplier agrees with the `i64` oracle for\"] # [doc = \" every pair at small widths.\"] # [test] fn mul_matches_integer_oracle () { for m in 1 ..= 4 { let max = max_magnitude (m) . unwrap () ; for x in - max ..= max { for y in - max ..= max { let a = int_to_trits (x , m) . unwrap () ; let b = int_to_trits (y , m) . unwrap () ; let got = mul (& a , & b) ; let expected = x * y ; if expected . abs () <= max { assert_eq ! (got , int_to_trits (expected , m) , \"mul {x}*{y} at m={m}\") ; } else { assert_eq ! (got , None , \"mul {x}*{y} should overflow at m={m}\") ; } } } } } # [test] fn unequal_widths_are_rejected () { let a = int_to_trits (1 , 2) . unwrap () ; let b = int_to_trits (1 , 3) . unwrap () ; assert_eq ! (add (& a , & b) , None) ; assert_eq ! (sub (& a , & b) , None) ; assert_eq ! (mul (& a , & b) , None) ; } }",
+      "reason": "#[cfg(test)] item — out of scope for this PoC's transpilation surface (excluded from the expressible-fraction denominator, but recorded, never silently skipped)",
+      "item_name": "tests"
+    }
+  ],
+  "total_top_level_items": 17
+}

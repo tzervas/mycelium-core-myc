@@ -1,0 +1,40 @@
+// nodule: core.content
+// Content-addressing: hash-of-AST definition identity, with names as separable metadata
+// (RFC-0001 §4.6; ADR-003). M-103.
+//
+// ```text
+// hash(def) = H( normalize(structure(def)) ‖ types_with_repr(def) ‖ static_contract(def) )
+// ```
+//
+// **Hashed (identity-bearing):** the normalized node structure (α-renamed so binder *names* don't
+// matter and bound variables are position-independent de Bruijn indices), the result/operand types
+// *including [`Repr`]*, the literal value of a [`Node::Const`], the operator name of a
+// [`Node::Op`], and the static contract of a [`Node::Swap`] (its target `Repr` and `policy`).
+//
+// **Not hashed (metadata):** human names (binder names, free-variable spellings are kept only
+// because they are part of the *contract* of an open term — see below), source spans, comments,
+// and **all dynamic value metadata** ([`crate::meta::Meta`]: provenance, measured sparsity,
+// realized bounds, `policy_used`). Names are stored separately in a [`Names`] map; renaming a
+// definition does not change its identity.
+//
+// Consequences (the M-103 acceptance, RFC-0001 §4.6): two definitions differing only in
+// representation paradigm get *different* hashes; a definition and any α-renaming/reformatting get
+// the *same* hash; identical definitions collide.
+//
+// The kernel hash is **BLAKE3**; the encoding fed to it is domain-separated and length-prefixed so
+// that distinct structures can never collide by concatenation ambiguity (an injective framing).
+// @summary: best-effort transpilation via mycelium-transpile (M-873). Declared,
+// unvalidated — no Mycelium parser/typechecker confirms this output; see the
+// accompanying .gap.json for every construct this pass could not express.
+nodule core.content;
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.id) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type ContentHash = ContentHash(Bytes);
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.repr) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type ScalarKind = F16_kw | Bf16 | F32_kw | F64_kw;
+type SparsityClass = Dense_kw | Sparse_kw(Binary{32});
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.value) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type Trit = Neg | Zero | Pos;
+type Payload = Bits(Vec[Bool]) | Trits(Vec[Trit]) | Scalars(Vec[Float]) | Hypervector(Vec[Float]) | Float_kw(Float) | Seq_kw(Vec[Value]) | Bytes_kw(Vec[Binary{8}]);

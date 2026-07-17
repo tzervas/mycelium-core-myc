@@ -1,0 +1,50 @@
+// nodule: core.value
+// Values: a [`Repr`] + a representation-specific payload + [`Meta`] (RFC-0001 §4.2;
+// `value.schema.json`).
+//
+// The `serde` wire form is the self-describing `[Repr] ‖ [Meta] ‖ [payload]` of RFC-0001 §4.8,
+// faithfully round-trippable (`deserialize(serialize(v)) == v`, M-104). The `payload` is rendered
+// per paradigm: `Bits`/`Trits` as compact most-significant-first strings (`"10110010"`,
+// `"0-00+0"` over the alphabet `{+,0,-}`, matching `docs/spec/swaps/binary-ternary.md`), and
+// `Scalars`/`Hypervector` as JSON number arrays. [`Value`]'s `Deserialize` routes through
+// [`Value::new`], so a wire value that mismatches its `repr` is rejected, never silently accepted.
+// @summary: best-effort transpilation via mycelium-transpile (M-873). Declared,
+// unvalidated — no Mycelium parser/typechecker confirms this output; see the
+// accompanying .gap.json for every construct this pass could not express.
+nodule core.value;
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type WfError = GuaranteeBoundMismatch | MalformedBound | MalformedRepr | DimensionTooLarge(Bytes, Binary{32}, Binary{32}) | PayloadReprMismatch | MalformedReconstruction | MalformedSparsity;
+
+// A balanced trit in `{-1, 0, +1}`.
+pub type Trit = Neg | Zero | Pos;
+
+impl Show[Trit] for Trit {
+  fn render(x: Trit) => Bytes =
+    match x { Neg => "Neg", Zero => "Zero", Pos => "Pos" };
+};
+
+fn eq_Trit(a: Trit, b: Trit) => Binary{1} =
+  match a { Neg => match b { Neg => 0b1, _ => 0b0 }, Zero => match b { Zero => 0b1, _ => 0b0 }, Pos => match b { Pos => 0b1, _ => 0b0 } };
+
+// The single canonical NaN bit pattern — the positive quiet NaN (ADR-040 §2.3). Every NaN held by
+// a [`Payload::Float`] value carries exactly these bits: [`Value::new`] normalizes on
+// construction, so a value's content address never depends on platform NaN payload/sign bits
+// (which hardware arithmetic does not determine — `Declared`, per the Rust reference).
+// Declared: co-emitted private const as zero-arg fn returning a BinLit — Mycelium has no const item production (`item` covers use/default/type/trait/impl/fn/object/lower/derive only); hand-port precedent `max_expr_depth()` (ORACLE-R1 A4; G2/VR-5: value from the Rust initializer or a known workspace-floor path, never fabricated). Use sites rewrite `NAME` → `NAME()`.
+fn CANONICAL_NAN_BITS() => Binary{64} = 0b0111_1111_1111_1000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000; // 9221120237041090560
+
+// Representation-specific payload. Detailed VSA storage (sparse index/value pairs) lands with the
+// VSA submodule (M-130); here a hypervector is a dense scalar vector.
+// Declared: renamed Float -> Float_kw (reserved-word collision, DN-140)
+// Declared: renamed Seq -> Seq_kw (reserved-word collision, DN-140)
+// Declared: renamed Bytes -> Bytes_kw (reserved-word collision, DN-140)
+pub type Payload = Bits(Vec[Bool]) | Trits(Vec[Trit]) | Scalars(Vec[Float]) | Hypervector(Vec[Float]) | Float_kw(Float) | Seq_kw(Vec[Value]) | Bytes_kw(Vec[Binary{8}]);
+
+// The externally-tagged wire projection of [`Payload`] — `{"bits": "…"}`, `{"trits": "…"}`,
+// `{"scalars": […]}`, `{"hypervector": […]}` — the paradigm-specific `payload` of
+// `value.schema.json`.
+// Declared: renamed Float -> Float_kw (reserved-word collision, DN-140)
+// Declared: renamed Seq -> Seq_kw (reserved-word collision, DN-140)
+// Declared: renamed Bytes -> Bytes_kw (reserved-word collision, DN-140)
+type PayloadWire = Bits(Bytes) | Trits(Bytes) | Scalars(Vec[Float]) | Hypervector(Vec[Float]) | Float_kw(Bytes) | Seq_kw(Vec[Value]) | Bytes_kw(Bytes);

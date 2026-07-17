@@ -1,0 +1,29 @@
+// nodule: core.node
+// The Core IR node grammar (RFC-0001 §4.5).
+//
+// This commits the **core subset** of `SPECIFICATION.md` §10.2; the full term language
+// (abstraction, application, recursion, modules) is layered above this and is a later RFC.
+//
+// ```ebnf
+// Node ::= Const { value: Value }
+//        | Var   { id: VarId }
+//        | Let   { id: VarId, bound: Node, body: Node }
+//        | Op    { prim: Prim, args: [Node] }          (* paradigm-specific primitive *)
+//        | Swap  { src: Node, target: Repr, policy: PolicyRef }  (* the ONLY Repr-changing node *)
+//        | Construct { ctor: CtorRef, args: [Node] }            (* NEW (r3): saturated, W6 *)
+//        | Match { scrutinee: Node, alts: [Alt], default: Option<Node> } (* NEW (r3): flat, W7 *)
+// ```
+//
+// Well-formedness (RFC-0001 §4.5): **WF1** every change of a value's `Repr` is a [`Node::Swap`];
+// **WF2** every [`Node::Swap`] carries a [`PolicyRef`] — enforced *by construction* here, since
+// the `policy` field is mandatory. The r3 nodes carry **WF6** (`Construct` saturation), **WF7**
+// (flat, checked-exhaustive `Match`), and **WF8** (no `Swap` introduced through a `Match`/`Construct`
+// elaboration); WF6/WF7 coverage is *checked* above the kernel (the M-320 usefulness analysis +
+// the data registry [`crate::data::DataRegistry`]), never assumed here (RFC-0011 §4.3).
+// @summary: best-effort transpilation via mycelium-transpile (M-873). Declared,
+// unvalidated — no Mycelium parser/typechecker confirms this output; see the
+// accompanying .gap.json for every construct this pass could not express.
+nodule core.node;
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core.id) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type ContentHash = ContentHash(Bytes);

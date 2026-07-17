@@ -1,0 +1,306 @@
+{
+  "source": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+  "emitted_items": [
+    "co-emit:GuaranteeStrength",
+    "co-include:BoundBasis",
+    "co-include:CertMode",
+    "co-include:ContentHash",
+    "co-include:WfError",
+    "SparsityObs",
+    "PackScheme",
+    "PhysicalLayout"
+  ],
+  "gaps": [
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 9,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "use serde :: { Deserialize , Serialize } ;",
+      "reason": "`use serde::Deserialize` — `serde` is not a sibling module OR sibling phylum transpiled in this same batch (an external crate, `std`, or simply out of this batch's target set). Flagged, not guessed (VR-5/G2); `use serde::Serialize` — `serde` is not a sibling module OR sibling phylum transpiled in this same batch (an external crate, `std`, or simply out of this batch's target set). Flagged, not guessed (VR-5/G2)",
+      "item_name": null
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 11,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "use crate :: bound :: { Bound , BoundBasis } ;",
+      "reason": "`use bound::Bound` — `Bound` is not among sibling `bound`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": "co-include:BoundBasis"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 14,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "use crate :: recon :: ReconInfo ;",
+      "reason": "`use recon::ReconInfo` — `ReconInfo` is not among sibling `recon`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": null
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 15,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "use crate :: wrapping :: WrappingOpt ;",
+      "reason": "`use wrapping::WrappingOpt` — `WrappingOpt` is not among sibling `wrapping`'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": null
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 16,
+      "col": 1,
+      "category": "Import",
+      "rust_construct": "Import",
+      "snippet": "use crate :: { GuaranteeStrength , WfError } ;",
+      "reason": "`use ::GuaranteeStrength` — `GuaranteeStrength` is not among sibling ``'s successfully-emitted surface in this batch (the sibling file itself gapped it rather than emitting it). Flagged, not guessed (VR-5/G2)",
+      "item_name": "co-include:WfError"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 18,
+      "col": 1,
+      "category": "PayloadVariant",
+      "rust_construct": "PayloadVariant",
+      "snippet": "# [doc = \" Provenance: an acyclic derivation DAG (RFC-0001 §4.6). Not part of code identity. The `serde`\"] # [doc = \" form is tagged on `kind` (`Root|Derived`), matching `provenance.schema.json`.\"] # [derive (Debug , Clone , PartialEq , Eq , Serialize , Deserialize)] # [serde (tag = \"kind\")] pub enum Provenance { # [doc = \" A primitive/constant origin.\"] Root , # [doc = \" Derived from inputs by the operation at content hash `op`.\"] Derived { # [doc = \" Content hash of the producing operation/definition.\"] op : ContentHash , # [doc = \" Content hashes of the inputs.\"] inputs : Vec < ContentHash > , } , }",
+      "reason": "enum `Provenance` has a named-field variant referencing a type not resolvable in-file — emitting it positionally would introduce an unresolved reference that poisons the file's `myc check`; left gapped under the M-1006 resolvability gate (VR-5/G2)",
+      "item_name": "Provenance"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 34,
+      "col": 1,
+      "category": "NamedFieldDrop",
+      "rust_construct": "NamedFieldDrop",
+      "snippet": "# [doc = \" Measured (dynamic) sparsity — distinct from the declared [`crate::repr::SparsityClass`].\"] # [derive (Debug , Clone , Copy , PartialEq , Serialize , Deserialize)] pub struct SparsityObs { # [doc = \" Number of active components.\"] pub active : u64 , # [doc = \" Density in `[0, 1]`.\"] pub density : f64 , }",
+      "reason": "struct `SparsityObs` named field(s) `active, density` emitted positionally as `SparsityObs(Binary{64}, Float)` — Mycelium's `constructor` is positional-only (no record surface); product structure preserved, field names dropped (matches `lib/std/*.myc` hand-ports)",
+      "item_name": "SparsityObs"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 34,
+      "col": 1,
+      "category": "DeriveAttr",
+      "rust_construct": "DeriveAttr",
+      "snippet": "# [doc = \" Measured (dynamic) sparsity — distinct from the declared [`crate::repr::SparsityClass`].\"] # [derive (Debug , Clone , Copy , PartialEq , Serialize , Deserialize)] pub struct SparsityObs { # [doc = \" Number of active components.\"] pub active : u64 , # [doc = \" Density in `[0, 1]`.\"] pub density : f64 , }",
+      "reason": "struct `SparsityObs` derive(Debug): field 1 has type `Float`, a primitive repr (or `Seq`/tuple/other bracketed shape) with no ambient `Show` instance in this file (`lib/std/fmt.myc`'s primitive impls live in a separate, unimported nodule) — the whole derive is left an honest gap rather than a partial/fabricated render (G2)",
+      "item_name": "SparsityObs"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 34,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" Measured (dynamic) sparsity — distinct from the declared [`crate::repr::SparsityClass`].\"] # [derive (Debug , Clone , Copy , PartialEq , Serialize , Deserialize)] pub struct SparsityObs { # [doc = \" Number of active components.\"] pub active : u64 , # [doc = \" Density in `[0, 1]`.\"] pub density : f64 , }",
+      "reason": "struct `SparsityObs` derive(Clone) is a satisfied no-op under Mycelium's value semantics (ADR-003 — every value already copies structurally; DN-128 §6.1) — not emitted as an impl, not a gap",
+      "item_name": "SparsityObs"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 34,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" Measured (dynamic) sparsity — distinct from the declared [`crate::repr::SparsityClass`].\"] # [derive (Debug , Clone , Copy , PartialEq , Serialize , Deserialize)] pub struct SparsityObs { # [doc = \" Number of active components.\"] pub active : u64 , # [doc = \" Density in `[0, 1]`.\"] pub density : f64 , }",
+      "reason": "struct `SparsityObs` derive(Copy) is a satisfied no-op under Mycelium's value semantics (ADR-003 — every value already copies structurally; DN-128 §6.1) — not emitted as an impl, not a gap",
+      "item_name": "SparsityObs"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 34,
+      "col": 1,
+      "category": "DeriveAttr",
+      "rust_construct": "DeriveAttr",
+      "snippet": "# [doc = \" Measured (dynamic) sparsity — distinct from the declared [`crate::repr::SparsityClass`].\"] # [derive (Debug , Clone , Copy , PartialEq , Serialize , Deserialize)] pub struct SparsityObs { # [doc = \" Number of active components.\"] pub active : u64 , # [doc = \" Density in `[0, 1]`.\"] pub density : f64 , }",
+      "reason": "struct `SparsityObs` derive(PartialEq): field 1 has type `Float` — a derived TOTAL equality over a float field is refused (ADR-040 §2.4 NaN semantics: NaN != NaN under IEEE-754, so a structural `and`-fold cannot honestly claim total equality here — matching Rust's own `derive(Eq)` refusal for `f64`) — the whole derive is left an honest gap rather than a silently-wrong equality (G2)",
+      "item_name": "SparsityObs"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 34,
+      "col": 1,
+      "category": "DeriveAttr",
+      "rust_construct": "DeriveAttr",
+      "snippet": "# [doc = \" Measured (dynamic) sparsity — distinct from the declared [`crate::repr::SparsityClass`].\"] # [derive (Debug , Clone , Copy , PartialEq , Serialize , Deserialize)] pub struct SparsityObs { # [doc = \" Number of active components.\"] pub active : u64 , # [doc = \" Density in `[0, 1]`.\"] pub density : f64 , }",
+      "reason": "struct `SparsityObs` derive(...) names Serialize, Deserialize not in the DN-128 standard-derive set this leaf builds (Debug/Default/Clone/Copy/PartialEq/PartialOrd/Hash all recognized; bare Eq/Ord are deliberately NOT recognized — see emit/derives/mod.rs::TABLE's doc for why) — dropped, no confirmed Mycelium surface",
+      "item_name": "SparsityObs"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 43,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" Lossless physical packing schemes (extensible registry; RFC-0001 §4.3; DN-01). The `serde`\"] # [doc = \" renderings match `physical-layout.schema.json`'s `PackScheme` enum (`I2S|TL1|TL2`).\"] # [derive (Debug , Clone , Copy , PartialEq , Eq , Serialize , Deserialize)] pub enum PackScheme { # [doc = \" Unpacked.\"] Unpacked , # [doc = \" Two bits per trit.\"] TwoBitPerTrit , # [doc = \" Five trits per byte.\"] FiveTritPerByte , # [doc = \" bitnet.cpp I2_S.\"] I2S , # [doc = \" bitnet.cpp TL1.\"] # [serde (rename = \"TL1\")] Tl1 , # [doc = \" bitnet.cpp TL2.\"] # [serde (rename = \"TL2\")] Tl2 , }",
+      "reason": "enum `PackScheme` derive(Clone) is a satisfied no-op under Mycelium's value semantics (ADR-003 — every value already copies structurally; DN-128 §6.1) — not emitted as an impl, not a gap",
+      "item_name": "PackScheme"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 43,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" Lossless physical packing schemes (extensible registry; RFC-0001 §4.3; DN-01). The `serde`\"] # [doc = \" renderings match `physical-layout.schema.json`'s `PackScheme` enum (`I2S|TL1|TL2`).\"] # [derive (Debug , Clone , Copy , PartialEq , Eq , Serialize , Deserialize)] pub enum PackScheme { # [doc = \" Unpacked.\"] Unpacked , # [doc = \" Two bits per trit.\"] TwoBitPerTrit , # [doc = \" Five trits per byte.\"] FiveTritPerByte , # [doc = \" bitnet.cpp I2_S.\"] I2S , # [doc = \" bitnet.cpp TL1.\"] # [serde (rename = \"TL1\")] Tl1 , # [doc = \" bitnet.cpp TL2.\"] # [serde (rename = \"TL2\")] Tl2 , }",
+      "reason": "enum `PackScheme` derive(Copy) is a satisfied no-op under Mycelium's value semantics (ADR-003 — every value already copies structurally; DN-128 §6.1) — not emitted as an impl, not a gap",
+      "item_name": "PackScheme"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 43,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" Lossless physical packing schemes (extensible registry; RFC-0001 §4.3; DN-01). The `serde`\"] # [doc = \" renderings match `physical-layout.schema.json`'s `PackScheme` enum (`I2S|TL1|TL2`).\"] # [derive (Debug , Clone , Copy , PartialEq , Eq , Serialize , Deserialize)] pub enum PackScheme { # [doc = \" Unpacked.\"] Unpacked , # [doc = \" Two bits per trit.\"] TwoBitPerTrit , # [doc = \" Five trits per byte.\"] FiveTritPerByte , # [doc = \" bitnet.cpp I2_S.\"] I2S , # [doc = \" bitnet.cpp TL1.\"] # [serde (rename = \"TL1\")] Tl1 , # [doc = \" bitnet.cpp TL2.\"] # [serde (rename = \"TL2\")] Tl2 , }",
+      "reason": "enum `PackScheme` derive(Eq): covered by co-occurring PartialEq → `fn eq_PackScheme` (product-row collision policy; DN-128 / ONESHOT C2) — not a second emission",
+      "item_name": "PackScheme"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 43,
+      "col": 1,
+      "category": "DeriveAttr",
+      "rust_construct": "DeriveAttr",
+      "snippet": "# [doc = \" Lossless physical packing schemes (extensible registry; RFC-0001 §4.3; DN-01). The `serde`\"] # [doc = \" renderings match `physical-layout.schema.json`'s `PackScheme` enum (`I2S|TL1|TL2`).\"] # [derive (Debug , Clone , Copy , PartialEq , Eq , Serialize , Deserialize)] pub enum PackScheme { # [doc = \" Unpacked.\"] Unpacked , # [doc = \" Two bits per trit.\"] TwoBitPerTrit , # [doc = \" Five trits per byte.\"] FiveTritPerByte , # [doc = \" bitnet.cpp I2_S.\"] I2S , # [doc = \" bitnet.cpp TL1.\"] # [serde (rename = \"TL1\")] Tl1 , # [doc = \" bitnet.cpp TL2.\"] # [serde (rename = \"TL2\")] Tl2 , }",
+      "reason": "enum `PackScheme` derive(...) names Serialize, Deserialize not in the DN-128 enum-derive set this leaf builds (Debug/PartialEq/Clone/Copy recognized; bare Eq is a satisfied co-occurrence note; Hash/PartialOrd/Ord/Default stay product-only for now) — dropped, no confirmed Mycelium surface",
+      "item_name": "PackScheme"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 63,
+      "col": 1,
+      "category": "DeriveAttr",
+      "rust_construct": "DeriveAttr",
+      "snippet": "# [doc = \" The recorded schedule-staged packing (RFC-0001 §4.3; RFC-0004 §5). A *record*, not the decision.\"] # [doc = \" The `serde` form is tagged on `layout`, matching `physical-layout.schema.json`.\"] # [derive (Debug , Clone , Copy , PartialEq , Eq , Serialize , Deserialize)] # [serde (tag = \"layout\")] pub enum PhysicalLayout { # [doc = \" Binary words.\"] BinaryWords , # [doc = \" Packed trits under `scheme`.\"] TritPacked { # [doc = \" The packing scheme used.\"] scheme : PackScheme , } , # [doc = \" Dense scalar array.\"] DenseArray , # [doc = \" VSA storage (sparse or dense).\"] VsaStore { # [doc = \" Whether storage is sparse.\"] sparse : bool , } , }",
+      "reason": "dropped non-doc non-derive attribute(s) on enum `PhysicalLayout`: # [serde (tag = \"layout\")]",
+      "item_name": "PhysicalLayout"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 63,
+      "col": 1,
+      "category": "NamedFieldDrop",
+      "rust_construct": "NamedFieldDrop",
+      "snippet": "# [doc = \" The recorded schedule-staged packing (RFC-0001 §4.3; RFC-0004 §5). A *record*, not the decision.\"] # [doc = \" The `serde` form is tagged on `layout`, matching `physical-layout.schema.json`.\"] # [derive (Debug , Clone , Copy , PartialEq , Eq , Serialize , Deserialize)] # [serde (tag = \"layout\")] pub enum PhysicalLayout { # [doc = \" Binary words.\"] BinaryWords , # [doc = \" Packed trits under `scheme`.\"] TritPacked { # [doc = \" The packing scheme used.\"] scheme : PackScheme , } , # [doc = \" Dense scalar array.\"] DenseArray , # [doc = \" VSA storage (sparse or dense).\"] VsaStore { # [doc = \" Whether storage is sparse.\"] sparse : bool , } , }",
+      "reason": "enum `PhysicalLayout` variant `TritPacked` named field(s) `scheme` emitted positionally as `TritPacked(PackScheme)` — Mycelium's `constructor` is positional-only (no record surface); product structure preserved, field names dropped",
+      "item_name": "PhysicalLayout"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 63,
+      "col": 1,
+      "category": "NamedFieldDrop",
+      "rust_construct": "NamedFieldDrop",
+      "snippet": "# [doc = \" The recorded schedule-staged packing (RFC-0001 §4.3; RFC-0004 §5). A *record*, not the decision.\"] # [doc = \" The `serde` form is tagged on `layout`, matching `physical-layout.schema.json`.\"] # [derive (Debug , Clone , Copy , PartialEq , Eq , Serialize , Deserialize)] # [serde (tag = \"layout\")] pub enum PhysicalLayout { # [doc = \" Binary words.\"] BinaryWords , # [doc = \" Packed trits under `scheme`.\"] TritPacked { # [doc = \" The packing scheme used.\"] scheme : PackScheme , } , # [doc = \" Dense scalar array.\"] DenseArray , # [doc = \" VSA storage (sparse or dense).\"] VsaStore { # [doc = \" Whether storage is sparse.\"] sparse : bool , } , }",
+      "reason": "enum `PhysicalLayout` variant `VsaStore` named field(s) `sparse` emitted positionally as `VsaStore(Bool)` — Mycelium's `constructor` is positional-only (no record surface); product structure preserved, field names dropped",
+      "item_name": "PhysicalLayout"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 63,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" The recorded schedule-staged packing (RFC-0001 §4.3; RFC-0004 §5). A *record*, not the decision.\"] # [doc = \" The `serde` form is tagged on `layout`, matching `physical-layout.schema.json`.\"] # [derive (Debug , Clone , Copy , PartialEq , Eq , Serialize , Deserialize)] # [serde (tag = \"layout\")] pub enum PhysicalLayout { # [doc = \" Binary words.\"] BinaryWords , # [doc = \" Packed trits under `scheme`.\"] TritPacked { # [doc = \" The packing scheme used.\"] scheme : PackScheme , } , # [doc = \" Dense scalar array.\"] DenseArray , # [doc = \" VSA storage (sparse or dense).\"] VsaStore { # [doc = \" Whether storage is sparse.\"] sparse : bool , } , }",
+      "reason": "enum `PhysicalLayout` derive(Clone) is a satisfied no-op under Mycelium's value semantics (ADR-003 — every value already copies structurally; DN-128 §6.1) — not emitted as an impl, not a gap",
+      "item_name": "PhysicalLayout"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 63,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" The recorded schedule-staged packing (RFC-0001 §4.3; RFC-0004 §5). A *record*, not the decision.\"] # [doc = \" The `serde` form is tagged on `layout`, matching `physical-layout.schema.json`.\"] # [derive (Debug , Clone , Copy , PartialEq , Eq , Serialize , Deserialize)] # [serde (tag = \"layout\")] pub enum PhysicalLayout { # [doc = \" Binary words.\"] BinaryWords , # [doc = \" Packed trits under `scheme`.\"] TritPacked { # [doc = \" The packing scheme used.\"] scheme : PackScheme , } , # [doc = \" Dense scalar array.\"] DenseArray , # [doc = \" VSA storage (sparse or dense).\"] VsaStore { # [doc = \" Whether storage is sparse.\"] sparse : bool , } , }",
+      "reason": "enum `PhysicalLayout` derive(Copy) is a satisfied no-op under Mycelium's value semantics (ADR-003 — every value already copies structurally; DN-128 §6.1) — not emitted as an impl, not a gap",
+      "item_name": "PhysicalLayout"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 63,
+      "col": 1,
+      "category": "DeriveSatisfied",
+      "rust_construct": "DeriveSatisfied",
+      "snippet": "# [doc = \" The recorded schedule-staged packing (RFC-0001 §4.3; RFC-0004 §5). A *record*, not the decision.\"] # [doc = \" The `serde` form is tagged on `layout`, matching `physical-layout.schema.json`.\"] # [derive (Debug , Clone , Copy , PartialEq , Eq , Serialize , Deserialize)] # [serde (tag = \"layout\")] pub enum PhysicalLayout { # [doc = \" Binary words.\"] BinaryWords , # [doc = \" Packed trits under `scheme`.\"] TritPacked { # [doc = \" The packing scheme used.\"] scheme : PackScheme , } , # [doc = \" Dense scalar array.\"] DenseArray , # [doc = \" VSA storage (sparse or dense).\"] VsaStore { # [doc = \" Whether storage is sparse.\"] sparse : bool , } , }",
+      "reason": "enum `PhysicalLayout` derive(Eq): covered by co-occurring PartialEq → `fn eq_PhysicalLayout` (product-row collision policy; DN-128 / ONESHOT C2) — not a second emission",
+      "item_name": "PhysicalLayout"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 63,
+      "col": 1,
+      "category": "DeriveAttr",
+      "rust_construct": "DeriveAttr",
+      "snippet": "# [doc = \" The recorded schedule-staged packing (RFC-0001 §4.3; RFC-0004 §5). A *record*, not the decision.\"] # [doc = \" The `serde` form is tagged on `layout`, matching `physical-layout.schema.json`.\"] # [derive (Debug , Clone , Copy , PartialEq , Eq , Serialize , Deserialize)] # [serde (tag = \"layout\")] pub enum PhysicalLayout { # [doc = \" Binary words.\"] BinaryWords , # [doc = \" Packed trits under `scheme`.\"] TritPacked { # [doc = \" The packing scheme used.\"] scheme : PackScheme , } , # [doc = \" Dense scalar array.\"] DenseArray , # [doc = \" VSA storage (sparse or dense).\"] VsaStore { # [doc = \" Whether storage is sparse.\"] sparse : bool , } , }",
+      "reason": "enum `PhysicalLayout` derive(...) names Serialize, Deserialize not in the DN-128 enum-derive set this leaf builds (Debug/PartialEq/Clone/Copy recognized; bare Eq is a satisfied co-occurrence note; Hash/PartialOrd/Ord/Default stay product-only for now) — dropped, no confirmed Mycelium surface",
+      "item_name": "PhysicalLayout"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 84,
+      "col": 1,
+      "category": "Struct",
+      "rust_construct": "Struct",
+      "snippet": "# [doc = \" Runtime, queryable metadata (RFC-0001 §4.3). Fields are private; the only way to build a `Meta`\"] # [doc = \" is [`Meta::new`], which enforces M-I1…M-I4 — so an inconsistent `Meta` is unrepresentable.\"] # [doc = \"\"] # [doc = \" `reconstruction` (RFC-0003 §6; M-260) is attached via [`Meta::with_reconstruction`] — its own\"] # [doc = \" invariants are enforced by [`ReconInfo::new`], and it does not interact with M-I1…M-I4.\"] # [derive (Debug , Clone , PartialEq)] pub struct Meta { provenance : Provenance , guarantee : GuaranteeStrength , bound : Option < Bound > , sparsity : Option < SparsityObs > , physical : Option < PhysicalLayout > , reconstruction : Option < Box < ReconInfo > > , policy_used : Option < ContentHash > , # [doc = \" The certification mode this value was produced under (RFC-0034 §3.1; M-786). A **never-silent**\"] # [doc = \" tag — every `Meta` carries one — defaulting to [`CertMode::Fast`] (RFC-0034 §5). Like all of\"] # [doc = \" `Meta`, it is **excluded from the content hash** (RFC-0001 §4.6; ADR-003 — switching modes never\"] # [doc = \" perturbs identity); the exclusion is by construction (the hasher never reads `Meta`).\"] cert_mode : CertMode , # [doc = \" The explicit Axis-B `wrapping` opt-out, if the producing operation was given a named,\"] # [doc = \" explicit `wrapping` annotation (RFC-0034 §10; M-791). **Absent by default** — never-silent\"] # [doc = \" failability (out-of-range → `Option`/`Result`/`SwapError`) is the default in every mode.\"] # [doc = \" Presence means the developer *explicitly* opted in to wraparound at the use site; it is\"] # [doc = \" never an ambient default and does **not** silence Axis-A guarantee/cert_mode tags (VR-5).\"] # [doc = \" Excluded from the content hash (rides `Meta`; RFC-0001 §4.6).\"] wrapping_opt : Option < WrappingOpt > , }",
+      "reason": "struct `Meta` uses named fields and references a type not resolvable in-file — emitting it positionally would introduce an unresolved reference that poisons the file's `myc check`; left gapped under the M-1006 resolvability gate (VR-5/G2)",
+      "item_name": "Meta"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 112,
+      "col": 1,
+      "category": "Impl",
+      "rust_construct": "Impl",
+      "snippet": "impl Meta { # [doc = \" Build a `Meta`, enforcing the guarantee/bound invariants:\"] # [doc = \"\"] # [doc = \" - **M-I1** `guarantee == Exact ⟺ bound == None`,\"] # [doc = \" - **M-I2** `Proven ⟹ basis ProvenThm`, **M-I3** `Empirical ⟹ EmpiricalFit`,\"] # [doc = \"   **M-I4** `Declared ⟹ UserDeclared`,\"] # [doc = \"\"] # [doc = \" plus numeric well-formedness of any bound. Returns [`WfError`] on violation.\"] pub fn new (provenance : Provenance , guarantee : GuaranteeStrength , bound : Option < Bound > , sparsity : Option < SparsityObs > , physical : Option < PhysicalLayout > , policy_used : Option < ContentHash > ,) -> Result < Self , WfError > { check_guarantee_bound (guarantee , bound . as_ref ()) ? ; if let Some (b) = & bound { if ! b . well_formed () { return Err (WfError :: MalformedBound) ; } } if let Some (s) = & sparsity { if ! (0.0 ..= 1.0) . contains (& s . density) { return Err (WfError :: MalformedSparsity) ; } } Ok (Meta { provenance , guarantee , bound , sparsity , physical , reconstruction : None , policy_used , cert_mode : CertMode :: default () , wrapping_opt : None , }) } # [doc = \" Attach a reconstruction manifest (RFC-0003 §6; M-260). The manifest's own schema\"] # [doc = \" invariants are already enforced by [`ReconInfo::new`]; it is independent of M-I1…M-I4,\"] # [doc = \" so this cannot invalidate an existing `Meta`.\"] # [must_use] pub fn with_reconstruction (mut self , reconstruction : ReconInfo) -> Self { self . reconstruction = Some (Box :: new (reconstruction)) ; self } # [doc = \" Record the schedule-staged packing chosen at a lowering stage (RFC-0004 §5; DN-01;\"] # [doc = \" M-250). This is the **inspectable record** of the layout decision, not the decision locus\"] # [doc = \" (the selector is [`mycelium-select`](https://docs.rs/mycelium-select); RFC-0005 §4).\"] # [doc = \"\"] # [doc = \" **M-I5 (lossless `physical`).** The layout is a lossless re-encoding of the same `payload`:\"] # [doc = \" it touches only the `physical` field and leaves the guarantee, bound, and value untouched\"] # [doc = \" — so recording (or *re*-recording) it can never change the value's type or its guarantee\"] # [doc = \" (RFC-0001 §4.3; `physical-layout.schema.json`). M-I1…M-I4 are therefore preserved by\"] # [doc = \" construction.\"] # [must_use] pub fn with_physical (mut self , physical : PhysicalLayout) -> Self { self . physical = Some (physical) ; self } # [doc = \" Record the certification mode this value was produced under (RFC-0034 §3.1; M-786). Touches\"] # [doc = \" only the `cert_mode` tag — it leaves the guarantee, bound, and value untouched, so it can\"] # [doc = \" never change a value's strength or identity (the mode rides `Meta`, excluded from the content\"] # [doc = \" hash; RFC-0001 §4.6 / ADR-003). A stronger mode is **not** a stronger guarantee (VR-5).\"] # [must_use] pub fn with_cert_mode (mut self , cert_mode : CertMode) -> Self { self . cert_mode = cert_mode ; self } # [doc = \" Attach the explicit named Axis-B `wrapping` opt-out marker (RFC-0034 §10; M-791).\"] # [doc = \"\"] # [doc = \" Touches only `wrapping_opt` — leaves the guarantee, bound, cert_mode, and value untouched.\"] # [doc = \" The opt-out is **never-silent**: the developer explicitly called this method at the use site,\"] # [doc = \" making the intent visible and grep-auditable. It does **not** silence Axis-A guarantee tags\"] # [doc = \" or the certification mode; those axes are orthogonal (VR-5 — opting out of one axis never\"] # [doc = \" upgrades another).\"] # [doc = \"\"] # [doc = \" **Absent by default:** not calling this method means Axis-B never-silent failability is\"] # [doc = \" active (the safe default). Presence signals \\\"the caller explicitly requested wraparound.\\\"\"] # [doc = \"\"] # [doc = \" **FLAG (M-791):** the op-layer wiring that *honors* this marker by actually electing\"] # [doc = \" wraparound instead of returning `Option`/`Result`/`SwapError` is a downstream task\"] # [doc = \" (M-788 onward); this method records the intent at the metadata level.\"] # [must_use] pub fn with_wrapping (mut self , opt : WrappingOpt) -> Self { self . wrapping_opt = Some (opt) ; self } # [doc = \" The common `Exact` metadata with no bound (M-I1).\"] # [must_use] pub fn exact (provenance : Provenance) -> Self { Meta { provenance , guarantee : GuaranteeStrength :: Exact , bound : None , sparsity : None , physical : None , reconstruction : None , policy_used : None , cert_mode : CertMode :: default () , wrapping_opt : None , } } # [doc = \" The value's provenance.\"] # [must_use] pub fn provenance (& self) -> & Provenance { & self . provenance } # [doc = \" The disclosed guarantee strength.\"] # [must_use] pub fn guarantee (& self) -> GuaranteeStrength { self . guarantee } # [doc = \" The bound, if approximate.\"] # [must_use] pub fn bound (& self) -> Option < & Bound > { self . bound . as_ref () } # [doc = \" Measured sparsity, if recorded.\"] # [must_use] pub fn sparsity (& self) -> Option < SparsityObs > { self . sparsity } # [doc = \" The recorded physical layout, if any.\"] # [must_use] pub fn physical (& self) -> Option < PhysicalLayout > { self . physical } # [doc = \" The reconstruction manifest, if attached (RFC-0003 §6).\"] # [must_use] pub fn reconstruction (& self) -> Option < & ReconInfo > { self . reconstruction . as_deref () } # [doc = \" The policy that produced this value (set iff produced by a swap).\"] # [must_use] pub fn policy_used (& self) -> Option < & ContentHash > { self . policy_used . as_ref () } # [doc = \" The certification mode this value was produced under (RFC-0034 §3.1; M-786). Always present —\"] # [doc = \" a never-silent tag — defaulting to [`CertMode::Fast`].\"] # [must_use] pub fn cert_mode (& self) -> CertMode { self . cert_mode } # [doc = \" The explicit Axis-B `wrapping` opt-out marker, if present (RFC-0034 §10; M-791).\"] # [doc = \"\"] # [doc = \" Returns `None` (the default) when Axis-B never-silent failability is active — the safe\"] # [doc = \" path requires no annotation. Returns `Some(WrappingOpt)` when the producing operation\"] # [doc = \" was explicitly annotated with a `wrapping` opt-out at the use site.\"] # [doc = \"\"] # [doc = \" Presence does **not** imply a weaker guarantee or a lower cert_mode; those axes are\"] # [doc = \" orthogonal (VR-5). Use this accessor to inspect or propagate the wraparound intent.\"] # [must_use] pub fn wrapping_opt (& self) -> Option < WrappingOpt > { self . wrapping_opt } }",
+      "reason": "no member of this impl block could be transpiled (15 sub-issue(s)): impl method `new` body: function body has a semicolon-terminated (value-discarding) statement expression before the tail — a `let`-chain body maps only simple `let x = e;` bindings plus a single trailing expression; impl method `with_reconstruction` body: function body has a semicolon-terminated (value-discarding) statement expression before the tail — a `let`-chain body maps only simple `let x = e;` bindings plus a single trailing expression; impl method `with_physical` body: function body has a semicolon-terminated (value-discarding) statement expression before the tail — a `let`-chain body maps only simple `let x = e;` bindings plus a single trailing expression; impl method `with_cert_mode` body: function body has a semicolon-terminated (value-discarding) statement expression before the tail — a `let`-chain body maps only simple `let x = e;` bindings plus a single trailing expression; impl method `with_wrapping` body: function body has a semicolon-terminated (value-discarding) statement expression before the tail — a `let`-chain body maps only simple `let x = e;` bindings plus a single trailing expression; impl method `exact` body: struct literal `Meta { .. }` — not an in-file single-ctor struct or enum struct-variant that emits (no constructor to build; a cross-nodule variant is an honest DN-113/DN-134-OQ-2 resolvability gap, never a fabricated out-of-file reference — VR-5/G2); impl method `provenance` body: field projection `self.provenance` on `Meta` — not an in-file single-ctor struct that emits (an enum / external / non-resolvable type has no constructor to `match` against); impl method `guarantee` body: field projection `self.guarantee` on `Meta` — not an in-file single-ctor struct that emits (an enum / external / non-resolvable type has no constructor to `match` against); impl method `bound` body: Rust ownership/identity-conversion no-op method `.as_ref()` has no Mycelium free-function/prim referent (value semantics — ADR-003); desugaring it to a bare `as_ref(recv)` would fabricate an unknown prim (`unknown function/constructor/prim `as_ref`` — verified against the oracle), so it is gapped, never fake-emitted (G2/VR-5); impl method `sparsity` body: field projection `self.sparsity` on `Meta` — not an in-file single-ctor struct that emits (an enum / external / non-resolvable type has no constructor to `match` against); impl method `physical` body: field projection `self.physical` on `Meta` — not an in-file single-ctor struct that emits (an enum / external / non-resolvable type has no constructor to `match` against); impl method `reconstruction` body: method call `.as_deref(...)` has no proven-emitted free-fn referent in this file (neither a D4-mangled inherent `Type__as_deref` nor a bare inherent recorded by this file's left-to-right pass, nor a prim_map / combinator row). Emitting bare `as_deref(recv, …)` would fabricate an unknown prim and file-poison myc-check (G-β Rank A / G2/VR-5; residual when the method body itself gapped — e.g. M-1037 `.to_vec()` inside `read_to_end` — so the declaration was never registered); impl method `policy_used` body: Rust ownership/identity-conversion no-op method `.as_ref()` has no Mycelium free-function/prim referent (value semantics — ADR-003); desugaring it to a bare `as_ref(recv)` would fabricate an unknown prim (`unknown function/constructor/prim `as_ref`` — verified against the oracle), so it is gapped, never fake-emitted (G2/VR-5); impl method `cert_mode` body: field projection `self.cert_mode` on `Meta` — not an in-file single-ctor struct that emits (an enum / external / non-resolvable type has no constructor to `match` against); impl method `wrapping_opt` body: field projection `self.wrapping_opt` on `Meta` — not an in-file single-ctor struct that emits (an enum / external / non-resolvable type has no constructor to `match` against)",
+      "item_name": "Meta"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 280,
+      "col": 1,
+      "category": "Struct",
+      "rust_construct": "Struct",
+      "snippet": "# [doc = \" The wire projection of [`Meta`] (`meta.schema.json`). Optional fields are omitted when absent\"] # [doc = \" (so `Exact` emits no `bound`, satisfying M-I1's presence model); on the way back in, `null` and\"] # [doc = \" absent both decode to `None`. `reconstruction` (RFC-0003 §6) **is** carried (serialized when\"] # [doc = \" present, re-validated on the way in). `deny_unknown_fields` makes the schema's\"] # [doc = \" `additionalProperties: false` a real contract — an unknown wire field is rejected, not silently\"] # [doc = \" dropped (A6-02/B2-03).\"] # [doc = \"\"] # [doc = \" **`cert_mode` is not carried on the wire (M-786, deferred — not silent).** The certification mode\"] # [doc = \" (RFC-0034 §3.1) is a *runtime* tag resolved from the active `@certification` scope (M-790), not an\"] # [doc = \" intrinsic property of a persisted value, so it is intentionally **not** part of this projection\"] # [doc = \" (keeping `meta.schema.json` / `additionalProperties: false` unchanged until the schema migration\"] # [doc = \" lands). A deserialized `Meta` therefore resolves to [`CertMode::Fast`] — the *weakest* mode, which\"] # [doc = \" never over-claims a stronger one (the VR-5 floor: a loaded value is never silently `Certified`).\"] # [derive (Serialize , Deserialize)] # [serde (deny_unknown_fields)] struct MetaWire { provenance : Provenance , guarantee : GuaranteeStrength , # [serde (default , skip_serializing_if = \"Option::is_none\")] bound : Option < Bound > , # [serde (default , skip_serializing_if = \"Option::is_none\")] sparsity : Option < SparsityObs > , # [serde (default , skip_serializing_if = \"Option::is_none\")] physical : Option < PhysicalLayout > , # [serde (default , skip_serializing_if = \"Option::is_none\")] reconstruction : Option < Box < ReconInfo > > , # [serde (default , skip_serializing_if = \"Option::is_none\")] policy_used : Option < ContentHash > , }",
+      "reason": "struct `MetaWire` uses named fields and references a type not resolvable in-file — emitting it positionally would introduce an unresolved reference that poisons the file's `myc check`; left gapped under the M-1006 resolvability gate (VR-5/G2)",
+      "item_name": "MetaWire"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 310,
+      "col": 1,
+      "category": "Impl",
+      "rust_construct": "Impl",
+      "snippet": "impl Serialize for Meta { fn serialize < S : serde :: Serializer > (& self , serializer : S) -> Result < S :: Ok , S :: Error > { MetaWire { provenance : self . provenance . clone () , guarantee : self . guarantee , bound : self . bound . clone () , sparsity : self . sparsity , physical : self . physical , reconstruction : self . reconstruction . clone () , policy_used : self . policy_used . clone () , } . serialize (serializer) } }",
+      "reason": "trait-impl of non-prelude trait `Serialize` — no ambient trait definition and synthetic trait emission is refused (DN-34 §8.8 / DN-122 MVP); gapped the whole impl so the residual cannot file-poison myc-check (G2; express gap-close 2026-07-16)",
+      "item_name": "Meta"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 325,
+      "col": 1,
+      "category": "GenericBound",
+      "rust_construct": "GenericBound",
+      "snippet": "impl < 'de > Deserialize < 'de > for Meta { fn deserialize < D : serde :: Deserializer < 'de > > (deserializer : D) -> Result < Self , D :: Error > { let w = MetaWire :: deserialize (deserializer) ? ; let meta = Meta :: new (w . provenance , w . guarantee , w . bound , w . sparsity , w . physical , w . policy_used ,) . map_err (serde :: de :: Error :: custom) ? ; Ok (match w . reconstruction { Some (r) => meta . with_reconstruction (* r) , None => meta , }) } }",
+      "reason": "impl-level generic parameter(s) on a *trait-instance* impl (`impl<..> Trait for ..`) have no confirmed mapping yet — DN-130 (parametric trait-instance heads + coherence) is the unbuilt scope for that case; DN-131 authorizes only the inherent-impl slot",
+      "item_name": "Meta"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/meta.rs",
+      "line": 346,
+      "col": 1,
+      "category": "MultiStmtBody",
+      "rust_construct": "MultiStmtBody",
+      "snippet": "# [doc = \" The M-I1…M-I4 guarantee/bound consistency check.\"] fn check_guarantee_bound (g : GuaranteeStrength , bound : Option < & Bound >) -> Result < () , WfError > { use GuaranteeStrength :: { Declared , Empirical , Exact , Proven } ; let basis_ok = | b : Option < & Bound > , want_proven : bool , want_empirical : bool | match b . map (| b | & b . basis) { Some (BoundBasis :: ProvenThm { .. }) => want_proven , Some (BoundBasis :: EmpiricalFit { .. }) => want_empirical , Some (BoundBasis :: UserDeclared) => ! want_proven && ! want_empirical , None => false , } ; match g { Exact => { if bound . is_none () { Ok (()) } else { Err (WfError :: GuaranteeBoundMismatch) } } Proven if basis_ok (bound , true , false) => Ok (()) , Empirical if basis_ok (bound , false , true) => Ok (()) , Declared if basis_ok (bound , false , false) => Ok (()) , _ => Err (WfError :: GuaranteeBoundMismatch) , } }",
+      "reason": "function body contains a nested item declaration (e.g. a local `static`/`const`/`fn`) — this grammar fragment has no local-item production; only simple `let x = e;` bindings plus a trailing expression map",
+      "item_name": "check_guarantee_bound"
+    }
+  ],
+  "total_top_level_items": 17
+}

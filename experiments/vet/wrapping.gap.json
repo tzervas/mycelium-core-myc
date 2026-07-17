@@ -1,0 +1,47 @@
+{
+  "source": "/root/git/isolated/mycelium/crates/mycelium-core/src/wrapping.rs",
+  "emitted_items": [],
+  "gaps": [
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/wrapping.rs",
+      "line": 1,
+      "col": 1,
+      "category": "ReservedWord",
+      "rust_construct": "ReservedWord",
+      "snippet": "nodule core.wrapping;",
+      "reason": "derived nodule path `core.wrapping` has segment(s) [wrapping] colliding with a Mycelium reserved word — emitting them verbatim would fail to parse (`nodule core.wrapping;` tokenizes the colliding word as a keyword, not an identifier); each colliding segment is escaped with the `_kw` suffix (now `core.wrapping_kw`) rather than dropped, so distinct source files whose only differing segment is a reserved word (e.g. `l1.fuse` vs `l1.nodule`) stay distinguishable instead of both collapsing onto the same nodule path (G2/VR-5)",
+      "item_name": null
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/wrapping.rs",
+      "line": 32,
+      "col": 1,
+      "category": "Struct",
+      "rust_construct": "Struct",
+      "snippet": "# [doc = \" The explicit, named Axis-B opt-out (RFC-0034 §10; M-791).\"] # [doc = \"\"] # [doc = \" Present on a [`Meta`](crate::meta::Meta) only when the producing operation was given a\"] # [doc = \" **named, explicit** `wrapping` annotation at the use site. Its absence is the default state\"] # [doc = \" (never-silent Axis-B failability applies). Its presence marks \\\"the caller explicitly requested\"] # [doc = \" wraparound; this is visible and auditable.\\\"\"] # [doc = \"\"] # [doc = \" `WrappingOpt` does **not** alter the guarantee strength (`Exact`/`Proven`/…) or the\"] # [doc = \" certification mode (`Fast`/`Certified`/…); those are Axis-A and certification axes and remain\"] # [doc = \" orthogonal (VR-5). A `wrapping` annotation is \\\"I chose wraparound here, explicitly\\\" — it is\"] # [doc = \" not \\\"I lowered the accuracy bar\\\".\"] # [derive (Debug , Clone , Copy , PartialEq , Eq)] pub struct WrappingOpt { # [doc = \" Reason field — reserved for v1 (M-791): a developer-supplied justification string (like the\"] # [doc = \" `// SAFETY:` convention for `unsafe`). In v0 the only legal value is `()` (the unit token is\"] # [doc = \" the explicit acknowledgement: no magic string, no default comment). The field is private so\"] # [doc = \" the stable public surface is just `WrappingOpt::new()`.\"] _reason : () , }",
+      "reason": "struct `WrappingOpt` uses named fields and references a type not resolvable in-file — emitting it positionally would introduce an unresolved reference that poisons the file's `myc check`; left gapped under the M-1006 resolvability gate (VR-5/G2)",
+      "item_name": "WrappingOpt"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/wrapping.rs",
+      "line": 52,
+      "col": 1,
+      "category": "Impl",
+      "rust_construct": "Impl",
+      "snippet": "impl WrappingOpt { # [doc = \" Construct the explicit `wrapping` opt-out marker (v0). The call site is the acknowledgement:\"] # [doc = \" the developer wrote `WrappingOpt::new()` — named, visible, grep-auditable (RFC-0034 §10).\"] # [doc = \"\"] # [doc = \" **v1 will require a justification argument** (analogous to `// SAFETY:`). Until then, the\"] # [doc = \" type's existence at the use site is the disclosure.\"] # [must_use] pub const fn new () -> Self { WrappingOpt { _reason : () } } }",
+      "reason": "no member of this impl block could be transpiled (1 sub-issue(s)): impl method `new` body: struct literal `WrappingOpt { .. }` — not an in-file single-ctor struct or enum struct-variant that emits (no constructor to build; a cross-nodule variant is an honest DN-113/DN-134-OQ-2 resolvability gap, never a fabricated out-of-file reference — VR-5/G2)",
+      "item_name": "WrappingOpt"
+    },
+    {
+      "file": "/root/git/isolated/mycelium/crates/mycelium-core/src/wrapping.rs",
+      "line": 64,
+      "col": 1,
+      "category": "Impl",
+      "rust_construct": "Impl",
+      "snippet": "impl Default for WrappingOpt { fn default () -> Self { Self :: new () } }",
+      "reason": "no member of this impl block could be transpiled (1 sub-issue(s)): impl method `default` body: qualified/associated-function call `Self :: new` did not resolve to a known-emitted associated fn — Mycelium calls are bare identifiers, and the only sound surface form for `Type::method(...)` is the mangled `Type__method` name the declaration side already emits for a receiver-less inherent-impl associated fn (DN-34 §8.13/8.14), referenced only when that exact declaration is PROVEN present (same-file, or a resolved M-1084 cross-nodule sibling). A primitive/std associated fn with no emitted decl (e.g. `i128::try_from`), an unresolved type, or a `self`-receiving method (excluded by construction — it stays reachable only from its own bare call site) all gap here rather than fabricate a call (G2/VR-5, DN-133)",
+      "item_name": "WrappingOpt"
+    }
+  ],
+  "total_top_level_items": 3
+}

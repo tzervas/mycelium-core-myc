@@ -1,0 +1,74 @@
+// nodule: core.repr
+// Representation descriptors — the paradigm-in-the-type (RFC-0001 §4.1; `repr.schema.json`).
+//
+// The four paradigm *kinds* are closed in the kernel (a fifth needs an RFC + ADR); the parameter
+// registries (`ScalarKind`, VSA `model`, `SparsityClass`) are open.
+//
+// The `serde` wire forms are exactly `repr.schema.json` (M-104): `Repr` is tagged on `kind`
+// (`Binary|Ternary|Dense|VSA`), `SparsityClass` on `class` (`Dense|Sparse`), and `ScalarKind`
+// renders `BF16` (Rust's `Bf16`).
+// @summary: best-effort transpilation via mycelium-transpile (M-873). Declared,
+// unvalidated — no Mycelium parser/typechecker confirms this output; see the
+// accompanying .gap.json for every construct this pass could not express.
+nodule core.repr;
+
+// EXPLAIN (L2-B/DN-124): Declared co-include of batch-sibling type surface (homes: core) so single-file oracle is self-contained — not a language `use` identity, not a short-form path collapse (M-1084 full path retained as provenance). Transitive type deps in the same batch are co-included. G2/VR-5.
+type WfError = GuaranteeBoundMismatch | MalformedBound | MalformedRepr | DimensionTooLarge(Bytes, Binary{32}, Binary{32}) | PayloadReprMismatch | MalformedReconstruction | MalformedSparsity;
+
+// Scalar element kind for `Dense` values (extensible registry).
+// Declared: renamed F16 -> F16_kw (reserved-word collision, DN-140)
+// Declared: renamed F32 -> F32_kw (reserved-word collision, DN-140)
+// Declared: renamed F64 -> F64_kw (reserved-word collision, DN-140)
+pub type ScalarKind = F16_kw | Bf16 | F32_kw | F64_kw;
+
+impl Show[ScalarKind] for ScalarKind {
+  fn render(x: ScalarKind) => Bytes =
+    match x { F16_kw => "F16_kw", Bf16 => "Bf16", F32_kw => "F32_kw", F64_kw => "F64_kw" };
+};
+
+fn eq_ScalarKind(a: ScalarKind, b: ScalarKind) => Binary{1} =
+  match a { F16_kw => match b { F16_kw => 0b1, _ => 0b0 }, Bf16 => match b { Bf16 => 0b1, _ => 0b0 }, F32_kw => match b { F32_kw => 0b1, _ => 0b0 }, F64_kw => match b { F64_kw => 0b1, _ => 0b0 } };
+
+impl ScalarKind {
+  // A stable one-byte code for content-addressing (M-103). Append-only: existing codes are
+  // frozen so a definition's identity never shifts when the registry grows.
+  fn tag(self: ScalarKind) => Binary{8} = match self { F16_kw => 0, Bf16 => 1, F32_kw => 2, F64_kw => 3 };
+};
+
+// Scalar-float width registry (ADR-040 §2.1) — a **dedicated** enum, deliberately *not* a reuse of
+// [`ScalarKind`] (ADR-040 FLAG-6: reuse would admit scalar `F16`/`BF16` by construction, silently
+// widening the ratified surface). **F64-only at introduction** (ADR-040 FLAG-1, ratified
+// 2026-07-02): every scalar-float consumer named in the corpus needs binary64 and only binary64.
+// Later widths are appended under new frozen tags — append-only, address-stable.
+// Declared: renamed F64 -> F64_kw (reserved-word collision, DN-140)
+pub type FloatWidth = F64_kw;
+
+impl Show[FloatWidth] for FloatWidth {
+  fn render(x: FloatWidth) => Bytes =
+    match x { F64_kw => "F64_kw" };
+};
+
+fn eq_FloatWidth(a: FloatWidth, b: FloatWidth) => Binary{1} =
+    0b1;
+
+impl FloatWidth {
+  // A stable one-byte code for content-addressing, mirroring the [`ScalarKind::tag`] frozen-tag
+  // discipline (ADR-040 §2.1). Append-only: existing codes are frozen so a value's identity
+  // never shifts when the width registry grows.
+  // Declared: renamed `impl FloatWidth { fn tag }` -> `_10FloatWidth3tag` (D4 inherent-impl flat-fn desugar + DN-140 length-prefix mangle, M-664).
+  fn _10FloatWidth3tag(self: FloatWidth) => Binary{8} = match self { F64_kw => 0 };
+};
+
+// Declared sparsity class of a VSA value (RFC-0001 §4.1; RFC-0003 §5). The *declared* class is a
+// static refinement; *observed* sparsity lives in [`crate::meta::Meta`].
+// Declared: renamed Dense -> Dense_kw (reserved-word collision, DN-140)
+// Declared: renamed Sparse -> Sparse_kw (reserved-word collision, DN-140)
+pub type SparsityClass = Dense_kw | Sparse_kw(Binary{32});
+
+impl Show[SparsityClass] for SparsityClass {
+  fn render(x: SparsityClass) => Bytes =
+    match x { Dense_kw => "Dense_kw", Sparse_kw(p0) => bytes_concat(bytes_concat("Sparse_kw(", render(width_cast(p0, 0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000))), ")") };
+};
+
+fn eq_SparsityClass(a: SparsityClass, b: SparsityClass) => Binary{1} =
+  match a { Dense_kw => match b { Dense_kw => 0b1, _ => 0b0 }, Sparse_kw(p0) => match b { Sparse_kw(q0) => eq(p0, q0), _ => 0b0 } };
